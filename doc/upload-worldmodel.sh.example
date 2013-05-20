@@ -1,0 +1,6 @@
+#!/bin/bash
+# this is an example upload script using tomcat's manager app
+# change target url
+# add options for authentication to the server, and
+# put it to your path (e.g. ~/bin)
+curl -T target/worldmodel.war "https://tomcat.realm:8443/manager/text/deploy?path=/worldmodel&update=true"

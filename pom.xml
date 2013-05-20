@@ -90,13 +90,13 @@
       <version>1.2.1</version>
       <executions>
        <execution>
-        <id>Upload the war to the test server</id>
-        <phase>package</phase>
+        <id>Install. See doc/upload-worldmodel.sh.example on setting it up.</id>
+        <phase>install</phase>
         <goals>
          <goal>exec</goal>
         </goals>
         <configuration>
-         <executable>${basedir}/test/upload.sh</executable>
+         <executable>upload-worldmodel.sh</executable>
         </configuration>
        </execution>
       </executions>
