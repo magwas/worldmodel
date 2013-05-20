@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration> 
+    <session-factory>
+
+        <property name="hibernate.connection.driver_class">org.hsqldb.jdbcDriver</property>
+        <property name="hibernate.connection.url">jdbc:hsqldb:file://tmp/testdb</property>
+        <property name="hibernate.connection.username">sa</property>
+        <property name="hibernate.connection.password"></property>
+        <property name="hibernate.dialect">org.hibernate.dialect.HSQLDialect</property>
+         
+        <property name="hibernate.connection.pool_size">4</property>
+               
+        <property name="hibernate.current_session_context_class">thread</property>
+        <property name="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+               
+        <property name="hibernate.show_sql">false</property>    
+        <property name="hibernate.format_sql">false</property>
+
+        
+        <property name="hibernate.hbm2ddl.auto">create</property>
+		
+        <!-- Mapped annotated entity-->
+        <mapping class="org.rulez.magwas.worldmodel.BaseObject"/>
+        <mapping class="org.rulez.magwas.worldmodel.Value"/>
+
+    </session-factory> 
+</hibernate-configuration>
