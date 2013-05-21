@@ -234,7 +234,6 @@ public class BaseObject implements Serializable {
 	 * @return the value
 	 */
 	public Value getValue() {
-		Util.hexdump("getValue",value.getValue());
 		return value;
 	}
 
@@ -242,7 +241,6 @@ public class BaseObject implements Serializable {
 	 * @param value the value to set
 	 */
 	public void setValue(Value value) {
-		Util.hexdump("setValue",value.getValue());
 		this.value = value;
 	}
 

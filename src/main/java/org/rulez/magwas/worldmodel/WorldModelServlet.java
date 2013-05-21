@@ -38,6 +38,8 @@ public class WorldModelServlet extends HttpServlet {
 		 */
 		BufferedReader reader = null;
 		String str = "";
+		response.setCharacterEncoding("UTF-8");
+		response.addHeader("Content-Type", "text/xml;charset=utf-8");
 		PrintWriter out = response.getWriter();
 		Session session = Util.getSession();
 		Transaction tx = session.beginTransaction();	
@@ -97,6 +99,8 @@ public class WorldModelServlet extends HttpServlet {
 		String id=request.getParameter("id");
 		Session session = Util.getSession();
 		BaseObject obj;
+		response.setCharacterEncoding("UTF-8");
+		response.addHeader("Content-Type", "text/xml;charset=utf-8");
 		PrintWriter out = response.getWriter();
 
 		Transaction tx = session.beginTransaction();

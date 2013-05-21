@@ -1,6 +1,5 @@
 package org.rulez.magwas.test;
 
-import org.rulez.magwas.worldmodel.Util;
 
 public class TestUtil {
 
