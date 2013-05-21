@@ -51,13 +51,23 @@ public class Util {
 		log(Level.DEBUG,what);
 	}
 
+	private static String codes = "0123456789abcdef";
+	public static void hexdump(String label,String str) {
+		char[] arr = str.toCharArray();
+		String outs = "";
+		for(int i=0;i<arr.length;i++) {
+			outs += ""+ codes.charAt((arr[i]>>8)&0x0f) + codes.charAt((arr[i]>>4)&0x0f) + codes.charAt(arr[i]&0xf)+""+arr[i]+" ";
+		}
+		Util.debug(label + outs);
+	}
+
 	public static void warning(String what) {
 		log(Level.WARN,what);
 	}
 
 	public static void log(Level level, String what) {
 		if(logger == null) {
-			logger = Logger.getLogger("org.rulez.magwas.worldmodel");
+			logger = Logger.getLogger(BaseObject.class);
 		}
 		logger.log(level, what);
 	}
