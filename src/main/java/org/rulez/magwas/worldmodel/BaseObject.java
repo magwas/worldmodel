@@ -49,16 +49,25 @@ public class BaseObject implements Serializable {
 		String typestring = node.getAttribute("type");
 		if (!typestring.equals("")) {
 			BaseObject tobj = getBaseObjectByCompositeId(typestring,session);
+			if(tobj == null) {
+				throw new InputParseException("object for type does not exists. id="+typestring); 
+			}
 			this.setType(tobj);
 		}
 		String sourcestring = node.getAttribute("source");
 		if (!sourcestring.equals("")) {
 			BaseObject tobj = getBaseObjectByCompositeId(sourcestring,session);
+			if(tobj == null) {
+				throw new InputParseException("object for source does not exists. id="+sourcestring); 
+			}
 			this.setSource(tobj);
 		}
 		String deststring = node.getAttribute("dest");
 		if (!deststring.equals("")) {
 			BaseObject tobj = getBaseObjectByCompositeId(deststring,session);
+			if(tobj == null) {
+				throw new InputParseException("object for dest does not exists. id="+deststring); 
+			}
 			this.setDest(tobj);
 		}
 		String valuestring = node.getFirstChild().getNodeValue();
