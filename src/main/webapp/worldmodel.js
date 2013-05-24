@@ -1,6 +1,9 @@
 
+var xsltproc = null;
+var idlist = [];
 
-function loadXMLDoc(xml)
+
+function xmlPost(xml)
 {
 	  var xmlhttp;
 	  var x,i;
@@ -9,12 +12,10 @@ function loadXMLDoc(xml)
 	  xmlhttp.setRequestHeader("Content-type","text/xml;charset=UTF-8");
 	  xmlhttp.send(xml);
 	  xmlDoc=xmlhttp.responseXML;
-	  var xmlText = new XMLSerializer().serializeToString(xmlDoc);
-	  alert(xmlText);
 	  return xmlDoc;
 }
 
-function loadXSLT(xslt)
+function xmlGet(xslt)
 {
 	  var xmlhttp;
 	  var x,i;
@@ -23,8 +24,6 @@ function loadXSLT(xslt)
 	  xmlhttp.setRequestHeader("Content-type","text/xml;charset=UTF-8");
 	  xmlhttp.send();
 	  xmlDoc=xmlhttp.responseXML;
-	  var xmlText = new XMLSerializer().serializeToString(xmlDoc);
-	  alert(xmlText);
 	  return xmlDoc;
 }
 
@@ -34,7 +33,6 @@ function addNodeAttr(node,objid,id) {
 }
 
 function submit(id) {
-	alert("submit "+id);
 	doc = (new DOMParser()).parseFromString('<root id="root"/>', 'text/xml');
 	 root = doc.documentElement;
 	 bo = doc.createElement("BaseObject");
@@ -48,9 +46,23 @@ function submit(id) {
 	 tn.data=e;
 	 bo.appendChild(tn);
 	 var xmlText = new XMLSerializer().serializeToString(doc);
-	 alert("query="+xmlText);
-	 response = loadXMLDoc(xmlText);
-	 insertRow(response);
+	 response = xmlPost(xmlText);
+	 newid=document.getElementById(id+'_id_t').value
+	 mytr = document.getElementById(id);
+	 alert("newid="+newid+" id="+id);
+	 if (newid == id ) {
+		 if(processExceptions(response)) {
+			 mytr.parentNode.replaceChild(xml2Fragment(response),mytr);
+		 } else {
+			 myself = xmlGet("worldmodel?id="+id);
+			 mytr.parentNode.replaceChild(xml2Fragment(myself),mytr);			 
+		 }
+	 } else {
+		 insertRow(response);
+		 myself = xmlGet("worldmodel?id="+id);
+		 mytr.parentNode.replaceChild(xml2Fragment(myself),mytr);
+	 }
+
 }
 
 function addCellFromId(obj,row,id) {
@@ -59,27 +71,43 @@ function addCellFromId(obj,row,id) {
 	row.appendChild(td);	 
 }
 
-var xsltproc = null;
 
 function query(id) {
-	response=loadXSLT("worldmodel?id="+id);
+	response=xmlGet("worldmodel?id="+id);
 	insertRow(response);
 }
-function insertRow(response) {
-	table=document.getElementById("table");
+
+function xml2Fragment(response) {
+	if (xsltproc == null) {
+		xsltproc = new XSLTProcessor();;
+		var xsltdoc = xmlGet("baseobj_as_row.xsl");
+		xsltproc.importStylesheet(xsltdoc);
+	}
+	frag = xsltproc.transformToFragment(response,document);
+	return frag;
+}
+
+function processExceptions(response) {
 	 allobjs = response.getElementsByTagName("exception"); 
 	 for ( var i=0; i<allobjs.length;i++ ) {
 		 alert(allobjs[i].textContent);
 	 }
+	 return (allobjs.length == 0)
+}
+function insertRow(response) {
+	table=document.getElementById("table");
 
-	if (xsltproc == null) {
-		proc = new XSLTProcessor();;
-		var xsltdoc = loadXSLT("baseobj_as_row.xsl");
-	}
-	if (allobjs.length == 0) {
-		proc.importStylesheet(xsltdoc);
-		frag = proc.transformToFragment(response,document);
-		table.appendChild(frag);
+	if (processExceptions(response)) {
+		frag = xml2Fragment(response);
+		trs = frag.querySelectorAll("tr");
+		 for ( var i=0; i<trs.length;i++ ) {
+			 newid=trs[i].id;
+			 alert(newid);
+			 if(idlist.indexOf(newid) == -1) {
+				 idlist.push(trs[i].id);
+				 table.appendChild(trs[i]);
+			 }
+		 }
 	}
 
 }
