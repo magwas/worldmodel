@@ -8,9 +8,17 @@
     <servlet-name>worldmodel</servlet-name>
     <servlet-class>org.rulez.magwas.worldmodel.WorldModelServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>search</servlet-name>
+    <servlet-class>org.rulez.magwas.worldmodel.SearchServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>worldmodel</servlet-name>
     <url-pattern>/worldmodel</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>search</servlet-name>
+    <url-pattern>/search</url-pattern>
   </servlet-mapping>
   <resource-ref>
       <description>DB Connection</description>
