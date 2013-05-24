@@ -1,10 +1,5 @@
 
 
-function addNodeAttr(node,id) {
-	 e=document.getElementById(id+'_t').value
-	 node.setAttribute(id,e);
-}
-
 function loadXMLDoc(xml)
 {
 	  var xmlhttp;
@@ -12,51 +7,103 @@ function loadXMLDoc(xml)
 	  xmlhttp=new XMLHttpRequest();
 	  xmlhttp.open("POST","https://tomcat.realm:8443/worldmodel/worldmodel",false);
 	  xmlhttp.setRequestHeader("Content-type","text/xml;charset=UTF-8");
-	  alert("e");
 	  xmlhttp.send(xml);
-	  alert("f");
 	  xmlDoc=xmlhttp.responseXML;
-	  alert("xmlDoc="+xmlDoc);
 	  var xmlText = new XMLSerializer().serializeToString(xmlDoc);
 	  alert(xmlText);
+	  return xmlDoc;
 }
 
-function submit() {
-	 doc = (new DOMParser()).parseFromString('<root id="root"/>', 'text/xml');
+function loadXSLT(xslt)
+{
+	  var xmlhttp;
+	  var x,i;
+	  xmlhttp=new XMLHttpRequest();
+	  xmlhttp.open("GET","https://tomcat.realm:8443/worldmodel/"+xslt,false);
+	  xmlhttp.setRequestHeader("Content-type","text/xml;charset=UTF-8");
+	  xmlhttp.send();
+	  xmlDoc=xmlhttp.responseXML;
+	  var xmlText = new XMLSerializer().serializeToString(xmlDoc);
+	  alert(xmlText);
+	  return xmlDoc;
+}
+
+function addNodeAttr(node,objid,id) {
+	 e=document.getElementById(objid+'_'+id+'_t').value
+	 node.setAttribute(id,e);
+}
+
+function submit(id) {
+	alert("submit "+id);
+	doc = (new DOMParser()).parseFromString('<root id="root"/>', 'text/xml');
 	 root = doc.documentElement;
 	 bo = doc.createElement("BaseObject");
 	 root.appendChild(bo);
-	 addNodeAttr(bo,"id");
-	 addNodeAttr(bo,"type");
-	 addNodeAttr(bo,"source");
-	 addNodeAttr(bo,"dest");
+	 addNodeAttr(bo,id,"id");
+	 addNodeAttr(bo,id,"type");
+	 addNodeAttr(bo,id,"source");
+	 addNodeAttr(bo,id,"dest");
 	 tn=doc.createTextNode("");
-	 e=document.getElementById('value_t').value
+	 e=document.getElementById(id+'_value_t').value
 	 tn.data=e;
 	 bo.appendChild(tn);
 	 var xmlText = new XMLSerializer().serializeToString(doc);
-	 loadXMLDoc(xmlText);
-	// alert("done");
+	 alert("query="+xmlText);
+	 response = loadXMLDoc(xmlText);
+	 insertRow(response);
 }
 
-function toedit(id) {
-	 e=document.getElementById(id);
+function addCellFromId(obj,row,id) {
+	td = document.createElement("td");
+	td.textContent = obj.getAttribute(id);
+	row.appendChild(td);	 
+}
+
+var xsltproc = null;
+
+function query(id) {
+	response=loadXSLT("worldmodel?id="+id);
+	insertRow(response);
+}
+function insertRow(response) {
+	table=document.getElementById("table");
+	 allobjs = response.getElementsByTagName("exception"); 
+	 for ( var i=0; i<allobjs.length;i++ ) {
+		 alert(allobjs[i].textContent);
+	 }
+
+	if (xsltproc == null) {
+		proc = new XSLTProcessor();;
+		var xsltdoc = loadXSLT("baseobj_as_row.xsl");
+	}
+	if (allobjs.length == 0) {
+		proc.importStylesheet(xsltdoc);
+		frag = proc.transformToFragment(response,document);
+		table.appendChild(frag);
+	}
+
+}
+
+function toedit(objid,id) {
+	fullid = objid+'_'+id;
+	 e=document.getElementById(fullid);
 	 v=e.textContent;
 	 e.textContent=""
 	 input=document.createElement("input");
 	 input.type="text";
-	 input.id=id+"_t";
+	 input.id=fullid+"_t";
 	 input.value=v;
 	 e.appendChild(input);
 }
 
-function edit() {
-	 but=document.getElementById("but");
-	 but.textContent="Submit"
-	 but.onclick=submit;
-	 toedit("id");
-	 toedit("type");
-	 toedit("value");
-	 toedit("source");
-	 toedit("dest");
+function edit(id) {
+	 toedit(id,"id");
+	 toedit(id,"type");
+	 toedit(id,"value");
+	 toedit(id,"source");
+	 toedit(id,"dest");
+	 but=document.getElementById(id+"_but");
+	 but.type="submit";
+	 but.value="Submit"
+	 but.setAttribute("onclick","javascript:submit('"+id+"')");
 }

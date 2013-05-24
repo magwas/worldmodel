@@ -6,7 +6,7 @@
 <body>
 
       <form id="form" action="javascript:edit()">
-        <table border="1">
+        <table border="1" id="table">
           <tr>
             <th>id</th><th>type</th><th>value</th><th>src</th><th>dest</th><th id="test"></th>
           </tr>
