@@ -25,7 +25,12 @@
   						 <xsl:value-of select="@dest"/>
   						 </a>
   						</td>
-              <td><input id="{@id}_but" type="submit" onclick="javascript:edit('{@id}')" value="Edit"/></td>
+              			<td>
+              				<input id="{@id}_but" type="submit" onclick="javascript:edit('{@id}')" value="Edit"/>
+              				<a href="javascript:search('type','{@id}')">Items with this type </a>
+              				<a href="javascript:search('source','{@id}')">Items with this source </a>
+              				<a href="javascript:search('dest','{@id}')">Items with this dest </a>
+              			</td>
   					</tr>
   </xsl:template>
 </xsl:stylesheet>

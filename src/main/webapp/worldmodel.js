@@ -49,7 +49,6 @@ function submit(id) {
 	 response = xmlPost(xmlText);
 	 newid=document.getElementById(id+'_id_t').value
 	 mytr = document.getElementById(id);
-	 alert("newid="+newid+" id="+id);
 	 if (newid == id ) {
 		 if(processExceptions(response)) {
 			 mytr.parentNode.replaceChild(xml2Fragment(response),mytr);
@@ -74,6 +73,14 @@ function addCellFromId(obj,row,id) {
 
 function query(id) {
 	response=xmlGet("worldmodel?id="+id);
+	insertRow(response);
+}
+
+function search(type,id) {
+	if(idlist.indexOf(id)== -1) {
+		idlist.push(id);		
+	}
+	response=xmlGet("search?"+type+"="+id);
 	insertRow(response);
 }
 
@@ -102,8 +109,8 @@ function insertRow(response) {
 		trs = frag.querySelectorAll("tr");
 		 for ( var i=0; i<trs.length;i++ ) {
 			 newid=trs[i].id;
-			 alert(newid);
 			 if(idlist.indexOf(newid) == -1) {
+				 alert(newid);
 				 idlist.push(trs[i].id);
 				 table.appendChild(trs[i]);
 			 }
@@ -125,6 +132,9 @@ function toedit(objid,id) {
 }
 
 function edit(id) {
+	if(idlist.indexOf(id)== -1) {
+		idlist.push(id);		
+	}
 	 toedit(id,"id");
 	 toedit(id,"type");
 	 toedit(id,"value");
@@ -135,3 +145,4 @@ function edit(id) {
 	 but.value="Submit"
 	 but.setAttribute("onclick","javascript:submit('"+id+"')");
 }
+
