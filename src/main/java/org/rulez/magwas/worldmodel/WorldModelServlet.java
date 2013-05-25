@@ -107,7 +107,7 @@ public class WorldModelServlet extends HttpServlet {
 		if(id != null) {
 			try {
 				obj = BaseObject.getBaseObjectByCompositeId(id, session);
-				out.println( Util.xml2String(obj) );
+				out.println( Util.baseObject2String(obj) );
 			} catch (InputParseException e) {
 				out.println("<exception>"+e.getMessage()+"</exception>");
 			}

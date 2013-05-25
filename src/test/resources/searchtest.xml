@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml-stylesheet type="text/xsl" href="stylesheet.xsl"?>
+<objects>
+
+<BaseObject id="thing" type="thing"/>
+<!-- TODO(code): source and dest is inherited because type reference, can be overridden to subtype -->
+<BaseObject id="relation" type="thing" source="thing" dest="thing"/>
+<BaseObject id="quality" type="relation" source="relation" dest="thing"/>
+<!-- TODO(code): relations of noninherited quality are not inherited in subtyping, every other is -->
+<!-- FIXME: for source or also for dest? -->
+<BaseObject id="noninherited" type="thing"/>
+<!-- TODO(code): check noncircularity -->
+<BaseObject id="noncircular" type="thing"/>
+<!-- TODO(ontology): Peano axioms? -->
+<!-- FIXME: follows is noncircular. What is a type has minoccur(follows) > 0 ? -->
+<BaseObject id="follows" type="relation" source="thing" dest="thing"/>
+<!-- TODO(code): We should be able to get away without having all integer < n on database -->
+<BaseObject id="integer" type="thing"/>
+<BaseObject id="Zero" type="integer">0</BaseObject>
+<BaseObject id="One" type="integer">1</BaseObject>
+<!-- TODO(code): minoccurs, maxoccurs, minreferences and maxreferences should be checked -->
+<BaseObject id="minoccurs" type="quality" dest="integer"/>
+<BaseObject id="maxoccurs" type="quality" dest="integer"/>
+<BaseObject id="minreferences" type="quality" dest="integer"/>
+<BaseObject id="maxreferences" type="quality" dest="integer"/>
+<BaseObject id="quality_references_max_1_relation" type="maxreferences" source="quality" dest="One"/>
+<BaseObject id="quality_references_min_0_relation" type="minreferences" source="quality" dest="Zero"/>
+<BaseObject id="relation_have_min_0_quality" type="minoccurs" source="quality" dest="Zero"/>
+<BaseObject id="contains" type="relation"/>
+<BaseObject id="thing_contains_min_0_thing" type="minoccurs" source="contains" dest="Zero"/>
+<BaseObject id="thing_contained_in_max_1_thing" type="maxreferences" source="contains" dest="One"/>
+<BaseObject id="follows_maxoccurs_1" type="maxoccurs" source="follows" dest="One"/>
+<BaseObject id="follows_maxreferences_1" type="maxreferences" source="follows" dest="One"/>
+<BaseObject id="follows_noncircular" type="quality" source="follows" dest="noncircular"/>
+<!-- TODO(code): xml representation of documents -->
+<BaseObject id="document" type="thing"/>
+<BaseObject id="tag" type="thing"/>
+<!-- objects of type attribute have the attribute key as value
+	objects of type directly subclassed from attribute have the attribute value as value
+	FIXME: is it consistent?
+ -->
+<BaseObject id="attribute" type="thing"/>
+<BaseObject id="document contains tag" type="contains" source="document" dest="tag"/>
+<BaseObject id="tag_contains_attribute" type="contains" source="tag" dest="attribute"/>
+<BaseObject id="tag_contains_tag" type="contains" source="tag" dest="tag"/>
+<BaseObject id="tag_maxreferences_attribute_1" type="maxreferences" source="tag_contains_attribute" dest="One"/>
+<BaseObject id="document_contains_max_1_tag" type="maxoccurs" source="document contains tag" dest="One"/>
+<BaseObject id="tag_contains_max_0_attribute" type="maxoccurs" source="tag_contains_attribute" dest="Zero"/>
+<BaseObject id="tag_contains_max_0_tag" type="maxoccurs" source="tag_contains_tag" dest="Zero"/>
+<!-- FIXME: not true in this form
+<BaseObject id="tag_follows_tag" type="follows" source="tag" dest="tag"/>
+ -->
+<BaseObject id="textNode" type="thing"/>
+<BaseObject id="textNode_follows_textNode" type="follows" source="textNode" dest="textNode"/>
+<BaseObject id="tag_contains_textNode" type="contains" source="tag" dest="textNode"/>
+<BaseObject id="tag_contains_min_0_textNode" type="minoccurs" source="tag_contains_textNode" dest="Zero"/>
+<BaseObject id="htmldocument" type="document"/>
+<BaseObject id="html" type="tag">html</BaseObject>
+<BaseObject id="htmldocument_contains_html" type="contains" source="htmldocument" dest="html"/>
+<BaseObject id="head" type="tag">head</BaseObject>
+<BaseObject id="html_contains_head" type="contains" source="html" dest="head"/>
+<BaseObject id="html_contains_max_1_head" type="maxoccurs" source="html_contains_head" dest="One"/>
+<BaseObject id="title" type="tag">title</BaseObject>
+<BaseObject id="head_contains_title" type="contains" source="head" dest="title"/>
+<BaseObject id="head_contains_max_1_title" type="maxoccurs" source="head_contains_title" dest="One"/>
+<BaseObject id="body" type="tag">body</BaseObject>
+<BaseObject id="head_contains_body" type="contains" source="head" dest="body"/>
+<BaseObject id="head_contains_max_1_body" type="maxoccurs" source="head_contains_body" dest="One"/>
+<BaseObject id="body_follows_head" type="follows" source="body" dest="head"/>
+<BaseObject id="h1" type="tag">h1</BaseObject>
+<BaseObject id="body_contains_h1" type="contains" source="body" dest="h1"/>
+<BaseObject id="body_contains_min_0_h1" type="minoccurs" source="body_contains_h1" dest="Zero"/>
+<BaseObject id="p" type="tag">p</BaseObject>
+<BaseObject id="body_contains_p" type="contains" source="body" dest="p"/>
+<BaseObject id="body_contains_min_0_p" type="minoccurs" source="body_contains_p" dest="Zero"/>
+<BaseObject id="a" type="tag">a</BaseObject>
+<BaseObject id="href" type="attribute">href</BaseObject>
+<BaseObject id="my_first_document" type="document"/>
+<BaseObject id="html#1" type="html"/>
+<BaseObject id="my_first_document_containshtml#1" type="contains" source="my_first_document" dest="html#1"/>
+<BaseObject id="head#1:" type="head"/>
+<BaseObject id="html#1_contains_head#1" type="contains" source="html#1" dest="head#1"/>
+<BaseObject id="body#1:" type="body"/>
+<BaseObject id="html#1_contains_body#1" type="contains" source="html#1" dest="body#1"/>
+<BaseObject id="p#1" type="p"/>
+<BaseObject id="body#1_contains_p#1" type="contains" source="body#1" dest="p#1"/>
+<BaseObject id="h1#1" type="h1"/>
+<BaseObject id="body#1_contains_h1#1" type="contains" source="body#1" dest="h1#1"/>
+<BaseObject id="p#1_follows_h1#1" type="follows" source="p#1" dest="h1#1"/>
+<BaseObject id="textNode#1" type="textNode">Árvíztűrő egy</BaseObject>
+<BaseObject id="textNode#2" type="textNode">Tükörfúrógép</BaseObject>
+<BaseObject id="a#1" type="a"/>
+<BaseObject id="a#1_href" type="href">Árvíztűrő</BaseObject>
+<BaseObject id="a#1_contains_a#1_href" type="contains" source="a#1" dest="a#1_href"/>
+<BaseObject id="p#1_contains_textNode#1" type="contains" source="p#1" dest="textNode#1"/>
+<BaseObject id="p#1_contains_textNode#2" type="contains" source="p#1" dest="textNode#2"/>
+<BaseObject id="p#1_contains_a#1" type="contains" source="p#1" dest="a#1"/>
+<!--
+<html>
+ <head>
+  <title>teszt</title>
+ </head>
+ <body>
+ <h1>Ez egy teszt</h1>
+ <p>
+  Árvíztűrő egy <a href="Tükörfúrógép">Tükörfúrógép</a>
+ </p>
+ </body>
+</html>
+-->
+</objects>
+

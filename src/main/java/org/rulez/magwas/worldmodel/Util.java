@@ -99,6 +99,12 @@ public class Util {
 
 	}
 
+	public static Document newDocument(String str) throws SAXException, IOException {
+		byte[] arr = str.getBytes("UTF-8");
+		ByteArrayInputStream bis = new ByteArrayInputStream(arr);
+		return newDocument(bis);
+	}
+	
 	public static Document newDocument(ByteArrayInputStream bis) throws SAXException, IOException {
 		dBuilder = getDocumentBuilder();
 		return dBuilder.parse(bis);
@@ -116,7 +122,7 @@ public class Util {
 		return out.toString();
 	}
 	
-	public static String xml2String(BaseObject obj) {
+	public static String baseObject2String(BaseObject obj) {
 		// maybe create an interface
 		
 		Document doc = Util.newDocument();

@@ -18,6 +18,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
 @Entity
@@ -38,7 +39,7 @@ public class BaseObject implements Serializable {
 		}
 		BaseObject obj = getBaseObjectByCompositeId(cidstring, session);
 		if (obj != null) {
-			throw new InputParseException("there is already an object with this id");
+			throw new InputParseException("there is already an object with this id: "+cidstring);
 		}
 		List<String> r = parseCompositeId(cidstring);
 		this.setId(Value.getValueByValue(r.get(0), session));
@@ -48,32 +49,47 @@ public class BaseObject implements Serializable {
 		}
 		String typestring = node.getAttribute("type");
 		if (!typestring.equals("")) {
-			BaseObject tobj = getBaseObjectByCompositeId(typestring,session);
-			if(tobj == null) {
-				throw new InputParseException("object for type does not exists. id="+typestring); 
+			if(typestring.equals(cidstring)) {
+				this.setType(this);
+			} else {
+				BaseObject tobj = getBaseObjectByCompositeId(typestring,session);
+				if(tobj == null) {
+					throw new InputParseException("object for type does not exists. id="+typestring); 
+				}
+				this.setType(tobj);
 			}
-			this.setType(tobj);
 		}
 		String sourcestring = node.getAttribute("source");
 		if (!sourcestring.equals("")) {
-			BaseObject tobj = getBaseObjectByCompositeId(sourcestring,session);
-			if(tobj == null) {
-				throw new InputParseException("object for source does not exists. id="+sourcestring); 
+			if(sourcestring.equals(cidstring)) {
+				this.setSource(this);
+			} else {
+				BaseObject tobj = getBaseObjectByCompositeId(sourcestring,session);
+				if(tobj == null) {
+					throw new InputParseException("object for source does not exists. id="+sourcestring); 
+				}
+				this.setSource(tobj);
 			}
-			this.setSource(tobj);
 		}
 		String deststring = node.getAttribute("dest");
 		if (!deststring.equals("")) {
-			BaseObject tobj = getBaseObjectByCompositeId(deststring,session);
-			if(tobj == null) {
-				throw new InputParseException("object for dest does not exists. id="+deststring); 
+			if(sourcestring.equals(cidstring)) {
+				this.setDest(this);
+			} else {
+				BaseObject tobj = getBaseObjectByCompositeId(deststring,session);
+				if(tobj == null) {
+					throw new InputParseException("object for dest does not exists. id="+deststring); 
+				}
+				this.setDest(tobj);
 			}
-			this.setDest(tobj);
 		}
-		String valuestring = node.getFirstChild().getNodeValue();
-		if (!valuestring.equals("")) {
-			Value tobj = Value.getValueByValue(valuestring,session);
-			this.setValue(tobj);
+		Node valuenode = node.getFirstChild();
+		if(valuenode != null) {
+			String valuestring = valuenode.getNodeValue();
+			if (!valuestring.equals("")) {
+				Value tobj = Value.getValueByValue(valuestring,session);
+				this.setValue(tobj);
+			}
 		}
 		session.save(this);
 	}

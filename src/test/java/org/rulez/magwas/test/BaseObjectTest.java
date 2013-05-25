@@ -67,7 +67,7 @@ public class BaseObjectTest extends TestCase {
 	 * Test method for {@link org.rulez.magwas.worldmodel.BaseObject#getXml()}.
 	 */
 	public void testGetXml() {
-		String str = Util.xml2String(obj);
+		String str = Util.baseObject2String(obj);
 		Util.hexdump("returned",str);
 		assertEquals(outstring,TestUtil.NormalizeXmlString(str));
 	}

@@ -22,6 +22,29 @@ public class WorldModelServletTest {
 	}
 
 	@Test
+	public void testDoPostWithSelfReference() throws ServletException, IOException {
+		String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xml><BaseObject id=\"stuff\" type=\"stuff\"/></xml>";
+		String retstring = "<objects><BaseObject id=\"stuff\" type=\"stuff\"/></objects>";
+		WorldModelServlet servlet = new WorldModelServlet();
+		MyHttpServletRequest request = new MyHttpServletRequest();
+		MyHttpServletResponse response = new MyHttpServletResponse();
+		request.setInputString(objstring);
+		servlet.doPost(request,response);
+		assertEquals(retstring,TestUtil.NormalizeXmlString(response.getOutput()));
+	}
+	@Test
+	public void testDoPostWithSelfReference2() throws ServletException, IOException {
+		String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xml><BaseObject id=\"stuff1\" type=\"stuff1\" source=\"stuff1\" dest=\"stuff1\"/></xml>";
+		String retstring = "<objects><BaseObject dest=\"stuff1\" id=\"stuff1\" source=\"stuff1\" type=\"stuff1\"/></objects>";
+		WorldModelServlet servlet = new WorldModelServlet();
+		MyHttpServletRequest request = new MyHttpServletRequest();
+		MyHttpServletResponse response = new MyHttpServletResponse();
+		request.setInputString(objstring);
+		servlet.doPost(request,response);
+		assertEquals(retstring,TestUtil.NormalizeXmlString(response.getOutput()));
+	}
+
+	@Test
 	public void testDoPostTest1() throws ServletException, IOException {
 		String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xml><BaseObject id=\"idnum\">érték</BaseObject></xml>";
 		String retstring = "<objects><BaseObject id=\"idnum\">érték</BaseObject></objects>";
@@ -88,7 +111,7 @@ public class WorldModelServletTest {
 		MyHttpServletResponse response2 = new MyHttpServletResponse();
 		request2.setInputString(objstring);
 		servlet.doPost(request2,response2);
-		assertEquals("<exception>there is already an object with this id</exception>",response2.getOutput());		
+		assertEquals("<exception>there is already an object with this id: negy</exception>",response2.getOutput());		
 	}
 
 	@Test
