@@ -2,8 +2,6 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:output method="html" version="1.0" encoding="utf-8" indent="yes" omit-xml-declaration="yes"/>
 
-<xsl:include href="baseobj_as_row.xsl"/>
-
 <xsl:template match="/">
 <html>
   		<head>
@@ -27,7 +25,7 @@
 </xsl:template>
 <xsl:template match="BaseObject">
 	<script>
-		ObjectManager.create('<xsl:value-of select="@id"/>','<xsl:value-of select="@type"/>','<xsl:value-of select="@source"/>','<xsl:value-of select="@dest"/>','<xsl:value-of select="."/>');
+		ObjectManager.create('<xsl:value-of select="@id"/>','<xsl:value-of select="@type"/>','<xsl:value-of select="@source"/>','<xsl:value-of select="@dest"/>','<xsl:value-of select="@value"/>');
 	</script>
 </xsl:template>
 <xsl:template match="@*|*|processing-instruction()|comment()">

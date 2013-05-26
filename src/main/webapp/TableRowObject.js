@@ -17,6 +17,10 @@ var TableRowObject = BaseObject.extend({
 		this.handleObject();
 	},
 
+	unedit: function() {
+		this.handleObject();
+	},
+	
 	handleObject : function() {
 		// add or update row
 		var row = document.getElementById(this.id);
@@ -44,6 +48,7 @@ var TableRowObject = BaseObject.extend({
 		td.appendChild(but);
 		row.appendChild(td);
 	},
+	
 	addCell : function(row,attname) {
 		var td = document.createElement("td");
 		td.setAttribute("id",this.id+"_"+attname);
@@ -65,15 +70,8 @@ var TableRowObject = BaseObject.extend({
 	addNodeAttr : function(node,fieldname) {
 		// gathers the field value and sets it as the fieldname attribute of node
 		// value is treated specially FIXME: value should be an attribute as well
-		if(fieldname=="value") {
-			var tn = node.ownerDocument.createTextNode("");
-			var e = document.getElementById(this.id+'_value_t').value
-			tn.data = e;
-			node.appendChild(tn);
-		} else {
-			var e = document.getElementById(this.id+'_'+fieldname+'_t').value
-			node.setAttribute(fieldname,e);
-		}
+		var e = document.getElementById(this.id+'_'+fieldname+'_t').value
+		node.setAttribute(fieldname,e);
 	},
 
 	toedit : function(attname) {
@@ -98,6 +96,11 @@ var TableRowObject = BaseObject.extend({
 		but.type="submit";
 		but.value="Submit"
 		but.setAttribute("onclick","javascript:submit('"+this.id+"')");
+		but2=document.createElement("input");
+		but2.type="submit";
+		but2.value="Cancel";
+		but2.setAttribute("onclick","javascript:unedit('"+this.id+"')");
+		but.parentNode.appendChild(but2);
 	},
 })
 

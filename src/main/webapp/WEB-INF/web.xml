@@ -3,27 +3,34 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-  <display-name>World Model</display-name>
-  <servlet>
-    <servlet-name>worldmodel</servlet-name>
-    <servlet-class>org.rulez.magwas.worldmodel.WorldModelServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>search</servlet-name>
-    <servlet-class>org.rulez.magwas.worldmodel.SearchServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>worldmodel</servlet-name>
-    <url-pattern>/worldmodel</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>search</servlet-name>
-    <url-pattern>/search</url-pattern>
-  </servlet-mapping>
-  <resource-ref>
-      <description>DB Connection</description>
-      <res-ref-name>jdbc/worldmodel</res-ref-name>
-      <res-type>javax.sql.DataSource</res-type>
-      <res-auth>Container</res-auth>
-  </resource-ref>
+	<display-name>World Model</display-name>
+	<welcome-file-list>
+		<welcome-file>index.xml</welcome-file>
+	</welcome-file-list>
+	<mime-mapping>
+		<extension>xml</extension>
+		<mime-type>text/xml</mime-type>
+	</mime-mapping>
+	<servlet>
+		<servlet-name>worldmodel</servlet-name>
+		<servlet-class>org.rulez.magwas.worldmodel.WorldModelServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>search</servlet-name>
+		<servlet-class>org.rulez.magwas.worldmodel.SearchServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>worldmodel</servlet-name>
+		<url-pattern>/worldmodel</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>search</servlet-name>
+		<url-pattern>/search</url-pattern>
+	</servlet-mapping>
+	<resource-ref>
+			<description>DB Connection</description>
+			<res-ref-name>jdbc/worldmodel</res-ref-name>
+			<res-type>javax.sql.DataSource</res-type>
+			<res-auth>Container</res-auth>
+	</resource-ref>
 </web-app>

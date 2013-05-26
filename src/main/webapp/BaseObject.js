@@ -15,7 +15,7 @@ var BaseObject = Class.extend({
 		var id = of.getAttribute("id");
 		var source = of.getAttribute("source");
 		var dest = of.getAttribute("dest");
-		var value = of.innerHTML;
+		var value = of.getAttribute("value");
 		this.objects[id] = new klass(id,type,source,dest,value);
 	},
 	
@@ -65,6 +65,7 @@ var BaseObject = Class.extend({
 		 var xmlText = new XMLSerializer().serializeToString(doc);
 		 var response = Util.xmlPost(xmlText);
 		 this.processResponse(response);
+		 this.unedit();
 	},
 	
 	query : function(id) {

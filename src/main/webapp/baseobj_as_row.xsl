@@ -8,7 +8,7 @@
   						 <xsl:value-of select="@id"/>
   						</td>
   						<td id="{@id}_value">
-  						 <xsl:value-of select="."/>
+  						 <xsl:value-of select="@value"/>
   						</td>
   						<td id="{@id}_type">
   						<a href="javascript:query('{@type}')">
