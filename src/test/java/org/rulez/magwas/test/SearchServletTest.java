@@ -7,7 +7,6 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.rulez.magwas.worldmodel.InputParseException;
 import org.rulez.magwas.worldmodel.SearchServlet;

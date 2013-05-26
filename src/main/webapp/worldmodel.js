@@ -1,148 +1,32 @@
 
-var xsltproc = null;
-var idlist = [];
+ObjectManager = new BaseObject();
 
 
-function xmlPost(xml)
-{
-	  var xmlhttp;
-	  var x,i;
-	  xmlhttp=new XMLHttpRequest();
-	  xmlhttp.open("POST","https://tomcat.realm:8443/worldmodel/worldmodel",false);
-	  xmlhttp.setRequestHeader("Content-type","text/xml;charset=UTF-8");
-	  xmlhttp.send(xml);
-	  xmlDoc=xmlhttp.responseXML;
-	  return xmlDoc;
-}
-
-function xmlGet(xslt)
-{
-	  var xmlhttp;
-	  var x,i;
-	  xmlhttp=new XMLHttpRequest();
-	  xmlhttp.open("GET","https://tomcat.realm:8443/worldmodel/"+xslt,false);
-	  xmlhttp.setRequestHeader("Content-type","text/xml;charset=UTF-8");
-	  xmlhttp.send();
-	  xmlDoc=xmlhttp.responseXML;
-	  return xmlDoc;
-}
-
-function addNodeAttr(node,objid,id) {
-	 e=document.getElementById(objid+'_'+id+'_t').value
-	 node.setAttribute(id,e);
+// the following functions are also the ones a object handler should provide
+function edit(id) {
+	//starts editing a object
+	ObjectManager.getObjectForId(id).edit();
 }
 
 function submit(id) {
-	doc = (new DOMParser()).parseFromString('<root id="root"/>', 'text/xml');
-	 root = doc.documentElement;
-	 bo = doc.createElement("BaseObject");
-	 root.appendChild(bo);
-	 addNodeAttr(bo,id,"id");
-	 addNodeAttr(bo,id,"type");
-	 addNodeAttr(bo,id,"source");
-	 addNodeAttr(bo,id,"dest");
-	 tn=doc.createTextNode("");
-	 e=document.getElementById(id+'_value_t').value
-	 tn.data=e;
-	 bo.appendChild(tn);
-	 var xmlText = new XMLSerializer().serializeToString(doc);
-	 response = xmlPost(xmlText);
-	 newid=document.getElementById(id+'_id_t').value
-	 mytr = document.getElementById(id);
-	 if (newid == id ) {
-		 if(processExceptions(response)) {
-			 mytr.parentNode.replaceChild(xml2Fragment(response),mytr);
-		 } else {
-			 myself = xmlGet("worldmodel?id="+id);
-			 mytr.parentNode.replaceChild(xml2Fragment(myself),mytr);			 
-		 }
-	 } else {
-		 insertRow(response);
-		 myself = xmlGet("worldmodel?id="+id);
-		 mytr.parentNode.replaceChild(xml2Fragment(myself),mytr);
-	 }
-
+	// submits the edited object as new. Reverts the object back to view state.
+	// May create new object based on response.
+	ObjectManager.getObjectForId(id).submit();
 }
 
-function addCellFromId(obj,row,id) {
-	td = document.createElement("td");
-	td.textContent = obj.getAttribute(id);
-	row.appendChild(td);	 
+function unedit(id) {
+	// reverts back the state of the object to view, canceling any unsubmitted edits
+	ObjectManager.getObjectForId(id).unedit();
 }
-
 
 function query(id) {
-	response=xmlGet("worldmodel?id="+id);
-	insertRow(response);
+	// queries/adds/refreshes the object with the given id
+	// FIXME: should be the task of the main handler
+	ObjectManager.query(id);
 }
 
-function search(type,id) {
-	if(idlist.indexOf(id)== -1) {
-		idlist.push(id);		
-	}
-	response=xmlGet("search?"+type+"="+id);
-	insertRow(response);
+function search(key,id) {
+	// searches for all objects where the attribute denoted by key ("type", "source", "dest") is id
+	// FIXME: should be the task of main handler
+	ObjectManager.search(key,id);
 }
-
-function xml2Fragment(response) {
-	if (xsltproc == null) {
-		xsltproc = new XSLTProcessor();;
-		var xsltdoc = xmlGet("baseobj_as_row.xsl");
-		xsltproc.importStylesheet(xsltdoc);
-	}
-	frag = xsltproc.transformToFragment(response,document);
-	return frag;
-}
-
-function processExceptions(response) {
-	 allobjs = response.getElementsByTagName("exception"); 
-	 for ( var i=0; i<allobjs.length;i++ ) {
-		 alert(allobjs[i].textContent);
-	 }
-	 return (allobjs.length == 0)
-}
-function insertRow(response) {
-	table=document.getElementById("table");
-
-	if (processExceptions(response)) {
-		frag = xml2Fragment(response);
-		trs = frag.querySelectorAll("tr");
-		 for ( var i=0; i<trs.length;i++ ) {
-			 newid=trs[i].id;
-			 if(idlist.indexOf(newid) == -1) {
-				 alert(newid);
-				 idlist.push(trs[i].id);
-				 table.appendChild(trs[i]);
-			 }
-		 }
-	}
-
-}
-
-function toedit(objid,id) {
-	fullid = objid+'_'+id;
-	 e=document.getElementById(fullid);
-	 v=e.textContent;
-	 e.textContent=""
-	 input=document.createElement("input");
-	 input.type="text";
-	 input.id=fullid+"_t";
-	 input.value=v;
-	 e.appendChild(input);
-}
-
-function edit(id) {
-	if(idlist.indexOf(id)== -1) {
-		idlist.push(id);		
-	}
-	 toedit(id,"id");
-	 toedit(id,"type");
-	 toedit(id,"value");
-	 toedit(id,"source");
-	 toedit(id,"dest");
-	 but=document.getElementById(id+"_but");
-	 but.type="submit";
-	 but.value="Submit"
-	 but.setAttribute("onclick","javascript:submit('"+id+"')");
-}
-

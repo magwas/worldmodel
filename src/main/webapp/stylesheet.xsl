@@ -7,6 +7,10 @@
 <xsl:template match="/">
 <html>
   		<head>
+  			<script type="text/javascript" src="Class.js"></script>
+  			<script type="text/javascript" src="Util.js"></script>
+  			<script type="text/javascript" src="BaseObject.js"></script>
+  			<script type="text/javascript" src="TableRowObject.js"></script>
   			<script type="text/javascript" src="worldmodel.js"></script>
   			<meta charset='utf-8'/> 
   			<title>World Model</title>
@@ -21,7 +25,11 @@
  		</body>
   	</html>
 </xsl:template>
-
+<xsl:template match="BaseObject">
+	<script>
+		ObjectManager.create('<xsl:value-of select="@id"/>','<xsl:value-of select="@type"/>','<xsl:value-of select="@source"/>','<xsl:value-of select="@dest"/>','<xsl:value-of select="."/>');
+	</script>
+</xsl:template>
 <xsl:template match="@*|*|processing-instruction()|comment()">
     <xsl:copy>
       <xsl:apply-templates select="*|@*|text()|processing-instruction()|comment()"/>
