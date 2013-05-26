@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -97,7 +96,7 @@ public class SearchServlet extends HttpServlet {
 	}
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		/* FIXME: should be type=xxx,source=xxx,dest=xxx ...
+		/* 
 		 * expects zero or more of the following parameters:
 		 *  - type: a composite id as the type of the objects we are looking for
 		 *  - source: a composite id as the source -+-
@@ -122,7 +121,7 @@ public class SearchServlet extends HttpServlet {
 			Query query = createQuery(request, session);
 
 			@SuppressWarnings("unchecked")
-			List<BaseObject> l  = query.list();//FIXME signal if we have more
+			List<BaseObject> l  = query.list();
 			Util.debug("number of items: "+l.size());
 			Document doc = Util.newDocument();
 			Element root = doc.createElement("objects");
@@ -137,7 +136,8 @@ public class SearchServlet extends HttpServlet {
 			}
 			out.print(Util.dom2String(doc));
 		} catch (Exception e) {
-			out.println("<exception>"+e.getMessage()+"\n"+ExceptionUtils.getStackTrace(e)+ "</exception>");//FIXME: stacktrace to debug log, not here
+			out.println("<exception>"+e.getMessage()+"</exception>");
+			Util.logException(e);
 		} 
 
     	tx.commit();

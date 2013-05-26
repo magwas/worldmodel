@@ -16,8 +16,8 @@
 <BaseObject id="follows" type="relation" source="thing" dest="thing"/>
 <!-- TODO(code): We should be able to get away without having all integer < n on database -->
 <BaseObject id="integer" type="thing"/>
-<BaseObject id="Zero" type="integer">0</BaseObject>
-<BaseObject id="One" type="integer">1</BaseObject>
+<BaseObject id="Zero" type="integer" value="0" />
+<BaseObject id="One" type="integer" value="1" />
 <!-- TODO(code): minoccurs, maxoccurs, minreferences and maxreferences should be checked -->
 <BaseObject id="minoccurs" type="quality" dest="integer"/>
 <BaseObject id="maxoccurs" type="quality" dest="integer"/>
@@ -55,26 +55,26 @@
 <BaseObject id="tag_contains_textNode" type="contains" source="tag" dest="textNode"/>
 <BaseObject id="tag_contains_min_0_textNode" type="minoccurs" source="tag_contains_textNode" dest="Zero"/>
 <BaseObject id="htmldocument" type="document"/>
-<BaseObject id="html" type="tag">html</BaseObject>
+<BaseObject id="html" type="tag" value="html" />
 <BaseObject id="htmldocument_contains_html" type="contains" source="htmldocument" dest="html"/>
-<BaseObject id="head" type="tag">head</BaseObject>
+<BaseObject id="head" type="tag" value="head" />
 <BaseObject id="html_contains_head" type="contains" source="html" dest="head"/>
 <BaseObject id="html_contains_max_1_head" type="maxoccurs" source="html_contains_head" dest="One"/>
-<BaseObject id="title" type="tag">title</BaseObject>
+<BaseObject id="title" type="tag" value="title" />
 <BaseObject id="head_contains_title" type="contains" source="head" dest="title"/>
 <BaseObject id="head_contains_max_1_title" type="maxoccurs" source="head_contains_title" dest="One"/>
-<BaseObject id="body" type="tag">body</BaseObject>
+<BaseObject id="body" type="tag" value="body" />
 <BaseObject id="head_contains_body" type="contains" source="head" dest="body"/>
 <BaseObject id="head_contains_max_1_body" type="maxoccurs" source="head_contains_body" dest="One"/>
 <BaseObject id="body_follows_head" type="follows" source="body" dest="head"/>
-<BaseObject id="h1" type="tag">h1</BaseObject>
+<BaseObject id="h1" type="tag" value="h1" />
 <BaseObject id="body_contains_h1" type="contains" source="body" dest="h1"/>
 <BaseObject id="body_contains_min_0_h1" type="minoccurs" source="body_contains_h1" dest="Zero"/>
-<BaseObject id="p" type="tag">p</BaseObject>
+<BaseObject id="p" type="tag" value="p" />
 <BaseObject id="body_contains_p" type="contains" source="body" dest="p"/>
 <BaseObject id="body_contains_min_0_p" type="minoccurs" source="body_contains_p" dest="Zero"/>
-<BaseObject id="a" type="tag">a</BaseObject>
-<BaseObject id="href" type="attribute">href</BaseObject>
+<BaseObject id="a" type="tag" value="a" />
+<BaseObject id="href" type="attribute" value="href" />
 <BaseObject id="my_first_document" type="document"/>
 <BaseObject id="html#1" type="html"/>
 <BaseObject id="my_first_document_containshtml#1" type="contains" source="my_first_document" dest="html#1"/>
@@ -87,10 +87,10 @@
 <BaseObject id="h1#1" type="h1"/>
 <BaseObject id="body#1_contains_h1#1" type="contains" source="body#1" dest="h1#1"/>
 <BaseObject id="p#1_follows_h1#1" type="follows" source="p#1" dest="h1#1"/>
-<BaseObject id="textNode#1" type="textNode">Árvíztűrő egy</BaseObject>
-<BaseObject id="textNode#2" type="textNode">Tükörfúrógép</BaseObject>
+<BaseObject id="textNode#1" type="textNode" value="Árvíztűrő egy" />
+<BaseObject id="textNode#2" type="textNode" value="Tükörfúrógép" />
 <BaseObject id="a#1" type="a"/>
-<BaseObject id="a#1_href" type="href">Árvíztűrő</BaseObject>
+<BaseObject id="a#1_href" type="href" value="Árvíztűrő" />
 <BaseObject id="a#1_contains_a#1_href" type="contains" source="a#1" dest="a#1_href"/>
 <BaseObject id="p#1_contains_textNode#1" type="contains" source="p#1" dest="textNode#1"/>
 <BaseObject id="p#1_contains_textNode#2" type="contains" source="p#1" dest="textNode#2"/>

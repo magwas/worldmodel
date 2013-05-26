@@ -29,7 +29,7 @@ public class SearchServletTest extends TestCase{
 		WorldModelServlet servlet = new WorldModelServlet();
 		MyHttpServletRequest request = new MyHttpServletRequest();
 		MyHttpServletResponse response = new MyHttpServletResponse();
-	    FileInputStream inputStream = new FileInputStream("src/test/resources/searchtest.xml");//FIXME fill it
+	    FileInputStream inputStream = new FileInputStream("src/test/resources/searchtest.xml");
         String objstring = IOUtils.toString(inputStream);
         System.out.println(objstring);
 		request.setInputString(objstring);

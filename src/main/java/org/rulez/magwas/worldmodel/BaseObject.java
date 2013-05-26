@@ -18,8 +18,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.Text;
 
 @Entity
 @Table(name="object")
@@ -83,13 +81,10 @@ public class BaseObject implements Serializable {
 				this.setDest(tobj);
 			}
 		}
-		Node valuenode = node.getFirstChild();
-		if(valuenode != null) {
-			String valuestring = valuenode.getNodeValue();
-			if (!valuestring.equals("")) {
-				Value tobj = Value.getValueByValue(valuestring,session);
-				this.setValue(tobj);
-			}
+		String valuestring = node.getAttribute("value");
+		if (!valuestring.equals("")) {
+			Value tobj = Value.getValueByValue(valuestring,session);
+			this.setValue(tobj);
 		}
 		session.save(this);
 	}
@@ -293,8 +288,7 @@ public class BaseObject implements Serializable {
 		setAttrIf(e,"source",source);
 		setAttrIf(e,"dest",dest);
 		if(value != null) {
-			Text tn = doc.createTextNode(value.getValue());
-			e.appendChild(tn);
+			e.setAttribute("value", value.getValue());
 		}
 		return e;
 	}

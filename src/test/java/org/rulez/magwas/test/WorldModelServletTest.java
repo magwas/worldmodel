@@ -46,8 +46,8 @@ public class WorldModelServletTest {
 
 	@Test
 	public void testDoPostTest1() throws ServletException, IOException {
-		String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xml><BaseObject id=\"idnum\">érték</BaseObject></xml>";
-		String retstring = "<objects><BaseObject id=\"idnum\">érték</BaseObject></objects>";
+		String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xml><BaseObject id=\"idnum\" value=\"érték\"/></xml>";
+		String retstring = "<objects><BaseObject id=\"idnum\" value=\"érték\"/></objects>";
 		WorldModelServlet servlet = new WorldModelServlet();
 		MyHttpServletRequest request = new MyHttpServletRequest();
 		MyHttpServletResponse response = new MyHttpServletResponse();
@@ -58,8 +58,8 @@ public class WorldModelServletTest {
 
 	@Test
 	public void testDoPostMoreObjects() throws ServletException, IOException {
-		String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xml><BaseObject id=\"idnum2\">érték</BaseObject><BaseObject id=\"idnum3\">érték</BaseObject></xml>";
-		String retstring = "<objects><BaseObject id=\"idnum2\">érték</BaseObject><BaseObject id=\"idnum3\">érték</BaseObject></objects>";
+		String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xml><BaseObject id=\"idnum2\" value=\"érték\"/><BaseObject id=\"idnum3\" value=\"érték\"/></xml>";
+		String retstring = "<objects><BaseObject id=\"idnum2\" value=\"érték\"/><BaseObject id=\"idnum3\" value=\"érték\"/></objects>";
 		WorldModelServlet servlet = new WorldModelServlet();
 		MyHttpServletRequest request = new MyHttpServletRequest();
 		MyHttpServletResponse response = new MyHttpServletResponse();
@@ -70,8 +70,8 @@ public class WorldModelServletTest {
 	
 	@Test
 	public void testDoPostTest2() throws ServletException, IOException {
-		String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<xml>\n<BaseObject id=\"harom\">na micsoda?</BaseObject></xml>";
-		String retstring = "<objects><BaseObject id=\"harom\">na micsoda?</BaseObject></objects>";
+		String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<xml>\n<BaseObject id=\"harom\" value=\"na micsoda?\"/></xml>";
+		String retstring = "<objects><BaseObject id=\"harom\" value=\"na micsoda?\"/></objects>";
 		WorldModelServlet servlet = new WorldModelServlet();
 		MyHttpServletRequest request = new MyHttpServletRequest();
 		MyHttpServletResponse response = new MyHttpServletResponse();
@@ -82,8 +82,8 @@ public class WorldModelServletTest {
 
 	@Test
 	public void testDoPostAndGet() throws ServletException, IOException {
-		String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<xml>\n<BaseObject id=\"hehe\">post And Get</BaseObject></xml>";
-		String retstring = "<objects><BaseObject id=\"hehe\">post And Get</BaseObject></objects>";
+		String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<xml>\n<BaseObject id=\"hehe\" value=\"post And Get\"/></xml>";
+		String retstring = "<objects><BaseObject id=\"hehe\" value=\"post And Get\"/></objects>";
 		WorldModelServlet servlet = new WorldModelServlet();
 		MyHttpServletRequest request = new MyHttpServletRequest();
 		MyHttpServletResponse response = new MyHttpServletResponse();
@@ -99,8 +99,8 @@ public class WorldModelServletTest {
 
 	@Test
 	public void testDoPostTestDoubleWrite() throws ServletException, IOException {
-		String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<xml>\n<BaseObject id=\"negy\">negyedik</BaseObject></xml>";
-		String retstring = "<objects><BaseObject id=\"negy\">negyedik</BaseObject></objects>";
+		String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<xml>\n<BaseObject id=\"negy\" value=\"negyedik\"/></xml>";
+		String retstring = "<objects><BaseObject id=\"negy\" value=\"negyedik\"/></objects>";
 		WorldModelServlet servlet = new WorldModelServlet();
 		MyHttpServletRequest request = new MyHttpServletRequest();
 		MyHttpServletResponse response = new MyHttpServletResponse();

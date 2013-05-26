@@ -10,7 +10,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.transform.TransformerException;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -20,7 +19,6 @@ import org.rulez.magwas.worldmodel.Util;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import org.apache.commons.io.IOUtils;
 
@@ -65,13 +63,10 @@ public class WorldModelServlet extends HttpServlet {
 			str = Util.dom2String(outdoc);
 			tx.commit();
 		
-		} catch (SAXException e) {
+		} catch (Exception e) {
 			str = "<exception>"+e.getMessage()+"</exception>";
-		} catch (InputParseException e) {
-			str = "<exception>"+e.getMessage()+"</exception>";
-		} catch (TransformerException e) {
-			str = "<exception>"+e.getMessage()+"</exception>";
-		} 
+			Util.logException(e);
+		}
 		
 		session.close();
 		out.write(str);			
@@ -110,6 +105,7 @@ public class WorldModelServlet extends HttpServlet {
 				out.println( Util.baseObject2String(obj) );
 			} catch (InputParseException e) {
 				out.println("<exception>"+e.getMessage()+"</exception>");
+				Util.logException(e);
 			}
 		} else {
 			out.println("<null>");

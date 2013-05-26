@@ -25,7 +25,6 @@ var BaseObject = Class.extend({
 	},
 	
 	getObjectForId : function(id) {
-		//FIXME: choose from different object handlers when there will be more
 		return this.objects[id];
 	},
 	

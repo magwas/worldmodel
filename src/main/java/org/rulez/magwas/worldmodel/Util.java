@@ -16,6 +16,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
@@ -71,6 +72,12 @@ public class Util {
 		}
 		logger.log(level, what);
 	}
+
+	public static void logException(Exception e) {
+		log(Level.ERROR,"Exception: "+ e.getMessage());
+		log(Level.INFO, "Stack trace: "+ ExceptionUtils.getStackTrace(e));
+	}
+	
 	public static void shutdown() {
     	// Close caches and connection pools
     	sessionFactory.close();
@@ -111,7 +118,6 @@ public class Util {
 	}
 
 	public static String dom2String(Document doc) throws TransformerException {
-		//FIXME is input and output encoding okay
 		DOMSource domSource = new DOMSource(doc);
 		TransformerFactory tFactory = TransformerFactory.newInstance();
 		Transformer transformer = tFactory.newTransformer();
@@ -121,7 +127,7 @@ public class Util {
 		transformer.transform(domSource, new StreamResult(out));
 		return out.toString();
 	}
-	
+
 	public static String baseObject2String(BaseObject obj) {
 		// maybe create an interface
 		
@@ -138,8 +144,10 @@ public class Util {
 		try {
 			return dom2String(doc);
 		} catch (TransformerException e) {
+			logException(e);
 			return "<exception>Transformation failed</exception>";
 		}
 	}
+
 }
 

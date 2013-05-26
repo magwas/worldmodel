@@ -24,8 +24,8 @@ import junit.framework.TestCase;
 public class BaseObjectTest extends TestCase {
 
 	private BaseObject obj;
-	private String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xml><BaseObject id=\"idnum0\">öüŐŰőűÖÜ</BaseObject></xml>";
-	private String outstring = "<objects><BaseObject id=\"idnum0\">öüŐŰőűÖÜ</BaseObject></objects>";
+	private String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xml><BaseObject id=\"idnum0\" value=\"öüŐŰőűÖÜ\"></BaseObject></xml>";
+	private String outstring = "<objects><BaseObject id=\"idnum0\" value=\"öüŐŰőűÖÜ\"/></objects>";
 	private Session session;
 	private Transaction tx;
 	/**
