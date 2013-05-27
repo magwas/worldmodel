@@ -166,10 +166,10 @@ test("processResponse exceptions and objects", function() {
 
 });
 
-test("query", function() {	
+test("search id=...", function() {	
 	checkalert();//should not get an alert yet
 	var numobjs = Object.keys(ObjectManager.objects).length;
-	ObjectManager.query("querytest");
+	ObjectManager.search("id","querytest");
 	equal(Object.keys(ObjectManager.objects).length,numobjs+1);
 	equal(ObjectManager.getObjectForId("worldmodel?id=querytest").id,"worldmodel?id=querytest");
 	equal(ObjectManager.getObjectForId("worldmodel?id=querytest").type,"worldmodel?id=querytestType");
@@ -183,9 +183,9 @@ test("search", function() {
 	var numobjs = Object.keys(ObjectManager.objects).length;
 	ObjectManager.search("type","searchtest");
 	equal(Object.keys(ObjectManager.objects).length,numobjs+1);
-	equal(ObjectManager.getObjectForId("search?type=searchtest").id,"search?type=searchtest");
-	equal(ObjectManager.getObjectForId("search?type=searchtest").type,"search?type=searchtestType");
-	equal(ObjectManager.getObjectForId("search?type=searchtest").source,null);
-	equal(ObjectManager.getObjectForId("search?type=searchtest").dest,null);
-	equal(ObjectManager.getObjectForId("search?type=searchtest").value,null);
+	equal(ObjectManager.getObjectForId("worldmodel?type=searchtest").id,"worldmodel?type=searchtest");
+	equal(ObjectManager.getObjectForId("worldmodel?type=searchtest").type,"worldmodel?type=searchtestType");
+	equal(ObjectManager.getObjectForId("worldmodel?type=searchtest").source,null);
+	equal(ObjectManager.getObjectForId("worldmodel?type=searchtest").dest,null);
+	equal(ObjectManager.getObjectForId("worldmodel?type=searchtest").value,null);
 });

@@ -55,7 +55,7 @@ var TableRowObject = BaseObject.extend({
 		row.appendChild(td);
 		if ( attname != "id" ) {
 			var a = document.createElement("a");
-			a.setAttribute("href","javascript:query('"+this[attname]+"')");
+			a.setAttribute("href","javascript:search('id','"+this[attname]+"')");
 			a.textContent = this[attname];
 			td.appendChild(a);
 			var a2 = document.createElement("a");
@@ -69,7 +69,6 @@ var TableRowObject = BaseObject.extend({
 
 	addNodeAttr : function(node,fieldname) {
 		// gathers the field value and sets it as the fieldname attribute of node
-		// value is treated specially FIXME: value should be an attribute as well
 		var e = document.getElementById(this.id+'_'+fieldname+'_t').value
 		node.setAttribute(fieldname,e);
 	},

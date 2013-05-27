@@ -104,6 +104,7 @@ public class BaseObject implements Serializable {
 		return r;
 		
 	}
+	
 	public static BaseObject getBaseObjectByCompositeId(String cidstring, Session session) throws InputParseException {
 		List<String> r = parseCompositeId(cidstring);
 

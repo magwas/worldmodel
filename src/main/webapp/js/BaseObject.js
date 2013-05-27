@@ -41,16 +41,7 @@ var BaseObject = Class.extend({
 			this.fragToObjectAutomatic(trs[i]);
 		}
 	},
-	
-	query : function(id) {//FIXME: query and search should be integrated both on client and server
-		response = Util.xmlGet("worldmodel?id="+this.id);
-		var obfrags = response.getElementsByTagName("BaseObject");
-		for ( var i=0; i<obfrags.length;i++ ) {
-			var of = obfrags[i];
-			this.fragToObjectAutomatic(of);
-		}
-	},
-	
+		
 	submit : function() {
 		 var doc = (new DOMParser()).parseFromString('<root id="root"/>', 'text/xml');
 		 var root = doc.documentElement;
@@ -66,14 +57,9 @@ var BaseObject = Class.extend({
 		 this.processResponse(response);
 		 this.unedit();
 	},
-	
-	query : function(id) {
-		var response = Util.xmlGet("worldmodel?id="+id);
-		this.processResponse(response);
-	},
-	
+		
 	search : function(type,id) {
-		var response = Util.xmlGet("search?"+type+"="+id);
+		var response = Util.xmlGet("worldmodel?"+type+"="+id);
 		this.processResponse(response);
 	},
 });

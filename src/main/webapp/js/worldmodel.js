@@ -19,15 +19,8 @@ function unedit(id) {
 	ObjectManager.getObjectForId(id).unedit();
 }
 
-function query(id) {
-	// queries/adds/refreshes the object with the given id
-	// FIXME: should be the task of the main handler
-	ObjectManager.query(id);
-}
-
 function search(key,id) {
 	// searches for all objects where the attribute denoted by key ("type", "source", "dest") is id
-	// FIXME: should be the task of main handler
 	alert(key);
 	ObjectManager.search(key,id);
 }
