@@ -35,15 +35,14 @@ var BaseObject = Class.extend({
 	
 	processResponse : function(response) {
 		// processes a response from the server
-		if (Util.processExceptions(response)) {
-			var trs = response.querySelectorAll("BaseObject");
-			for ( var i=0; i<trs.length;i++ ) {
-				this.fragToObjectAutomatic(trs[i]);
-			}
+		Util.processExceptions(response);
+		var trs = response.querySelectorAll("BaseObject");
+		for ( var i=0; i<trs.length;i++ ) {
+			this.fragToObjectAutomatic(trs[i]);
 		}
 	},
 	
-	query : function(id) {
+	query : function(id) {//FIXME: query and search should be integrated both on client and server
 		response = Util.xmlGet("worldmodel?id="+this.id);
 		var obfrags = response.getElementsByTagName("BaseObject");
 		for ( var i=0; i<obfrags.length;i++ ) {
@@ -69,14 +68,14 @@ var BaseObject = Class.extend({
 	},
 	
 	query : function(id) {
-		response = Util.xmlGet("worldmodel?id="+id);
+		var response = Util.xmlGet("worldmodel?id="+id);
 		this.processResponse(response);
 	},
 	
 	search : function(type,id) {
-		response = Util.xmlGet("search?"+type+"="+id);
+		var response = Util.xmlGet("search?"+type+"="+id);
 		this.processResponse(response);
 	},
-},"singleton");
+});
 
 

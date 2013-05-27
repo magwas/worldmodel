@@ -12,7 +12,7 @@ Util.xsltproc = null;
 Util.xmlPost = function(xml) {
 	var xmlhttp;
 	xmlhttp=new XMLHttpRequest();
-	xmlhttp.open("POST","https://tomcat.realm:8443/worldmodel/worldmodel",false);
+	xmlhttp.open("POST","/worldmodel/worldmodel",false);
 	xmlhttp.setRequestHeader("Content-type","text/xml;charset=UTF-8");
 	xmlhttp.send(xml);
 	xmlDoc=xmlhttp.responseXML;
@@ -22,13 +22,13 @@ Util.xmlPost = function(xml) {
 Util.xmlGet = function(uriend) {
 	var xmlhttp;
 	xmlhttp=new XMLHttpRequest();
-	xmlhttp.open("GET","https://tomcat.realm:8443/worldmodel/"+uriend,false);
+	xmlhttp.open("GET","/worldmodel/"+uriend,false);
 	xmlhttp.setRequestHeader("Content-type","text/xml;charset=UTF-8");
 	xmlhttp.send();
 	xmlDoc=xmlhttp.responseXML;
 	return xmlDoc;
 };
-
+/*
 Util.xml2Fragment = function(response) {
 	if (Util.xsltproc == null) {
 		Util.xsltproc = new XSLTProcessor();;
@@ -38,9 +38,10 @@ Util.xml2Fragment = function(response) {
 	frag = Util.xsltproc.transformToFragment(response,document);
 	return frag;
 }
+*/
 
 Util.processExceptions = function(response) {
-	allobjs = response.getElementsByTagName("exception"); 
+	var allobjs = response.getElementsByTagName("exception"); 
 	for ( var i=0; i<allobjs.length;i++ ) {
 		 alert(allobjs[i].textContent);
 	}
