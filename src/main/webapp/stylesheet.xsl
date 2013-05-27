@@ -5,11 +5,11 @@
 <xsl:template match="/">
 <html>
   		<head>
-  			<script type="text/javascript" src="Class.js"></script>
-  			<script type="text/javascript" src="Util.js"></script>
-  			<script type="text/javascript" src="BaseObject.js"></script>
-  			<script type="text/javascript" src="TableRowObject.js"></script>
-  			<script type="text/javascript" src="worldmodel.js"></script>
+  			<script type="text/javascript" src="js/Class.js"></script>
+  			<script type="text/javascript" src="js/Util.js"></script>
+  			<script type="text/javascript" src="js/BaseObject.js"></script>
+  			<script type="text/javascript" src="js/TableRowObject.js"></script>
+  			<script type="text/javascript" src="js/worldmodel.js"></script>
   			<meta charset='utf-8'/> 
   			<title>World Model</title>
   		</head>

@@ -28,5 +28,6 @@ function query(id) {
 function search(key,id) {
 	// searches for all objects where the attribute denoted by key ("type", "source", "dest") is id
 	// FIXME: should be the task of main handler
+	alert(key);
 	ObjectManager.search(key,id);
 }

@@ -1,21 +1,5 @@
-
 function setUp() {
-	QUnit.config.noglobals = true;//FIXME: it does not work, check for noglobals by hand
 	ObjectManager = new BaseObject();
-	alerttext = "";
-	alert = function (str) {
-		alerttext += str;
-	};
-	clearalert = function() {
-		alerttext = "";
-	};
-	checkalert = function(str) {
-		if (str == null) {
-			str ="";
-		}
-		equal(alerttext,str,"Alert check");
-		clearalert();
-	};
 };
 
 setUp();

@@ -64,9 +64,16 @@ page.open(system.args[1], function(status){
         }, function(){
             var failedNum = page.evaluate(function(){
                 var el = document.getElementById('qunit-testresult');
+                console.log('<html><head><link rel="stylesheet" href="qunit.css"></head><body>');
                 console.log(el.innerText);
+                var failed = document.querySelectorAll(".fail");
+                for ( var i=0; i<failed.length;i++ ) {
+                  console.log("failed: "+ failed[i].innerHTML);
+                }
+                console.log("</body></html");
                 try {
-                    return el.getElementsByClassName('failed')[0].innerHTML;
+                    var failed = el.getElementsByClassName('failed')[0].innerHTML;
+                    return failed;
                 } catch (e) { }
                 return 10000;
             });
