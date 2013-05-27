@@ -1,5 +1,5 @@
 Util.xmlPost = function(xml) {
-	var doc = (new DOMParser()).parseFromString(xml);
+	var doc = (new DOMParser()).parseFromString(xml,'text/xml');
 	return doc;
 }
 

@@ -76,13 +76,13 @@ var TableRowObject = BaseObject.extend({
 
 	toedit : function(attname) {
 		// turns a display row to an entry row
-		var fullid = this.id+'_'+attname;
+		var fullid = this.id + '_' + attname;
 		var e = document.getElementById(fullid);
 		e.textContent = ""
-		input=document.createElement("input");
-		input.type="text";
-		input.id=fullid+"_t";
-		input.value=this[attname];
+		var input = document.createElement("input");
+		input.type = "text";
+		input.id = fullid + "_t";
+		input.value = this[attname];
 		e.appendChild(input);
 	},
 
@@ -92,14 +92,14 @@ var TableRowObject = BaseObject.extend({
 		this.toedit("value");
 		this.toedit("source");
 		this.toedit("dest");
-		but=document.getElementById(this.id+"_but");
-		but.type="submit";
-		but.value="Submit"
-		but.setAttribute("onclick","javascript:submit('"+this.id+"')");
-		but2=document.createElement("input");
-		but2.type="submit";
-		but2.value="Cancel";
-		but2.setAttribute("onclick","javascript:unedit('"+this.id+"')");
+		var but = document.getElementById(this.id + "_but");
+		but.type = "submit";
+		but.value = "Submit"
+		but.setAttribute("onclick","javascript:submit('" + this.id + "')");
+		var but2 = document.createElement("input");
+		but2.type = "submit";
+		but2.value = "Cancel";
+		but2.setAttribute("onclick","javascript:unedit('" + this.id + "')");
 		but.parentNode.appendChild(but2);
 	},
 })
