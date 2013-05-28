@@ -1,19 +1,37 @@
+
+// testcases can set the test data for "server result" here.
+Util.xmlAnswers = null;
+Util.xmlAnsNo = 0;
+
 Util.xmlPost = function(xml) {
-	var doc = (new DOMParser()).parseFromString(xml,'text/xml');
-	return doc;
+	if(Util.xmlnAswers == null) {
+		var doc = (new DOMParser()).parseFromString(xml,'text/xml');
+		return doc;
+	} else {
+		doc = Util.xmlAnswers[Util.xmlAnsNo];
+		Util.xmlAnsNo ++;
+		return doc
+	}
 }
 
 Util.xmlGet = function(uriend) {
-	var doc = (new DOMParser()).parseFromString('<objects>\
-			<BaseObject id=\"'+ uriend+ '\" type=\"'+uriend+'Type\"></BaseObject>\
-			</objects>', 'text/xml')
-	return doc;
+	if(Util.xmlAnswers == null) {
+		var doc = (new DOMParser()).parseFromString('<objects>\
+				<BaseObject id=\"'+ uriend+ '\" type=\"'+uriend+'Type\"></BaseObject>\
+				</objects>', 'text/xml')
+		return doc;
+	} else {
+		doc = Util.xmlAnswers[Util.xmlAnsNo];		Util.xmlAnsNo ++;
+		return doc
+	}
 };
 
-	QUnit.config.noglobals = true;//FIXME: it does not work, check for noglobals by hand
+QUnit.config.noglobals = true;//FIXME: it does not work, check for noglobals by hand
 
 alerttext = "";
+oldalert = alert
 alert = function (str) {
+	//oldalert(str);
 	alerttext += str;
 };
 clearalert = function() {

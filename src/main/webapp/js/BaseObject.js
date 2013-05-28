@@ -40,6 +40,10 @@ var BaseObject = Class.extend({
 		for ( var i=0; i<trs.length;i++ ) {
 			this.fragToObjectAutomatic(trs[i]);
 		}
+		var continues = response.querySelectorAll("continues").length;
+		if(continues) {
+			this.search(this.currentSearchQuery,this.currentSearchOffset+trs.length);
+		}
 	},
 		
 	submit : function() {
@@ -58,8 +62,13 @@ var BaseObject = Class.extend({
 		 this.unedit();
 	},
 		
-	search : function(type,id) {
-		var response = Util.xmlGet("worldmodel?"+type+"="+id);
+	search : function(query,offset) {//FIXME parameters changed!
+		this.currentSearchQuery = query;
+		this.currentSearchOffset = offset;
+		if(offset != null ) {
+			query += "&offset="+offset;
+		}
+		var response = Util.xmlGet(query);
 		this.processResponse(response);
 	},
 });
