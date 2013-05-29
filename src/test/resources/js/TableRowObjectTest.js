@@ -13,10 +13,10 @@ test( "TableRowObject.init, edit, unedit (handleObject (addCell))", function() {
 	var doc = (new DOMParser()).parseFromString(
 			"<tr id=\"TRO1\">" +
 				"<td id=\"TRO1_id\">TRO1</td>" +
-				"<td id=\"TRO1_value\"><a href=\"javascript:search('id','TRO1Value')\">TRO1Value</a><a href=\"javascript:search('value','TRO1')\">+</a></td>" +
-				"<td id=\"TRO1_type\"><a href=\"javascript:search('id','TRO1Type')\">TRO1Type</a><a href=\"javascript:search('type','TRO1')\">+</a></td>" +
-				"<td id=\"TRO1_source\"><a href=\"javascript:search('id','TRO1Source')\">TRO1Source</a><a href=\"javascript:search('source','TRO1')\">+</a></td>" +
-				"<td id=\"TRO1_dest\"><a href=\"javascript:search('id','TRO1Dest')\">TRO1Dest</a><a href=\"javascript:search('dest','TRO1')\">+</a></td>" +
+				"<td id=\"TRO1_value\"><a href=\"javascript:search('id=TRO1Value')\">TRO1Value</a><a href=\"javascript:search('value=TRO1')\">+</a></td>" +
+				"<td id=\"TRO1_type\"><a href=\"javascript:search('id=TRO1Type')\">TRO1Type</a><a href=\"javascript:search('type=TRO1')\">+</a></td>" +
+				"<td id=\"TRO1_source\"><a href=\"javascript:search('id=TRO1Source')\">TRO1Source</a><a href=\"javascript:search('source=TRO1')\">+</a></td>" +
+				"<td id=\"TRO1_dest\"><a href=\"javascript:search('id=TRO1Dest')\">TRO1Dest</a><a href=\"javascript:search('dest=TRO1')\">+</a></td>" +
 				"<td><input onclick=\"javascript:edit('TRO1')\" value=\"Edit\" id=\"TRO1_but\" type=\"submit\"/></td>" +
 			"</tr>",
 			 'text/xml');

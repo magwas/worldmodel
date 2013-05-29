@@ -3,7 +3,7 @@
 Util.xmlAnswers = null;
 Util.xmlAnsNo = 0;
 
-Util.xmlPost = function(xml) {
+Util.xmlPost = function(xml) {//FIXME: what about a local edit mode using this, a "save to file", and a "submit from file"
 	if(Util.xmlnAswers == null) {
 		var doc = (new DOMParser()).parseFromString(xml,'text/xml');
 		return doc;
@@ -26,7 +26,7 @@ Util.xmlGet = function(uriend) {
 	}
 };
 
-QUnit.config.noglobals = true;//FIXME: it does not work, check for noglobals by hand
+//QUnit.config.noglobals = true;//FIXME: it does not work, check for noglobals by hand
 
 alerttext = "";
 oldalert = alert

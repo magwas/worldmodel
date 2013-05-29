@@ -46,6 +46,14 @@ var BaseObject = Class.extend({
 		}
 	},
 		
+	addNodeAttr : function(node,fieldname) {
+		// gathers the field value and sets it as the fieldname attribute of node
+		var e = this.getDataFor(node,fieldname);
+		if(e != "") {
+			node.setAttribute(fieldname,e);
+		}
+	},
+
 	submit : function() {
 		 var doc = (new DOMParser()).parseFromString('<root id="root"/>', 'text/xml');
 		 var root = doc.documentElement;

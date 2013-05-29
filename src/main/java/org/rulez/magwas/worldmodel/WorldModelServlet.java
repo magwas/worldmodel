@@ -179,7 +179,7 @@ public class WorldModelServlet extends HttpServlet {
 
 		 *  returns an xml containing BaseObjects corresponding to the query, ordered by physid.
 		 *  Returns at most 25 objects.
-		 *  If there are more objects to retrieve, a <continues/> tag is added. //FIXME unit test it in JS.
+		 *  If there are more objects to retrieve, a <continues/> tag is added.
 		 */
 		
 		response.setCharacterEncoding("UTF-8");

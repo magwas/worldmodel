@@ -19,8 +19,7 @@ function unedit(id) {
 	ObjectManager.getObjectForId(id).unedit();
 }
 
-function search(key,id) {
+function search(request) {
 	// searches for all objects where the attribute denoted by key ("type", "source", "dest") is id
-	alert(key);
-	ObjectManager.search(key,id);
+	ObjectManager.search(request);
 }
