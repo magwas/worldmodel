@@ -1,0 +1,36 @@
+@CHARSET "UTF-8";
+
+#menu {
+	background: red;
+	height: 20px;
+}
+
+#navigator {
+	background: yellow;
+	width: 20%;
+	top: 20px;
+	height: 80%;
+	float: left;
+}
+
+#browser {
+	background: green;
+	width: 60%;
+	height: 60%;
+	top: 20px;
+	left: 20%;
+	float:left;
+}
+
+#inspector {
+	background: blue;
+	width: 80%;
+	top: 65%;
+	float: left;
+}
+.tablebrowser table {
+	width: 100%;	
+}
+.tablebrowser input {
+	width: 100%;	
+}

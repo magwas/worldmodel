@@ -7,19 +7,28 @@
   		<head>
   			<script type="text/javascript" src="js/Class.js"></script>
   			<script type="text/javascript" src="js/Util.js"></script>
+  			<script type="text/javascript" src="../../test/resources/js/TestUtil.js"></script>
   			<script type="text/javascript" src="js/BaseObject.js"></script>
   			<script type="text/javascript" src="js/TableRowObject.js"></script>
   			<script type="text/javascript" src="js/worldmodel.js"></script>
+  			<link rel="stylesheet" href="worldmodel.css"></link>
   			<meta charset='utf-8'/> 
   			<title>World Model</title>
   		</head>
   		<body>
-  			<table id="table">
-  				<tr>
-  					<th>id</th><th>value</th><th>type</th><th>src</th><th>dest</th><th></th>
-  				</tr>
-  				<xsl:apply-templates select=".//BaseObject"/>
-  			</table>
+  			<div id="menu">menu comes here</div>
+  			<div id="navigator">navigator comes here</div>
+  			<div id="browser">
+  				<div id="browser.table" class="tablebrowser">
+		  			<table id="table">
+	  					<tr>
+	  						<th>id</th><th>value</th><th>type</th><th>src</th><th>dest</th><th></th>
+	  					</tr>
+	  					<xsl:apply-templates select=".//BaseObject"/>
+	  				</table>
+  				</div>
+  			</div>
+  			<div id="inspector">inspector view comes here</div>
  		</body>
   	</html>
 </xsl:template>
