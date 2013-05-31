@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+
+	<title>Theme Previewer</title>
+
+<!--
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dijit/themes/claro/document.css"/>
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dijit/themes/claro/claro.css"/>
+
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dojo/dojo.js"
+		data-dojo-config="parseOnLoad: false, async:true"></script>
+-->
+
+	<link rel="stylesheet" href="js/dijit/themes/claro/document.css"/>
+	<link rel="stylesheet" href="js/dijit/themes/claro/claro.css"/>
+
+	<script type="text/javascript" src="js/dojo/dojo.js"
+		data-dojo-config="parseOnLoad: false, async:true"></script>
+	<link rel="stylesheet" href="demo.css"/>
+	<script type="text/javascript" src="src.js"></script>
+</head>
+<body class="claro">
+	<!-- basic preloader: -->
+	<div id="loader"><div id="loaderInner" style="direction:ltr;white-space:nowrap;overflow:visible;">Loading ... </div></div>
+
+  <!-- context menu -->
+	<div data-dojo-type="dijit.Menu" id="submenu1" data-dojo-props='contextMenuForWindow:true, style:"display:none"' style="display: none;">
+		<div data-dojo-type="dijit.MenuItem" data-dojo-props="disabled:true">Disabled Item</div>
+		<div data-dojo-type="dijit.MenuSeparator"></div>
+	</div>
+	<!-- end contextMenu -->
+
+	<div id="main" data-dojo-type="dijit.layout.BorderContainer" data-dojo-props="liveSplitters:false, design:'sidebar'">
+
+		<div id="header" data-dojo-type="dijit.MenuBar" data-dojo-props="region:'top'">
+			<div data-dojo-type="dijit.PopupMenuBarItem" id="edit">
+				<span>Edit</span>
+				<div data-dojo-type="dijit.Menu" id="editMenu">
+			    <div data-dojo-type="dijit.MenuItem" data-dojo-props="onClick: showDialog">slow loading</div>
+					<div data-dojo-type="dijit.MenuItem" id="cut" data-dojo-props="
+						iconClass:'dijitIconCut'
+					">Cut</div>
+					<div data-dojo-type="dijit.MenuItem" id="copy" data-dojo-props="
+						iconClass:'dijitIconCopy'
+					">Copy</div>
+					<div data-dojo-type="dijit.MenuItem" id="paste" data-dojo-props="iconClass:'dijitIconPaste'">Paste</div>
+					<div data-dojo-type="dijit.MenuSeparator" id="separator"></div>
+					<div data-dojo-type="dijit.MenuItem" id="undo" data-dojo-props="iconClass:'dijitIconUndo'">Undo</div>
+				</div>
+			</div>
+		</div>
+
+		<div data-dojo-type="dijit.layout.AccordionContainer" data-dojo-props="region:'leading', splitter:true, minSize:20"
+			style="width: 300px;" id="leftAccordion">
+
+			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Tree"'>
+				<!-- tree widget -->
+				<div data-dojo-type="dijit.Tree" 
+					data-dojo-props="model: continentModel, query:{ type:'continent'}, label:'Continents', openOnClick:true"
+				></div>
+			</div>
+
+		</div><!-- end AccordionContainer -->
+
+		<!-- top tabs (marked as "center" to take up the main part of the BorderContainer) -->
+		<div data-dojo-type="dijit.layout.TabContainer" data-dojo-props="region:'center', tabStrip:true" id="topTabs">
+
+			<div id="basicFormTab" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:'Basic Form Widgets', style:'padding:10px;display:none;'">
+
+				<h2>Buttons</h2>
+				<p>Buttons can do an action, display a menu, or both:</p>
+
+				Enabled:
+
+				<button data-dojo-type="dijit.form.Button" data-dojo-props="iconClass:'dijitIconTask'">
+					Simple
+				</button>
+
+			</div><!-- end of Editor tab -->
+
+
+		</div><!-- end of region="center" TabContainer -->
+
+		<!-- bottom right tabs -->
+		<div data-dojo-type="dijit.layout.TabContainer" id="bottomTabs"
+			data-dojo-props="
+				tabPosition:'bottom', selectedchild:'btab1', region:'bottom',
+				splitter:true, tabStrip:true
+			">
+			<!-- btab 1 -->
+			<div id="btab1" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Info", style:" padding:10px; "'>
+				<p>You can explore this single page after applying a Theme
+				for use in creation of your own theme.</p>
+
+				<p>There is a right-click [context] pop-up menu here, as well.</p>
+			</div><!-- end:info btab1 -->
+
+		</div><!-- end Bottom TabContainer -->
+
+	</div><!-- end of BorderContainer -->
+
+	<!-- dialog in body -->
+	<div id="dialogAB" data-dojo-type="dijit.Dialog" data-dojo-props="title:'Floating Modal Dialog'" style="display:none;">
+		<div class="dijitDialogPaneContentArea">
+			<table>
+				<tr>
+					<td><label for="name">Name: </label></td>
+					<td><input data-dojo-type="dijit.form.TextBox" type="text" name="name" id="name"></td>
+				</tr>
+				<tr>
+					<td><label for="loc">Location: </label></td>
+					<td><input data-dojo-type="dijit.form.TextBox" type="text" name="loc" id="loc"></td>
+				</tr>
+				<tr>
+					<td><label for="date">Date: </label></td>
+					<td><input data-dojo-type="dijit.form.DateTextBox" type="text" name="date" id="date"></td>
+				</tr>
+			</table>
+		</div>
+		
+		<div class="dijitDialogPaneActionBar">
+			<button data-dojo-type="dijit.form.Button" type="submit" id="ABdialog1button1">OK</button>
+			<button data-dojo-type="dijit.form.Button" type="button" data-dojo-props="onClick:function(){ dijit.byId('dialogAB').onCancel(); }" 
+					id="ABdialog1button2">Cancel</button>
+		</div>
+	</div>
+
+</body>
+</html>
+
