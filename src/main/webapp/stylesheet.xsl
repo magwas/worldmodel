@@ -4,38 +4,75 @@
 
 <xsl:template match="/">
 <html>
-  		<head>
-  			<script type="text/javascript" src="js/Class.js"></script>
-  			<script type="text/javascript" src="js/Util.js"></script>
-  			<script type="text/javascript" src="../../test/resources/js/TestUtil.js"></script>
-  			<script type="text/javascript" src="js/BaseObject.js"></script>
-  			<script type="text/javascript" src="js/TableRowObject.js"></script>
-  			<script type="text/javascript" src="js/worldmodel.js"></script>
-  			<link rel="stylesheet" href="worldmodel.css"></link>
-  			<meta charset='utf-8'/> 
-  			<title>World Model</title>
-  		</head>
-  		<body>
-  			<div id="menu">menu comes here</div>
-  			<div id="navigator">navigator comes here</div>
-  			<div id="browser">
-  				<div id="browser.table" class="tablebrowser">
-		  			<table id="table">
-	  					<tr>
-	  						<th>id</th><th>value</th><th>type</th><th>src</th><th>dest</th><th></th>
-	  					</tr>
-	  					<xsl:apply-templates select=".//BaseObject"/>
-	  				</table>
-  				</div>
-  			</div>
-  			<div id="inspector">inspector view comes here</div>
- 		</body>
-  	</html>
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+
+	<title>The Thing</title>
+
+
+	<script type="text/javascript" src="js/Util.js"></script>
+	<link rel="stylesheet" href="js/dijit/themes/claro/document.css"/>
+	<link rel="stylesheet" href="js/dijit/themes/claro/claro.css"/>
+	<script type="text/javascript" src="js/dojo/dojo.js"
+		data-dojo-config="parseOnLoad: false, async:true"></script>
+	<link rel="stylesheet" href="demo.css"/>
+	<script type="text/javascript" src="js/main.js"></script>
+	<script>
+	<xsl:apply-templates select=".//BaseObject"/>
+	</script>
+</head>
+<body class="claro">
+	<!-- basic preloader: -->
+	<div id="loader"><div id="loaderInner" style="direction:ltr;white-space:nowrap;overflow:visible;">Loading ... </div></div>
+
+  <!-- context menu -->
+	<div data-dojo-type="dijit.Menu" id="submenu1" data-dojo-props='contextMenuForWindow:true, style:"display:none"' style="display: none;">
+		<div data-dojo-type="dijit.MenuItem" data-dojo-props="disabled:true">Disabled Item</div>
+		<div data-dojo-type="dijit.MenuSeparator"></div>
+	</div>
+	<!-- end contextMenu -->
+
+  <!-- main menu -->
+	<div id="main" data-dojo-type="dijit.layout.BorderContainer" data-dojo-props="liveSplitters:false, design:'sidebar'">
+		<div id="header" data-dojo-type="dijit.MenuBar" data-dojo-props="region:'top'">
+			<div data-dojo-type="dijit.PopupMenuBarItem" id="edit">
+				<span>Edit</span>
+				<div data-dojo-type="dijit.Menu" id="editMenu">
+					<div data-dojo-type="dijit.MenuItem" id="undo" data-dojo-props="iconClass:'dijitIconUndo'">Undo</div>
+				</div>
+			</div>
+		</div>
+  <!-- end main menu -->
+
+  <!-- navigators -->
+		<div data-dojo-type="dijit.layout.AccordionContainer" data-dojo-props="region:'leading', splitter:true, minSize:20"
+			style="width: 300px;" id="navigatorArea">
+		</div>
+  <!-- end navigators -->
+
+  <!-- browsers -->
+		<!-- top tabs (marked as "center" to take up the main part of the BorderContainer) -->
+		<div data-dojo-type="dijit.layout.TabContainer" data-dojo-props="region:'center', tabStrip:true" id="browserArea">
+		</div><!-- end of region="center" TabContainer -->
+  <!-- browsers -->
+
+		<!-- bottom right tabs -->
+		<div data-dojo-type="dijit.layout.TabContainer" id="inspectorArea"
+			data-dojo-props="
+				tabPosition:'bottom', region:'bottom',
+				splitter:true, tabStrip:true
+			">
+		</div><!-- end Bottom TabContainer -->
+
+	</div><!-- end of BorderContainer -->
+	
+
+</body>
+</html>
+
 </xsl:template>
 <xsl:template match="BaseObject">
-	<script>
-		ObjectManager.create('<xsl:value-of select="@id"/>','<xsl:value-of select="@type"/>','<xsl:value-of select="@source"/>','<xsl:value-of select="@dest"/>','<xsl:value-of select="@value"/>');
-	</script>
+		obManager.create('<xsl:value-of select="@id"/>','<xsl:value-of select="@type"/>','<xsl:value-of select="@source"/>','<xsl:value-of select="@dest"/>','<xsl:value-of select="@value"/>');
 </xsl:template>
 <xsl:template match="@*|*|processing-instruction()|comment()">
     <xsl:copy>

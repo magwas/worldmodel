@@ -23,12 +23,10 @@ Util.xmlPost = function(xml) {
 Util.xmlGet = function(uriend) {
 	var xmlhttp;
 	xmlhttp=new XMLHttpRequest();
-	alert(uriend);
-	xmlhttp.open("GET","/worldmodel/worldmodel"+uriend,false);
+	xmlhttp.open("GET","/worldmodel/worldmodel?"+uriend,false);
 	xmlhttp.setRequestHeader("Content-type","text/xml;charset=UTF-8");
 	xmlhttp.send();
 	xmlDoc=xmlhttp.responseXML;
-	alert(xmlDoc);
 	return xmlDoc;
 };
 

@@ -17,9 +17,11 @@ html, body {
 	margin: 0;
 }
 #navigatorArea {
+	overflow: auto;
 	width: 25%;
 }
 #inspectorArea {
+	overflow: auto;
 	height: 40%;
 }
 #hs-1width {

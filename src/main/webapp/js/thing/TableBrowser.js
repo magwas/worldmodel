@@ -24,6 +24,7 @@ define([
         	 this.domNode.innerHTML = "<div><table width=\"100%\"><tr><td>id</td><td>name</td><td>value</td><td>type</td><td>source</td><td>dest</td></tr></table></div>";
         	 this.table = this.domNode.children[0].children[0]
         	 var objs = ObjectManager.query();
+        	 objs.observe();
         	 for(var i=0 ; i<objs.length; i++) {
         		 this.handleObject(objs[i]);
         	 }
@@ -39,7 +40,9 @@ define([
      	},
      });
 
-     ready(function(){//FIXME is it reached?
+/*
+      ready(function(){//FIXME is it reached?
          parser.parse();
      });
+*/
  });

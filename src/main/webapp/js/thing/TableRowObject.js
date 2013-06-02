@@ -19,12 +19,12 @@ define([
  			if ( attname != "id" && attname != "name") {
  				if(this.obj[attname] != null) {
  					var a = document.createElement("a");
- 					a.setAttribute("href","javascript:search('id="+this.obj[attname]+"')");
+ 					a.setAttribute("href","javascript:dojo.ObjectManager.search('id="+this.obj[attname]+"')");
  					a.textContent = this.obj[attname];
  					td.appendChild(a);
  				}
  				var a2 = document.createElement("a");
- 				a2.setAttribute("href","javascript:search('"+attname+"="+this.obj.id+"')");
+ 				a2.setAttribute("href","javascript:dojo.ObjectManager.search('"+attname+"="+this.obj.id+"')");
  				a2.textContent = "+";
  				td.appendChild(a2);
  			} else {
@@ -89,7 +89,7 @@ define([
     		this.domNode.appendChild(td);
          },
          getDataFor : function(attname) {
-        	 e = document.getElementById(this.obj.id+"_"+attname + "_t");
+        	 var e = document.getElementById(this.obj.id+"_"+attname + "_t");
         	 return  e.value;
          },
          unedit: function() {

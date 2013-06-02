@@ -5,7 +5,7 @@ define([
      	"dojo/_base/lang",
      	"thing/BaseObject"
   ], function(Memory,Observable,declare,lang,BaseObject){
-	return Observable(new declare("thing.ObjectManager",Memory,{
+	var om = Observable(new declare("thing.ObjectManager",Memory,{
 		data: [],
 		handlers: [],
 	    getChildren: function(object) {
@@ -61,6 +61,19 @@ define([
 			var l = this.query({id: id})
 			if(l.length > 1) { throw "internal error" }
 			return l[0];
+		},
+		getChildren: function(object) {
+			var q = this.query({type: object.id});
+			if(q.length == 0) {
+				q.observe();
+				this.search("type="+object.id);
+			}
+			return q
+		},
+		create: function(id, type, src, dest, value) {
+			this.put(new BaseObject({id: id, type: type, value: value, source: src, dest: dest}),{overwrite: true});			
 		}
 	})())
+	dojo.ObjectManager = om;
+	return om
 });
