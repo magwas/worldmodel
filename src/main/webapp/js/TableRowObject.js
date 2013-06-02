@@ -2,6 +2,18 @@
  * Object handler utilizing table rows
  */
 
+require([
+		"dojo/dom"
+		], function(dom) {
+	dojo.declare("thing.TableManager",null,{
+		constructor: function() {
+			table=document.createElement("table");
+			dom.
+		}
+	});
+	
+})
+
 var TableRowObject = BaseObject.extend({
 
 	//list of types handled by this one. "*" means all

@@ -16,10 +16,10 @@ html, body {
 #header {
 	margin: 0;
 }
-#leftAccordion {
+#navigatorArea {
 	width: 25%;
 }
-#bottomTabs {
+#inspectorArea {
 	height: 40%;
 }
 #hs-1width {
