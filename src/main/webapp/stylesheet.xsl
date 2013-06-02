@@ -17,8 +17,10 @@
 		data-dojo-config="parseOnLoad: false, async:true"></script>
 	<link rel="stylesheet" href="demo.css"/>
 	<script type="text/javascript" src="js/main.js"></script>
-	<script>
+	<script type="text/javascript">
+	require(["thing/ObjectManager"],function(ObjectManager) {
 	<xsl:apply-templates select=".//BaseObject"/>
+	});
 	</script>
 </head>
 <body class="claro">
@@ -72,7 +74,7 @@
 
 </xsl:template>
 <xsl:template match="BaseObject">
-		obManager.create('<xsl:value-of select="@id"/>','<xsl:value-of select="@type"/>','<xsl:value-of select="@source"/>','<xsl:value-of select="@dest"/>','<xsl:value-of select="@value"/>');
+		ObjectManager.create('<xsl:value-of select="@id"/>','<xsl:value-of select="@type"/>','<xsl:value-of select="@source"/>','<xsl:value-of select="@dest"/>','<xsl:value-of select="@value"/>');
 </xsl:template>
 <xsl:template match="@*|*|processing-instruction()|comment()">
     <xsl:copy>

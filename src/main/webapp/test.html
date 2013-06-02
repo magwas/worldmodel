@@ -14,6 +14,11 @@
 		data-dojo-config="parseOnLoad: false, async:true"></script>
 	<link rel="stylesheet" href="demo.css"/>
 	<script type="text/javascript" src="js/main.js"></script>
+  <script type="text/javascript">
+  //require(["thing/ObjectManager"],function(ObjectManager) {
+    dojo.ObjectManager.create("thing","thing");
+  //});
+  </script>
 </head>
 <body class="claro">
 	<!-- basic preloader: -->

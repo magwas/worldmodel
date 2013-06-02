@@ -23,7 +23,7 @@ require([
 ], function(  dom, ready, fx, registry, locale, parser, Memory, ObjectStoreModel, Tree, Observable, ContentPane, ObjectManager, TableBrowser){
 
 
-  ObjectManager.search("id=thing")
+  ObjectManager.search("type=thing")
   obMan = ObjectManager;
   // Create the model
   var typeTreeModel = new ObjectStoreModel({ store: ObjectManager, query: {id: 'thing'} });
