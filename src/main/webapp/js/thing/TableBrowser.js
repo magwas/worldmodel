@@ -10,7 +10,7 @@ define([
      "dijit/layout/ContentPane"
  ], function(declare, parser, ready, dom, _WidgetBase, _TemplatedMixin, ObjectManager, TableRowObject){
      return declare("thing.TableBrowser", [_WidgetBase,_TemplatedMixin], {
-    	 templateString: "<div data-dojo-type=\"dijit.layout.ContentPane\" data-dojo-props='title:\"Table Browser\"'>",
+    	 templateString: "<div data-dojo-type=\"dijit.layout.ContentPane\" data-dojo-props=\"title:'Table Browser'\">",
     	 constructor: function() {
     		 this.query = ObjectManager.query()
     		 this.query.observe(this.observer(this));
