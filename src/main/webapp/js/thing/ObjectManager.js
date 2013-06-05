@@ -8,9 +8,6 @@ define([
 	var om = Observable(new declare("thing.ObjectManager",Memory,{
 		data: [],
 		handlers: [],
-	    getChildren: function(object) {
-	       return this.query({parent: object.id});
-	       },
 		search : function(query,offset) {
 			this.currentSearchQuery = query;
 			this.currentSearchOffset = offset;
@@ -32,7 +29,7 @@ define([
 				this.search(this.currentSearchQuery,this.currentSearchOffset+trs.length);
 			}
 		},
-		getHandlerForType : function(type) {
+		getHandlerForType : function(type) { //FIXME unit test
 			//FIXME: choose from different object handlers when there will be more
 			return BaseObject;
 		},
@@ -51,7 +48,7 @@ define([
 			 this.processResponse(response);
 			 handlerobj.submitted();
 		},
-		addNodeAttr : function(handlerobj,node,fieldname) {
+		/* private */ addNodeAttr : function(handlerobj,node,fieldname) {
 			var e = handlerobj.getDataFor(fieldname);
 			if(e != "") {
 				node.setAttribute(fieldname,e);
@@ -62,7 +59,7 @@ define([
 			if(l.length > 1) { throw "internal error" }
 			return l[0];
 		},
-		getChildren: function(object) {
+		getChildren: function(object) { //FIXME unit test
 			var q = this.query({type: object.id});
 			if(q.length == 0) {
 				q.observe();
@@ -70,7 +67,7 @@ define([
 			}
 			return q
 		},
-		create: function(id, type, src, dest, value) {
+		create: function(id, type, src, dest, value) {//FIXME unit test
 			this.put(new BaseObject({id: id, type: type, value: value, source: src, dest: dest}),{overwrite: true});			
 		}
 	})())

@@ -5,7 +5,7 @@ require([
 	
 
 
-	test( "TableBrowser.constructor, edit, unedit", function() {
+	test( "TableBrowser.constructor, postCreate, ObjectManager.submit, edit, unedit, TableRowObject.constructor, postCreate, edit, unedit, getdataFor, submit, submitted", function() {
 		checkalert();//should not get an alert yet
 		var doc = (new DOMParser()).parseFromString('<object>'+
 				'<BaseObject id="TRO1" type="TRO1Type" source="TRO1Source" dest="TRO1Dest" value="TRO1Value"></BaseObject>'+

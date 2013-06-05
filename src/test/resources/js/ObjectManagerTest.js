@@ -1,7 +1,7 @@
 require(["thing/ObjectManager"], function(ObjectManager){
 	om = ObjectManager;
 	
-	test("processResponse basic", function() {
+	test("processResponse basic, getObjectForId", function() {
 		//processResponse: exceptions
 		var frag = document.createElement("objects");
 		var obj = document.createElement("BaseObject");

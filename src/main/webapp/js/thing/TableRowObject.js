@@ -12,7 +12,7 @@ define([
     	 constructor: function(attrs) {
     		 this.obj = attrs.obj;
     	 },
-    	 addCell : function(attname) {
+    	 /* private */ addCell : function(attname) {
  			var td = document.createElement("td");
  			td.setAttribute("id",this.obj.id+"_"+attname);
  			this.domNode.appendChild(td);
@@ -50,7 +50,7 @@ define([
     		this.domNode.appendChild(td);
     		dojo[this.id] = this;
          },
-         addEditCell : function(attname) {
+         /* private  */ addEditCell : function(attname) {
   			var td = document.createElement("td");
  			if ( attname != "name") {
  	     		var input = document.createElement("input");
@@ -102,8 +102,5 @@ define([
       		this.postCreate();        	 
          }
 
-     });
-     ready(function(){//FIXME is it reached?
-         parser.parse();
      });
 });

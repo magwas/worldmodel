@@ -15,7 +15,7 @@ define([
     		 this.query = ObjectManager.query()
     		 this.query.observe(this.observer(this));
     	 },
-    	 observer: function(self) {
+    	 /* private*/ observer: function(self) {
     		 return function(object, prevoiusIndex, newIndex) {
     			 self.handleObject(object);
     		 }
@@ -29,7 +29,7 @@ define([
         		 this.handleObject(objs[i]);
         	 }
          },
-     	handleObject : function(/*BaseObject*/obj) {
+     	/* private */ handleObject : function(/*BaseObject*/obj) {
      		var row = dom.byId(obj.id);
      		if(row) {
      			row.update(obj)
@@ -40,9 +40,5 @@ define([
      	},
      });
 
-/*
-      ready(function(){//FIXME is it reached?
-         parser.parse();
-     });
-*/
+
  });
