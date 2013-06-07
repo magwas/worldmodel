@@ -12,7 +12,7 @@ require([
 				'<BaseObject id="TRO2" value="pr2Value">foo</BaseObject>'+
 				'</object>', 'text/xml');
 		var numobjs = ObjectManager.data.length;
-		ObjectManager.processResponse(doc);
+		ObjectManager.processResponse(ObjectManager)(doc);
 		var tb = new TableBrowser()
 		.placeAt("testarea");
 		equal(ObjectManager.data.length,numobjs+2);

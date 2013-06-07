@@ -3,27 +3,27 @@
 Util.xmlAnswers = null;
 Util.xmlAnsNo = 0;
 
-Util.xmlPost = function(xml) {//FIXME: what about a local edit mode using this, a "save to file", and a "submit from file"
+Util.xmlPost = function(xml,callback) {//FIXME: what about a local edit mode using this, a "save to file", and a "submit from file"
+	var doc;
 	if(Util.xmlnAswers == null) {
-		var doc = (new DOMParser()).parseFromString(xml,'text/xml');
-		return doc;
+		doc = (new DOMParser()).parseFromString(xml,'text/xml');
 	} else {
 		doc = Util.xmlAnswers[Util.xmlAnsNo];
 		Util.xmlAnsNo ++;
-		return doc
 	}
+	callback(doc);
 }
 
-Util.xmlGet = function(uriend) {
+Util.xmlGet = function(uriend, callback) {
+	var doc;
 	if(Util.xmlAnswers == null) {
-		var doc = (new DOMParser()).parseFromString('<objects>\
+		doc = (new DOMParser()).parseFromString('<objects>\
 				<BaseObject id=\"'+ uriend+ '\" type=\"'+uriend+'Type\"></BaseObject>\
 				</objects>', 'text/xml')
-		return doc;
 	} else {
 		doc = Util.xmlAnswers[Util.xmlAnsNo];		Util.xmlAnsNo ++;
-		return doc
 	}
+	callback(doc);
 };
 
 //QUnit.config.noglobals = true;//FIXME: it does not work, check for noglobals by hand

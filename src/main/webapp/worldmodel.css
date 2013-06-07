@@ -16,6 +16,53 @@ html, body {
 #header {
 	margin: 0;
 }
+.dijitVisible {
+        /* To show selected pane in StackContainer etc. */
+        display: block !important;      /* override user's display:none setting via style setting or indirectly via class */
+        position: relative;                     /* to support setting width/height, see #2033 */
+        overflow: hidden;/*for GraphBrowser */
+        height: 100%;/* ditto */
+}
+
+
+.graphBrowserAtttype {
+	stroke:rgb(255,0,0);
+}
+.graphBrowserAttsource {
+	stroke:rgb(0,255,0);
+}
+.graphBrowserAttdest {
+	stroke:rgb(0,0,255);
+}
+
+.graphBrowserLine {
+	stroke-width:2
+	z-index: 3;
+}
+.graphBrowserSvg {
+	position:absolute;
+	top: 0px;
+	height: 0px;
+	overflow: hidden;
+	height: 100%;
+	width: 100%;
+	z-index: -1;
+}
+
+.graphBrowserCanvas {
+	position:absolute;
+	top: 0px;
+	height: 0px;
+	overflow: hidden;
+	height: 100%;
+	width: 100%;
+	z-index: -1;
+}
+.graphObject {
+	position:absolute;
+	background:yellow;
+	z-index: 1;
+}
 .dijitTabPaneWrapper {
         overflow: auto;
 }

@@ -12,6 +12,7 @@ require([
   "dijit/layout/ContentPane",
   "thing/ObjectManager",
   "thing/TableBrowser",
+  "thing/GraphBrowser",
 	"dijit/Menu",
 	"dijit/MenuBar",
 	"dijit/MenuSeparator",
@@ -20,7 +21,8 @@ require([
 	"dijit/layout/BorderContainer",
 	"dijit/layout/AccordionContainer",
 	"dijit/layout/TabContainer",
-], function(  dom, ready, fx, registry, locale, parser, Memory, ObjectStoreModel, Tree, Observable, ContentPane, ObjectManager, TableBrowser){
+], function(  dom, ready, fx, registry, locale, parser, Memory, ObjectStoreModel, Tree,
+		Observable, ContentPane, ObjectManager, TableBrowser, GraphBrowser){
 
 
   ObjectManager.search("type=thing")
@@ -41,6 +43,7 @@ require([
 			parser.parse(dom.byId('container'));
 
       var tb = new TableBrowser().placeAt("browserArea")
+      var gb = new GraphBrowser().placeAt("browserArea")
 			dom.byId('loaderInner').innerHTML += " done.";
 			setTimeout(function hideLoader(){
 				fx.fadeOut({ 

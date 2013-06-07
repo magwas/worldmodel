@@ -14,19 +14,22 @@ define([
 			if(offset != null ) {
 				query += "&offset="+offset;
 			}
-			var response = Util.xmlGet(query);
-			this.processResponse(response);
+			var response = Util.xmlGet(query,this.processResponse(this));
 		},
-		processResponse : function(response) {
-			// processes a response from the server
-			Util.processExceptions(response);
-			var trs = response.querySelectorAll("BaseObject");
-			for ( var i=0; i<trs.length;i++ ) {
-				this.put(BaseObject.fragToObject(trs[i]),{overwrite: true});
-			}
-			var continues = response.querySelectorAll("continues").length;
-			if(continues) {
-				this.search(this.currentSearchQuery,this.currentSearchOffset+trs.length);
+		processResponse : function(self) {
+			//this.inresponse = true;
+			return function(response) {
+				// processes a response from the server
+				Util.processExceptions(response);
+				var trs = response.querySelectorAll("BaseObject");
+				for ( var i=0; i<trs.length;i++ ) {
+					self.put(BaseObject.fragToObject(trs[i]),{overwrite: true});
+				}
+				var continues = response.querySelectorAll("continues").length;
+				if(continues) {
+					self.search(this.currentSearchQuery,self.currentSearchOffset+trs.length);
+				}
+				//this.inresponse = false;
 			}
 		},
 		getHandlerForType : function(type) { //FIXME unit test
@@ -44,8 +47,7 @@ define([
 			 this.addNodeAttr(handlerobj,bo,"dest");
 			 this.addNodeAttr(handlerobj,bo,"value");
 			 var xmlText = new XMLSerializer().serializeToString(doc);
-			 var response = Util.xmlPost(xmlText);
-			 this.processResponse(response);
+			 var response = Util.xmlPost(xmlText,this.processResponse(this));
 			 handlerobj.submitted();
 		},
 		/* private */ addNodeAttr : function(handlerobj,node,fieldname) {

@@ -10,7 +10,7 @@ require(["thing/ObjectManager"], function(ObjectManager){
 		obj.setAttribute("value","processResponseValue1");
 		frag.appendChild(obj);
 		var numobjs = ObjectManager.data.length;
-		ObjectManager.processResponse(frag);
+		ObjectManager.processResponse(ObjectManager)(frag);
 		equal(ObjectManager.data.length,numobjs+1);
 		equal(ObjectManager.getObjectForId("processResponseId1").id,"processResponseId1");
 		equal(ObjectManager.getObjectForId("processResponseId1").type,"processResponseType1");
@@ -24,7 +24,7 @@ require(["thing/ObjectManager"], function(ObjectManager){
 		checkalert();//should not get an alert yet
 		var doc = (new DOMParser()).parseFromString('<exception>test exception</exception>', 'text/xml');
 		var numobjs = Object.keys(ObjectManager.data).length;
-		ObjectManager.processResponse(doc);
+		ObjectManager.processResponse(ObjectManager)(doc);
 		checkalert("test exception");
 		equal(Object.keys(ObjectManager.data).length,numobjs);
 
@@ -34,7 +34,7 @@ require(["thing/ObjectManager"], function(ObjectManager){
 		checkalert();//should not get an alert yet
 		var doc = (new DOMParser()).parseFromString('<object><exception>test exception2</exception></object>', 'text/xml');
 		var numobjs = Object.keys(ObjectManager.data).length;
-		ObjectManager.processResponse(doc);
+		ObjectManager.processResponse(ObjectManager)(doc);
 		checkalert("test exception2");
 		equal(Object.keys(ObjectManager.data).length,numobjs);
 	});
@@ -43,7 +43,7 @@ require(["thing/ObjectManager"], function(ObjectManager){
 		checkalert();//should not get an alert yet
 		var doc = (new DOMParser()).parseFromString('<object><exception>test exception3</exception><exception>test exception 4</exception></object>', 'text/xml');
 		var numobjs = Object.keys(ObjectManager.data).length;
-		ObjectManager.processResponse(doc);
+		ObjectManager.processResponse(ObjectManager)(doc);
 		checkalert("test exception3test exception 4");
 		equal(Object.keys(ObjectManager.data).length,numobjs);
 	});
@@ -52,7 +52,7 @@ require(["thing/ObjectManager"], function(ObjectManager){
 		checkalert();//should not get an alert yet
 		var doc = (new DOMParser()).parseFromString('<object><BaseObject id="pR1" type="pR1Type"></BaseObject><BaseObject id="pR2" value="pr2Value">foo</BaseObject></object>', 'text/xml');
 		var numobjs = Object.keys(ObjectManager.data).length;
-		ObjectManager.processResponse(doc);
+		ObjectManager.processResponse(ObjectManager)(doc);
 		checkalert();
 		equal(Object.keys(ObjectManager.data).length,numobjs+2);
 		equal(ObjectManager.getObjectForId("pR1").id,"pR1");
@@ -71,7 +71,7 @@ require(["thing/ObjectManager"], function(ObjectManager){
 		checkalert();//should not get an alert yet
 		var doc = (new DOMParser()).parseFromString('<object><exception>test exception 5</exception><BaseObject id="pR3" type="pR1Type"></BaseObject><BaseObject id="pR4" value="pr2Value">foo</BaseObject></object>', 'text/xml');
 		var numobjs = Object.keys(ObjectManager.data).length;
-		ObjectManager.processResponse(doc);
+		ObjectManager.processResponse(ObjectManager)(doc);
 		checkalert("test exception 5");
 		equal(Object.keys(ObjectManager.data).length,numobjs+2);
 		equal(ObjectManager.getObjectForId("pR3").id,"pR3");

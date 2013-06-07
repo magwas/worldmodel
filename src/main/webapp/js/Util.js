@@ -9,25 +9,48 @@ var Util = function(){
 
 Util.xsltproc = null;
 
-Util.xmlPost = function(xml) {
+Util.xmlPost = function(xml,callback) {
 	var xmlhttp;
 	xmlhttp=new XMLHttpRequest();
-	xmlhttp.open("POST","/worldmodel/worldmodel",false);
+	xmlhttp.onreadystatechange=function() {
+		if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+			  callback(xmlhttp.responseXML);
+		};
+	};
+	xmlhttp.open("POST","/worldmodel/worldmodel",true);
 	xmlhttp.setRequestHeader("Content-type","text/xml;charset=UTF-8");
 	xmlhttp.send(xml);
-	xmlDoc=xmlhttp.responseXML;
-	return xmlDoc;
-
 }
 
-Util.xmlGet = function(uriend) {
+Util.xmlGet = function(uriend, callback) {
 	var xmlhttp;
-	xmlhttp=new XMLHttpRequest();
-	xmlhttp.open("GET","/worldmodel/worldmodel?"+uriend,false);
+	var uri;
+	if (window.XMLHttpRequest) {
+		// code for modern browsers
+		xmlhttp=new XMLHttpRequest();
+	} else {// code for dinosaurs
+	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	if(document.URL.startsWith("file://")) {
+		uri = "https://tomcat.realm:8443/worldmodel/worldmodel?";
+	} else {
+		uri = "/worldmodel/worldmodel?"
+	}
+//	alert(uri+uriend);
+	xmlhttp.onreadystatechange=function() {
+//		alert("readystate="+xmlhttp.readyState+", status="+xmlhttp.status);
+		if (xmlhttp.readyState==4 && xmlhttp.status==0) {
+//			alert("preflight OK");
+		    callback(xmlhttp.responseXML);
+		}
+		if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+//			alert("calling back");
+		    callback(xmlhttp.responseXML);
+		}
+	}
+	xmlhttp.open("GET",uri+uriend,true);
 	xmlhttp.setRequestHeader("Content-type","text/xml;charset=UTF-8");
-	xmlhttp.send();
-	xmlDoc=xmlhttp.responseXML;
-	return xmlDoc;
+	xmlhttp.send();		
 };
 
 /*
