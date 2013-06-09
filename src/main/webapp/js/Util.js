@@ -31,12 +31,12 @@ Util.xmlGet = function(uriend, callback) {
 	} else {// code for dinosaurs
 	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
 	}
-	if(document.URL.startsWith("file://")) {
+	if(document.URL.startsWith("file://")) {//FIXME preflight does not work, see http://stackoverflow.com/questions/16962487/ajax-preflight-fails-with-options-response-200-in-firefox
 		uri = "https://tomcat.realm:8443/worldmodel/worldmodel?";
 	} else {
 		uri = "/worldmodel/worldmodel?"
 	}
-//	alert(uri+uriend);
+	alert(uri+uriend);
 	xmlhttp.onreadystatechange=function() {
 //		alert("readystate="+xmlhttp.readyState+", status="+xmlhttp.status);
 		if (xmlhttp.readyState==4 && xmlhttp.status==0) {
