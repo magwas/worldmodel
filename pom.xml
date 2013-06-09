@@ -90,6 +90,16 @@
       <version>1.2.1</version>
       <executions>
        <execution>
+        <id>prepare dojo and dijit</id>
+        <phase>initialize</phase>
+        <goals>
+         <goal>exec</goal>
+        </goals>
+        <configuration>
+         <executable>src/test/resources/downloaddojo</executable>
+        </configuration>
+       </execution>
+       <execution>
         <id>Install. See doc/upload-worldmodel.sh.example on setting it up.</id>
         <phase>install</phase>
         <goals>

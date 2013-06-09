@@ -1,0 +1,16 @@
+#!/bin/sh
+set -e
+if [ -d src/main/webapp/js/dijit/.git/ ]
+then
+  (cd src/main/webapp/js/dijit;git pull)
+else
+    git clone git://github.com/dojo/dijit.git src/main/webapp/js/dijit
+fi
+
+if [ -d src/main/webapp/js/dojo/.git/ ]
+then
+  (cd src/main/webapp/js/dojo;git pull )
+else
+    git clone git://github.com/dojo/dojo.git src/main/webapp/js/dojo
+fi
+

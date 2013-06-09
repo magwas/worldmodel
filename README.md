@@ -24,3 +24,21 @@ The kanban table:
 
 http://huboard.com/magwas/worldmodel/board
 
+
+Building:
+
+1. you should make sure that java uses UTF-8 as encoding. There are more ways to do it:
+
+ - your LANG environment variable is set accordingly, e.g. export LANG=en\_US.UTF-8
+
+ - export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dfile.encoding=UTF8"
+
+ - with jenkins use the Environment Injector plugin with the following Groovy Script:
+
+        def map = [JAVA_TOOL_OPTIONS: " -Dfile.encoding=UTF8"]
+        return
+
+
+2. You should have phantomjs installed. You need >= 1.5 if you want to compile headless (e.g. from jenkins)
+
+
