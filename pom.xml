@@ -79,7 +79,7 @@
         <version>2.14.1</version>
         <configuration>
           <additionalClasspathElements>
-          <additionalClasspathElement>/usr/local/share/java/hsqldb-2.2.9.jar</additionalClasspathElement>
+          <additionalClasspathElement>src/test/resources/hsqldb-2.2.9.jar</additionalClasspathElement>
             <additionalClasspathElement>/usr/share/java/postgresql.jar</additionalClasspathElement>
           </additionalClasspathElements>
         </configuration>
