@@ -12,6 +12,8 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <maven.test.compile.encoding>UTF-8</maven.test.compile.encoding>
+    <maven.compile.encoding>UTF-8</maven.compile.encoding>
   </properties>
   <dependencies>  
     <dependency>
