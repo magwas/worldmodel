@@ -71,6 +71,7 @@
         <configuration>
           <source>1.7</source>
           <target>1.7</target>
+          <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
       <plugin>
@@ -85,31 +86,13 @@
         </configuration>
       </plugin>
     <plugin>
-      <artifactId>exec-maven-plugin</artifactId>
-      <groupId>org.codehaus.mojo</groupId>
-      <version>1.2.1</version>
-      <executions>
-       <execution>
-        <id>Install. See doc/upload-worldmodel.sh.example on setting it up.</id>
-        <phase>install</phase>
-        <goals>
-         <goal>exec</goal>
-        </goals>
-        <configuration>
-         <executable>upload-worldmodel.sh</executable>
-        </configuration>
-       </execution>
-       <execution>
-        <id>Javascript unit tests</id>
-        <phase>test</phase>
-        <goals>
-         <goal>exec</goal>
-        </goals>
-        <configuration>
-         <executable>src/test/resources/runjsunit</executable>
-        </configuration>
-       </execution>
-      </executions>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-site-plugin</artifactId>
+      <version>3.2</version>
+      <configuration>
+        <inputEncoding>UTF-8</inputEncoding>
+        <outputEncoding>UTF-8</outputEncoding>
+      </configuration>
     </plugin>
     </plugins>
   </build>
