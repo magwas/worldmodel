@@ -28,7 +28,7 @@ import org.w3c.dom.ProcessingInstruction;
 import org.xml.sax.SAXException;
 
 
-public class Util {
+public final class Util {
 
 	private static SessionFactory sessionFactory =   null;
 
@@ -39,13 +39,13 @@ public class Util {
 		//singleton
 	}
 
-	@SuppressWarnings("deprecation")//Every method of initializing hibernate is deprecated AFAIK.
+  //Every method of initializing hibernate is deprecated AFAIK.
+	@SuppressWarnings("deprecation")
 	public static Session getSession(){
 		if (sessionFactory == null) {
 			sessionFactory =   new Configuration().configure().buildSessionFactory();
 		}
-		Session session = sessionFactory.openSession();
-		return session;
+		return sessionFactory.openSession();
 	}
 	
 	public static void debug(String what) {
@@ -55,11 +55,17 @@ public class Util {
 	private static String codes = "0123456789abcdef";
 	public static void hexdump(String label,String str) {
 		char[] arr = str.toCharArray();
-		String outs = "";
+		
+		StringBuffer buff = new StringBuffer();
 		for(int i=0;i<arr.length;i++) {
-			outs += ""+ codes.charAt((arr[i]>>8)&0x0f) + codes.charAt((arr[i]>>4)&0x0f) + codes.charAt(arr[i]&0xf)+""+arr[i]+" ";
+			//yeah, hexdump is magical, thus uses magic numbers
+			buff.append(codes.charAt((arr[i]>>8)&0x0f))
+				.append(codes.charAt((arr[i]>>4)&0x0f))
+				.append(codes.charAt(arr[i]&0xf))
+				.append(arr[i])
+				.append(" ");
 		}
-		Util.debug(label + outs);
+		Util.debug(label + buff.toString());
 	}
 
 	public static void warning(String what) {
