@@ -44,5 +44,5 @@ Building:
 
 Code review:
 
-Code review is done with gerrit.
+Code review is done with gerrit..
 
