@@ -61,10 +61,16 @@
     	<artifactId>commons-lang3</artifactId>
     	<version>3.1</version>
     </dependency>
+    <dependency>
+    	<groupId>org.codehaus.mojo</groupId>
+    	<artifactId>exec-maven-plugin</artifactId>
+    	<version>1.2.1</version>
+    	<type>maven-plugin</type>
+    </dependency>
   </dependencies>
   <build>
     <finalName>worldmodel</finalName>
-    <pluginManagement>
+<!--    <pluginManagement> -->
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -123,6 +129,6 @@
       </executions>
     </plugin>
     </plugins>
-    </pluginManagement>
+<!--    </pluginManagement> -->
   </build>
 </project>
