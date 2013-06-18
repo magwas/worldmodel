@@ -21,11 +21,11 @@ require([
 		var str = ("<tr id=\"TRO1\" widgetid=\"WIDGETID\">" +
 					"<td id=\"TRO1_id\">TRO1</td>" +
 					"<td id=\"TRO1_name\">id=TRO1</td>" +
-					"<td id=\"TRO1_value\"><a href=\"javascript:dojo.ObjectManager.search('id=TRO1Value')\">TRO1Value</a><a href=\"javascript:dojo.ObjectManager.search('value=TRO1')\">+</a></td>" +
-					"<td id=\"TRO1_type\"><a href=\"javascript:dojo.ObjectManager.search('id=TRO1Type')\">TRO1Type</a><a href=\"javascript:dojo.ObjectManager.search('type=TRO1')\">+</a></td>" +
-					"<td id=\"TRO1_source\"><a href=\"javascript:dojo.ObjectManager.search('id=TRO1Source')\">TRO1Source</a><a href=\"javascript:dojo.ObjectManager.search('source=TRO1')\">+</a></td>" +
-					"<td id=\"TRO1_dest\"><a href=\"javascript:dojo.ObjectManager.search('id=TRO1Dest')\">TRO1Dest</a><a href=\"javascript:dojo.ObjectManager.search('dest=TRO1')\">+</a></td>" +
-					"<td><input onclick=\"javascript:dojo.WIDGETID.edit('TRO1')\" value=\"Edit\" id=\"TRO1_but\" type=\"submit\"/></td>" +
+					"<td id=\"TRO1_value\"><a>TRO1Value</a><a>+</a></td>" +
+					"<td id=\"TRO1_type\"><a>TRO1Type</a><a>+</a></td>" +
+					"<td id=\"TRO1_source\"><a>TRO1Source</a><a>+</a></td>" +
+					"<td id=\"TRO1_dest\"><a>TRO1Dest</a><a>+</a></td>" +
+					"<td><input value=\"Edit\" id=\"TRO1_but\" type=\"submit\"/></td>" +
 				"</tr>").replace(/WIDGETID/g,vi);
 		var doc = (new DOMParser()).parseFromString(str,'text/xml');
 		equalxml(trohtml,doc.documentElement);
@@ -48,8 +48,8 @@ require([
 				"<td id=\"TRO1_type\"><input id=\"TRO1_type_t\" type=\"text\"/></td>" +
 				"<td id=\"TRO1_source\"><input id=\"TRO1_source_t\" type=\"text\"/></td>" +
 				"<td id=\"TRO1_dest\"><input id=\"TRO1_dest_t\" type=\"text\"/></td>" +
-				"<td><input onclick=\"javascript:dojo.WIDGETID.submit('TRO1')\" value=\"Submit\" id=\"TRO1_but\" type=\"submit\"/>" +
-				"<input onclick=\"javascript:dojo.WIDGETID.unedit('TRO1')\" value=\"Cancel\" type=\"submit\"/></td>" +
+				"<td><input value=\"Submit\" id=\"TRO1_but\" type=\"submit\"/>" +
+				"<input value=\"Cancel\" type=\"submit\"/></td>" +
 				"</tr>";
 		doc2str = doc2str.replace(/WIDGETID/g,vi2);
 		var doc2 = (new DOMParser()).parseFromString(doc2str,'text/xml');

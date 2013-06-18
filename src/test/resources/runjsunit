@@ -1,2 +1,2 @@
 #!/bin/bash
-phantomjs src/test/resources/js/run-qunit.js src/test/resources/jstests.html
+phantomjs src/test/js/run-qunit.js src/test/resources/jstests.html

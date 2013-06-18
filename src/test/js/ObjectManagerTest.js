@@ -1,3 +1,4 @@
+/* global checkalert: false, require:false */
 require(["thing/ObjectManager"], function(ObjectManager){
 	om = ObjectManager;
 	
