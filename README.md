@@ -42,3 +42,7 @@ Building:
 2. You should have phantomjs installed. You need >= 1.5 if you want to compile headless (e.g. from jenkins)
 
 
+Code review:
+
+Code review is done with gerrit...
+

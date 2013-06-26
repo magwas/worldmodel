@@ -1,16 +1,22 @@
 #!/bin/sh
+#echo src/test/resources/downloaddojo is temporarily disabled!!!
+#exit 0
 set -e
-if [ -d src/main/webapp/js/dijit/.git/ ]
+if [ -d external/dijit/.git/ ]
 then
-  (cd src/main/webapp/js/dijit;git pull)
+  (cd external/dijit;git pull)
 else
-    git clone git://github.com/dojo/dijit.git src/main/webapp/js/dijit
+    git clone git://github.com/dojo/dijit.git external/dijit
+    mkdir -p target/generated-sources/js
+    ln -s external/dijit target/generated-sources/js
 fi
 
-if [ -d src/main/webapp/js/dojo/.git/ ]
+if [ -d external/dojo/.git/ ]
 then
-  (cd src/main/webapp/js/dojo;git pull )
+  (cd external/dojo;git pull )
 else
-    git clone git://github.com/dojo/dojo.git src/main/webapp/js/dojo
+    git clone git://github.com/dojo/dojo.git external/dojo
+    mkdir -p target/generated-sources/js
+    ln -s external/dojo target/generated-sources/js
 fi
 

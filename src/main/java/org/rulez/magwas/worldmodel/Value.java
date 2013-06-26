@@ -25,7 +25,7 @@ public class Value {
 	private String value;
 	
 	public static Value getValueByValue(String value, Session session) {
-		if (value.equals("") || (value == null)) {
+		if ((value == null) || value.equals("")) {
 			return null;
 		}
 		Query query = session.createQuery("from Value where value = :value");

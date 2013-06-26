@@ -1,6 +1,5 @@
 package org.rulez.magwas.worldmodel;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +20,7 @@ import org.w3c.dom.Element;
 
 @Entity
 @Table(name="object")
-public class BaseObject implements Serializable {
+public class BaseObject {
 	
 	public BaseObject() {
 		super();
@@ -40,51 +39,51 @@ public class BaseObject implements Serializable {
 			throw new InputParseException("there is already an object with this id: "+cidstring);
 		}
 		List<String> r = parseCompositeId(cidstring);
-		this.setId(Value.getValueByValue(r.get(0), session));
+		this.theid = Value.getValueByValue(r.get(0), session);
 		String versionstring = r.get(1);
 		if ((versionstring != null) && !versionstring.equals("")) {
-			this.setVersion(Value.getValueByValue(versionstring, session));			
+			this.version = Value.getValueByValue(versionstring, session);			
 		}
 		String typestring = node.getAttribute("type");
 		if (!typestring.equals("")) {
 			if(typestring.equals(cidstring)) {
-				this.setType(this);
+				this.type = this;
 			} else {
 				BaseObject tobj = getBaseObjectByCompositeId(typestring,session);
 				if(tobj == null) {
 					throw new InputParseException("object for type does not exists. id="+typestring); 
 				}
-				this.setType(tobj);
+				this.type = tobj;
 			}
 		}
 		String sourcestring = node.getAttribute("source");
 		if (!sourcestring.equals("")) {
 			if(sourcestring.equals(cidstring)) {
-				this.setSource(this);
+				this.source = this;
 			} else {
 				BaseObject tobj = getBaseObjectByCompositeId(sourcestring,session);
 				if(tobj == null) {
 					throw new InputParseException("object for source does not exists. id="+sourcestring); 
 				}
-				this.setSource(tobj);
+				this.source = tobj;
 			}
 		}
 		String deststring = node.getAttribute("dest");
 		if (!deststring.equals("")) {
 			if(sourcestring.equals(cidstring)) {
-				this.setDest(this);
+				this.dest = this;
 			} else {
 				BaseObject tobj = getBaseObjectByCompositeId(deststring,session);
 				if(tobj == null) {
 					throw new InputParseException("object for dest does not exists. id="+deststring); 
 				}
-				this.setDest(tobj);
+				this.dest = tobj;
 			}
 		}
 		String valuestring = node.getAttribute("value");
 		if (!valuestring.equals("")) {
 			Value tobj = Value.getValueByValue(valuestring,session);
-			this.setValue(tobj);
+			this.value = tobj;
 		}
 		session.save(this);
 	}
@@ -130,7 +129,6 @@ public class BaseObject implements Serializable {
 		return obj;
 	}
 	
-	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column

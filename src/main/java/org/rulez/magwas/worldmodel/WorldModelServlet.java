@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -33,6 +34,7 @@ public class WorldModelServlet extends HttpServlet {
 	 * serial version just to get rid of warning
 	 */
 	private static final long serialVersionUID = 1L;
+	private static final int NUMENTRIES = 25;
 
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -51,7 +53,7 @@ public class WorldModelServlet extends HttpServlet {
 			reader = request.getReader();
 			String xmlstring = IOUtils.toString(reader);
 			//FIXME schema validation (maybe in upper layers)
-			ByteArrayInputStream bis = new ByteArrayInputStream(xmlstring.getBytes());
+			ByteArrayInputStream bis = new ByteArrayInputStream(xmlstring.getBytes("UTF-8"));
 			Document doc = Util.newDocument(bis);
 
 			NodeList objs = doc.getElementsByTagName("BaseObject");
@@ -143,11 +145,11 @@ public class WorldModelServlet extends HttpServlet {
 		querystring += " order by physid";
 		Util.debug(querystring);
 		Query query = session.createQuery(querystring);
-		
-		for(String key : queryparms.keySet()) {
-			query.setParameter(key,queryparms.get(key));			
+		for( Entry<String, Object> entry : queryparms.entrySet()) {
+			query.setParameter(entry.getKey(),entry.getValue());			
 		}
-		query.setMaxResults(26);//yes, it is one more. We signal continuation this way.
+		//yes, it is one more. We signal continuation this way.
+		query.setMaxResults(NUMENTRIES+1);
 		Util.debug("offset="+offset);
 		query.setFirstResult(offset);
 
@@ -201,18 +203,19 @@ public class WorldModelServlet extends HttpServlet {
 			} else {
 				Query query = createQuery(request, session);
 
-				@SuppressWarnings("unchecked") // variable introduced to make the scope of it small
+				@SuppressWarnings("unchecked")
+				// variable introduced just to make the scope of SuppressWarnings small
 				List<BaseObject> ql = (List<BaseObject>) query.list();
 				l = ql;
 
 			}
 			Util.debug("number of items: "+l.size());
 			doc.appendChild(root);
-			for (BaseObject o :l.subList(0, Math.min(l.size(),25))) {
+			for (BaseObject o :l.subList(0, Math.min(l.size(),NUMENTRIES))) {
 				Element bo = o.toXML(doc);
 				root.appendChild(bo);
 			}
-			if(l.size() > 25) {
+			if(l.size() > NUMENTRIES) {
 				Element continues = doc.createElement("continues");
 				root.appendChild(continues);
 			}

@@ -2,5 +2,5 @@ This is a maven project, so you have to install maven in order to compile it.
 You run 'mvn package' in order to create target/worldmodel.war
 Deploy it on your J2EE server (tomcat/glassfish/jboss) as usual.
 If you set up an uploader (see upload-worldmodel.sh.example for instructions),
-you can install it with 'mvn install' as well.
+you can install it with 'mvn integration-test' as well.
 

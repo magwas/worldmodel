@@ -16,9 +16,7 @@ Util.xmlPost = function(xml) {//FIXME: what about a local edit mode using this, 
 
 Util.xmlGet = function(uriend) {
 	if(Util.xmlAnswers == null) {
-		var doc = (new DOMParser()).parseFromString('<objects>\
-				<BaseObject id=\"'+ uriend+ '\" type=\"'+uriend+'Type\"></BaseObject>\
-				</objects>', 'text/xml')
+		var doc = (new DOMParser()).parseFromString('<objects> <BaseObject id=\"'+ uriend+ '\" type=\"'+uriend+'Type\"></BaseObject> </objects>', 'text/xml')
 		return doc;
 	} else {
 		doc = Util.xmlAnswers[Util.xmlAnsNo];		Util.xmlAnsNo ++;
@@ -49,6 +47,11 @@ function ifequal(a,b,comment) {
 	if (a != b) {
 		equal(a,b,comment)
 	}
+}
+
+function equalxml_p(dom1,dom2) {
+    oldalert(new XMLSerializer().serializeToString(dom1)+ "\n------------------\n" + new XMLSerializer().serializeToString(dom2))
+    equalxml(dom1,dom2)
 }
 
 function equalxml(dom1,dom2) {
