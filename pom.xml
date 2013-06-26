@@ -173,33 +173,6 @@
               </execution>
           </executions>
       </plugin>
-    <plugin>
-      <artifactId>exec-maven-plugin</artifactId>
-      <groupId>org.codehaus.mojo</groupId>
-      <version>1.2.1</version>
-      <executions>
-       <execution>
-        <id>Javascript unit tests</id>
-        <phase>test</phase>
-        <goals>
-         <goal>exec</goal>
-        </goals>
-        <configuration>
-         <executable>src/test/resources/runjsunit</executable>
-        </configuration>
-       </execution>
-       <execution>
-        <id>Install to integration test environment. See doc/upload-worldmodel.sh.example on setting it up.</id>
-        <phase>integration-test</phase>
-        <goals>
-         <goal>exec</goal>
-        </goals>
-        <configuration>
-         <executable>upload-worldmodel.sh</executable>
-        </configuration>
-       </execution>
-      </executions>
-    </plugin>
     </plugins>
   	<pluginManagement>
   			<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
@@ -246,4 +219,41 @@
   		</plugins>
   	</pluginManagement>
   </build>
+  
+   <profiles>
+      <profile>
+      <id>test</id>
+      <build>
+      <plugins>
+    <plugin>
+      <artifactId>exec-maven-plugin</artifactId>
+      <groupId>org.codehaus.mojo</groupId>
+      <version>1.2.1</version>
+      <executions>
+       <execution>
+        <id>Javascript unit tests</id>
+        <phase>test</phase>
+        <goals>
+         <goal>exec</goal>
+        </goals>
+        <configuration>
+         <executable>src/test/resources/runjsunit</executable>
+        </configuration>
+       </execution>
+       <execution>
+        <id>deploy. See doc/upload-worldmodel.sh.example on setting it up.</id>
+        <phase>integration-test</phase>
+        <goals>
+         <goal>exec</goal>
+        </goals>
+        <configuration>
+         <executable>upload-worldmodel.sh</executable>
+        </configuration>
+       </execution>
+      </executions>
+    </plugin>
+      </plugins>
+      </build>
+      </profile>
+   </profiles>
 </project>
