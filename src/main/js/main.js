@@ -1,13 +1,11 @@
 /*global require:false*/
-require([ "dojo/dom", "dojo/ready", "dojo/_base/fx", "dijit/registry",
-        "dojo/date/locale", "dojo/parser", "dojo/store/Memory",
-        "dijit/tree/ObjectStoreModel", "dijit/Tree", "dojo/store/Observable",
+require([ "dojo/dom", "dojo/ready", "dojo/_base/fx", "dojo/parser",
+        "dijit/tree/ObjectStoreModel", "dijit/Tree",
         "dijit/layout/ContentPane", "thing/ObjectManager",
         "thing/TableBrowser", "dijit/Menu", "dijit/MenuBar",
         "dijit/MenuSeparator", "dijit/PopupMenuBarItem", "dijit/MenuItem",
         "dijit/layout/BorderContainer", "dijit/layout/AccordionContainer",
-        "dijit/layout/TabContainer" ], function (dom, ready, fx, registry,
-        locale, parser, Memory, ObjectStoreModel, Tree, Observable,
+        "dijit/layout/TabContainer" ], function (dom, ready, fx, parser, ObjectStoreModel, Tree,
         ContentPane, ObjectManager, TableBrowser) {
     "use strict";
     var obMan, typeTreeModel, tree, browser1;
@@ -34,9 +32,9 @@ require([ "dojo/dom", "dojo/ready", "dojo/_base/fx", "dijit/registry",
         // time to finish loading
         setTimeout(function () {
             parser.parse(dom.byId('container'));
-            var tb = new TableBrowser().placeAt("browserArea");
+            (new TableBrowser()).placeAt("browserArea");
             dom.byId('loaderInner').innerHTML += " done.";
-            setTimeout(function hideLoader() {
+            setTimeout(function () {
                 fx.fadeOut({
                     node : 'loader',
                     duration : 500,

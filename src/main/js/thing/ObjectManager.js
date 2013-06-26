@@ -1,7 +1,7 @@
 /*global define: false, Util: false, DOMParser: false, XMLSerializer: false */
 define([ "dojo/store/Memory", "dojo/store/Observable", "dojo/_base/declare",
-        "dojo/_base/lang", "thing/BaseObject" ], function (Memory, observable,
-        declare, lang, BaseObject) {
+        "thing/BaseObject" ], function (Memory, observable,
+        declare, BaseObject) {
     "use strict";
     var ObjectManagerClass, om;
     ObjectManagerClass = declare("thing.ObjectManager", Memory, {
@@ -32,7 +32,8 @@ define([ "dojo/store/Memory", "dojo/store/Observable", "dojo/_base/declare",
                         + trs.length);
             }
         },
-        getHandlerForType : function (type) { // FIXME unit test
+        // FIXME unit test
+        getHandlerForType : function (type) {
             // FIXME: choose from different object handlers when there will be
             // more
             return BaseObject;
@@ -70,7 +71,8 @@ define([ "dojo/store/Memory", "dojo/store/Observable", "dojo/_base/declare",
             }
             return l[0];
         },
-        getChildren : function (object) { // FIXME unit test
+     // FIXME unit test
+        getChildren : function (object) {
             var q = this.query({
                 type : object.id
             });
@@ -80,7 +82,8 @@ define([ "dojo/store/Memory", "dojo/store/Observable", "dojo/_base/declare",
             }
             return q;
         },
-        create : function (id, type, src, dest, value) {// FIXME unit test
+     // FIXME unit test
+        create : function (id, type, src, dest, value) {
             this.put(new BaseObject({
                 id : id,
                 type : type,
@@ -93,6 +96,5 @@ define([ "dojo/store/Memory", "dojo/store/Observable", "dojo/_base/declare",
         }
     });
     om = observable(new ObjectManagerClass());
-    //dojo.ObjectManager = om;
     return om;
 });

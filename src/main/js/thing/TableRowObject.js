@@ -1,7 +1,7 @@
 /*globals dojo: false, define: false*/
-define([ "dojo/_base/declare", "dojo/parser", "dojo/ready", "dijit/_WidgetBase",
+define([ "dojo/_base/declare", "dijit/_WidgetBase",
         "dijit/_TemplatedMixin", "thing/ObjectManager",
-        "dijit/layout/ContentPane" ], function (declare, parser, ready,
+        "dijit/layout/ContentPane" ], function (declare,
         WidgetBase, TemplatedMixin, ObjectManager) {
     "use strict";
     return declare("thing.TableRowObject", [ WidgetBase, TemplatedMixin ],
@@ -19,12 +19,16 @@ define([ "dojo/_base/declare", "dojo/parser", "dojo/ready", "dijit/_WidgetBase",
                 if (attname !== "id" && attname !== "name") {
                     if (this.obj[attname] !== null) {
                         a = document.createElement("a");
-                        a.onclick = function () { ObjectManager.search(this.id); };
+                        a.onclick = function () {
+                            ObjectManager.search(this.id);
+                        };
                         a.textContent = this.obj[attname];
                         td.appendChild(a);
                     }
                     a2 = document.createElement("a");
-                    a2.onclick = function () { ObjectManager.search(this.obj.id); };
+                    a2.onclick = function () {
+                        ObjectManager.search(this.obj.id);
+                    };
                     a2.textContent = "+";
                     td.appendChild(a2);
                 } else {
@@ -46,7 +50,9 @@ define([ "dojo/_base/declare", "dojo/parser", "dojo/ready", "dijit/_WidgetBase",
                 but.setAttribute("id", this.obj.id + "_but");
                 but.type = "submit";
                 but.value = "Edit";
-                but.onclick = function () { this.edit(this.obj.id); };
+                but.onclick = function () {
+                    this.edit(this.obj.id);
+                };
                 td.appendChild(but);
                 this.domNode.appendChild(td);
                 dojo[this.id] = this;
@@ -83,11 +89,15 @@ define([ "dojo/_base/declare", "dojo/parser", "dojo/ready", "dijit/_WidgetBase",
                 but.setAttribute("id", this.obj.id + "_but");
                 but.type = "submit";
                 but.value = "Submit";
-                but.onclick = function () { ObjectManager.submit(this); };
+                but.onclick = function () {
+                    ObjectManager.submit(this);
+                };
                 but2 = document.createElement("input");
                 but2.type = "submit";
                 but2.value = "Cancel";
-                but.onclick = function () { this.unedit(this.obj.id); };
+                but.onclick = function () {
+                    this.unedit(this.obj.id);
+                };
                 td.appendChild(but);
                 td.appendChild(but2);
                 this.domNode.appendChild(td);

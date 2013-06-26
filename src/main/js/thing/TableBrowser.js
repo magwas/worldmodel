@@ -1,10 +1,10 @@
 /*global define: false */
 define(
-    [ "dojo/_base/declare", "dojo/parser", "dojo/ready", "dojo/dom",
+    [ "dojo/_base/declare", "dojo/dom",
             "dijit/_WidgetBase", "dijit/_TemplatedMixin",
             "thing/ObjectManager", "thing/TableRowObject",
             "dijit/layout/ContentPane" ],
-    function (declare, parser, ready, dom, WidgetBase, TemplatedMixin,
+    function (declare, dom, WidgetBase, TemplatedMixin,
             ObjectManager, TableRowObject) {
         "use strict";
         return declare(
@@ -18,7 +18,8 @@ define(
                 },
                 /* private */
                 observer : function (self) {
-                    return function (object, prevoiusIndex, newIndex) {
+                    /*, FIXME prevoiusIndex, newIndex */
+                    return function (object) {
                         self.handleObject(object);
                     };
                 },

@@ -35,13 +35,6 @@ Util.xmlGet = function (uriend) {
     return xmlDoc;
 };
 
-/*
- * Util.xml2Fragment = function(response) { if (Util.xsltproc == null) {
- * Util.xsltproc = new XSLTProcessor();; var xsltdoc =
- * Util.xmlGet("baseobj_as_row.xsl"); Util.xsltproc.importStylesheet(xsltdoc); }
- * frag = Util.xsltproc.transformToFragment(response,document); return frag; }
- */
-
 Util.processExceptions = function (response) {
     "use strict";
     var allobjs, i;
