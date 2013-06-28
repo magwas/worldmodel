@@ -4,9 +4,6 @@
 
 <web-app>
 	<display-name>World Model</display-name>
-	<welcome-file-list>
-		<welcome-file>index.xml</welcome-file>
-	</welcome-file-list>
 	<mime-mapping>
 		<extension>xml</extension>
 		<mime-type>text/xml</mime-type>
