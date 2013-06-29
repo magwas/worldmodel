@@ -2,9 +2,13 @@
 <?xml-stylesheet type="text/xsl" href="stylesheet.xsl"?>
 <objects>
 
+<!-- already built in
 <BaseObject id="thing" type="thing"/>
-<!-- TODO(code): source and dest is inherited because type reference, can be overridden to subtype -->
 <BaseObject id="relation" type="thing" source="thing" dest="thing"/>
+<BaseObject id="contains" type="relation"/>
+
+-->
+<!-- TODO(code): source and dest is inherited because type reference, can be overridden to subtype -->
 <BaseObject id="quality" type="relation" source="relation" dest="thing"/>
 <!-- TODO(code): relations of noninherited quality are not inherited in subtyping, every other is -->
 <!-- FIXME: for source or also for dest? -->
@@ -26,7 +30,6 @@
 <BaseObject id="quality_references_max_1_relation" type="maxreferences" source="quality" dest="One"/>
 <BaseObject id="quality_references_min_0_relation" type="minreferences" source="quality" dest="Zero"/>
 <BaseObject id="relation_have_min_0_quality" type="minoccurs" source="quality" dest="Zero"/>
-<BaseObject id="contains" type="relation"/>
 <BaseObject id="thing_contains_min_0_thing" type="minoccurs" source="contains" dest="Zero"/>
 <BaseObject id="thing_contained_in_max_1_thing" type="maxreferences" source="contains" dest="One"/>
 <BaseObject id="follows_maxoccurs_1" type="maxoccurs" source="follows" dest="One"/>

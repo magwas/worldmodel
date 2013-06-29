@@ -82,6 +82,11 @@ public final class Util {
         log(Level.INFO, "Stack trace: " + ExceptionUtils.getStackTrace(e));
     }
     
+    public static void logInfo(String string) {
+        log(Level.INFO, string);
+        
+    }
+    
     public static void shutdown() {
         // Close caches and connection pools
         sessionFactory.close();
@@ -101,7 +106,7 @@ public final class Util {
     }
     
     public static void die(Exception e) {
-        e.printStackTrace();
+        logException(e);
         System.exit(1);
     }
     

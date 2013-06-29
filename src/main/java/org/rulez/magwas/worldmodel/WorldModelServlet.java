@@ -29,8 +29,9 @@ public class WorldModelServlet extends HttpServlet {
     /**
      * serial version just to get rid of warning
      */
-    private static final long serialVersionUID = 1L;
-    private static final int  NUMENTRIES       = 25;
+    private static final long       serialVersionUID = 1L;
+    private static final int        NUMENTRIES       = 25;
+    private List<IWorldModelPlugin> pluginstack      = null;
     
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -50,6 +51,27 @@ public class WorldModelServlet extends HttpServlet {
             thing.setId(Value.getValueByValue("thing", session));
             thing.setType(thing);
             session.save(thing);
+        }
+        String pluginstackConfig = config.getInitParameter("PluginStack");
+        pluginstack = new ArrayList<IWorldModelPlugin>();
+        for (String classname : pluginstackConfig.split("[ \t\n\r]+")) {
+            try {
+                Util.logInfo("initializing plugin:" + classname + ".");
+                IWorldModelPlugin plugin = (IWorldModelPlugin) Class.forName(
+                        classname).newInstance();
+                pluginstack.add(plugin);
+                plugin.init(session);
+            } catch (Exception e) {
+                Util.die(e);
+            }
+        }
+        session.close();
+    }
+    
+    public void checkAll() throws Exception {
+        Session session = Util.getSession();
+        for (IWorldModelPlugin plugin : pluginstack) {
+            plugin.checkConsistencyAll(session);
         }
         session.close();
     }
@@ -79,12 +101,19 @@ public class WorldModelServlet extends HttpServlet {
             Document outdoc = Util.newDocument();
             Element rootnode = outdoc.createElement("objects");
             outdoc.appendChild(rootnode);
+            List<BaseObject> newobjs = new ArrayList<BaseObject>();
             for (int i = 0; i < objs.getLength(); i++) {
                 BaseObject obj = new BaseObject((Element) objs.item(i), session);
+                newobjs.add(obj);
                 session.save(obj);
                 Element xml;
                 xml = obj.toXML(outdoc);
                 rootnode.appendChild(xml);
+            }
+            for (IWorldModelPlugin plugin : pluginstack) {
+                for (BaseObject candidate : newobjs) {
+                    plugin.checkConsistencyOne(session, candidate);
+                }
             }
             
             str = Util.dom2String(outdoc);
@@ -182,6 +211,7 @@ public class WorldModelServlet extends HttpServlet {
     
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // FIXME should only convert the get to post and submit
         /*
          * expects zero or more of the following parameters: - id: a composite
          * id of the object we are looking for - type: a composite id as the
