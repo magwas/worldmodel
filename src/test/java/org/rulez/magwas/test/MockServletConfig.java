@@ -7,9 +7,16 @@ import javax.servlet.ServletContext;
 
 public class MockServletConfig implements ServletConfig {
     
+    public String param;
+    
+    MockServletConfig() {
+        super();
+        param = "org.rulez.magwas.worldmodel.HierarchyPlugin";
+    }
+    
     @Override
     public String getInitParameter(String arg0) {
-        return "org.rulez.magwas.worldmodel.HierarchyPlugin";
+        return param;
     }
     
     @Override

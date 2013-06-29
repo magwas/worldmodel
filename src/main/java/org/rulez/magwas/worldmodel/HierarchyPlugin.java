@@ -21,6 +21,8 @@ import org.xml.sax.SAXException;
  *  - there should not be two relations of type or derived from "contains" where dest is the same.
  */
 public class HierarchyPlugin implements IWorldModelPlugin {
+    
+    private static final long        serialVersionUID  = 1L;
     static final String              INITOBJECTS       = "<objs>"
                                                                + "<BaseObject id=\"relation\" type=\"thing\" source=\"thing\" dest=\"thing\"/>"
                                                                + "<BaseObject id=\"contains\" type=\"relation\"/>"
@@ -39,6 +41,7 @@ public class HierarchyPlugin implements IWorldModelPlugin {
                                                                + "</objs>";
     private Set<BaseObject>          checked           = new HashSet<BaseObject>();
     private BaseObject               hierarchyroot;
+    // FIXME: it should be cleared from items added in a failed transaction
     private Map<BaseObject, Boolean> iscontainrelation = new HashMap<BaseObject, Boolean>();
     private BaseObject               thing;
     
@@ -69,6 +72,7 @@ public class HierarchyPlugin implements IWorldModelPlugin {
     private Boolean isContainRelation(BaseObject relation)
             throws HierarchyInconsistencyException {
         if (iscontainrelation.containsKey(relation)) {
+            // FIXME no unit test coverage
             return iscontainrelation.get(relation);
         }
         Set<BaseObject> relationLineage = new HashSet<BaseObject>();
@@ -78,7 +82,6 @@ public class HierarchyPlugin implements IWorldModelPlugin {
     private Boolean isContainRelation(BaseObject relation,
             Set<BaseObject> relationLineage)
             throws HierarchyInconsistencyException {
-        System.out.println("ick" + relation.getCompositeId());
         if (relationLineage.contains(relation)) {
             // loop
             throw new HierarchyInconsistencyException("relation loop at "
@@ -86,6 +89,9 @@ public class HierarchyPlugin implements IWorldModelPlugin {
         }
         BaseObject type = relation.getType();
         if (type == null || type.equals(thing)) {
+            for (BaseObject r : relationLineage) {
+                iscontainrelation.put(r, false);
+            }
             return false;
         }
         if (iscontainrelation.containsKey(type)) {
@@ -133,11 +139,11 @@ public class HierarchyPlugin implements IWorldModelPlugin {
                 if (isContainRelation(r)) {
                     containscount += 1;
                     if (containscount > 1) {
-                        throw new HierarchyInconsistencyException("object "
+                        throw new HierarchyInconsistencyException("object '"
                                 + obj.getCompositeId()
-                                + " have at least two parents: "
-                                + r.getCompositeId() + " and "
-                                + container.getCompositeId());
+                                + "' have at least two parents: '"
+                                + r.getCompositeId() + "' and '"
+                                + container.getCompositeId() + "'");
                     }
                     container = r;
                 }

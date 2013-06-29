@@ -1,13 +1,15 @@
 package org.rulez.magwas.worldmodel;
 
+import java.io.Serializable;
+
 import org.hibernate.Session;
 
-public interface IWorldModelPlugin {
+public interface IWorldModelPlugin extends Serializable {
     
     /*
      * initialisation of the plugin
      */
-    public void init(Session session) throws Exception;
+    void init(Session session) throws Exception;
     
     /*
      * Checks the consistency of one object.

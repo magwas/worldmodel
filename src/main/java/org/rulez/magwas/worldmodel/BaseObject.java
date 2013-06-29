@@ -1,6 +1,7 @@
 package org.rulez.magwas.worldmodel;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,9 @@ import org.xml.sax.SAXException;
 
 @Entity
 @Table(name = "object")
-public class BaseObject {
+public class BaseObject implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     public BaseObject() {
         super();
@@ -55,11 +58,15 @@ public class BaseObject {
                 BaseObject tobj = getBaseObjectByCompositeId(typestring,
                         session);
                 if (tobj == null) {
+                    Util.logInfo("object for type does not exists. id="
+                            + typestring);
                     throw new InputParseException(
                             "object for type does not exists. id=" + typestring);
                 }
                 this.type = tobj;
             }
+        } else {
+            throw new InputParseException("object without type " + cidstring);
         }
         String sourcestring = node.getAttribute("source");
         if (!sourcestring.equals("")) {
@@ -180,6 +187,7 @@ public class BaseObject {
         return this.getCompositeId().hashCode() + 1;
     }
     
+    @SuppressWarnings("unused")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -210,26 +218,6 @@ public class BaseObject {
     private Value      value;
     
     /**
-     * @return the physid
-     */
-    public Integer getPhysid() {
-        if (this.physid == null) {
-            throw new UnsupportedOperationException(
-                    "You should persist before getting physid");
-        }
-        return physid;
-    }
-    
-    /**
-     * @param physid
-     *            the physid to set
-     */
-    public void setPhysid(int physid) {
-        
-        this.physid = physid;
-    }
-    
-    /**
      * @return the id
      */
     public Value getId() {
@@ -239,12 +227,8 @@ public class BaseObject {
         return theid;
     }
     
-    /**
-     * @param id
-     *            the id to set
-     */
-    public void setId(Value id) {
-        this.theid = id;
+    public void setId(Value theid) {
+        this.theid = theid;
     }
     
     /**
@@ -252,14 +236,6 @@ public class BaseObject {
      */
     public Value getVersion() {
         return version;
-    }
-    
-    /**
-     * @param version
-     *            the version to set
-     */
-    public void setVersion(Value version) {
-        this.version = version;
     }
     
     /**
@@ -285,14 +261,6 @@ public class BaseObject {
     }
     
     /**
-     * @param source
-     *            the source to set
-     */
-    public void setSource(BaseObject source) {
-        this.source = source;
-    }
-    
-    /**
      * @return the dest
      */
     public BaseObject getDest() {
@@ -300,26 +268,10 @@ public class BaseObject {
     }
     
     /**
-     * @param dest
-     *            the dest to set
-     */
-    public void setDest(BaseObject dest) {
-        this.dest = dest;
-    }
-    
-    /**
      * @return the value
      */
     public Value getValue() {
         return value;
-    }
-    
-    /**
-     * @param value
-     *            the value to set
-     */
-    public void setValue(Value value) {
-        this.value = value;
     }
     
     public String getCompositeId() {

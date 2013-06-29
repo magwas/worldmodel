@@ -9,24 +9,39 @@
 
 -->
 <!-- TODO(code): source and dest is inherited because type reference, can be overridden to subtype -->
+<!-- TODO(code): check noncircularity -->
 <BaseObject id="quality" type="relation" source="relation" dest="thing"/>
 <!-- TODO(code): relations of noninherited quality are not inherited in subtyping, every other is -->
 <!-- FIXME: for source or also for dest? -->
-<BaseObject id="noninherited" type="thing"/>
-<!-- TODO(code): check noncircularity -->
-<BaseObject id="noncircular" type="thing"/>
 <!-- TODO(ontology): Peano axioms? -->
 <!-- FIXME: follows is noncircular. What is a type has minoccur(follows) > 0 ? -->
-<BaseObject id="follows" type="relation" source="thing" dest="thing"/>
 <!-- TODO(code): We should be able to get away without having all integer < n on database -->
-<BaseObject id="integer" type="thing"/>
-<BaseObject id="Zero" type="integer" value="0" />
-<BaseObject id="One" type="integer" value="1" />
 <!-- TODO(code): minoccurs, maxoccurs, minreferences and maxreferences should be checked -->
+<!-- TODO(code): xml representation of documents -->
+<!-- objects of type attribute have the attribute key as value
+  objects of type directly subclassed from attribute have the attribute value as value
+  FIXME: is it consistent?
+ -->
+<BaseObject id="noninherited" type="thing"/>
+<BaseObject id="noninherited_rel" type="contains" source="hierarchyroot" dest="noninherited"/>
+<BaseObject id="noncircular" type="thing"/>
+<BaseObject id="noncircular_rel" type="contains" source="ontology" dest="noncircular"/>
+<BaseObject id="follows" type="contains"/>
+<BaseObject id="follows_rel" type="contains" source="ontology" dest="follows"/>
+<BaseObject id="integer" type="thing"/>
+<BaseObject id="integer_rel" type="contains" source="ontology" dest="integer"/>
+<BaseObject id="Zero" type="integer" value="0" />
+<BaseObject id="Zero_rel" type="contains" source="hierarchyroot" dest="Zero"/>
+<BaseObject id="One" type="integer" value="1" />
+<BaseObject id="One_rel" type="contains" source="hierarchyroot" dest="One"/>
 <BaseObject id="minoccurs" type="quality" dest="integer"/>
+<BaseObject id="minoccurs_rel" type="contains" source="hierarchyroot" dest="minoccurs"/>
 <BaseObject id="maxoccurs" type="quality" dest="integer"/>
+<BaseObject id="maxoccurs_rel" type="contains" source="hierarchyroot" dest="maxoccurs"/>
 <BaseObject id="minreferences" type="quality" dest="integer"/>
+<BaseObject id="minreferences_rel" type="contains" source="hierarchyroot" dest="minreferences"/>
 <BaseObject id="maxreferences" type="quality" dest="integer"/>
+<BaseObject id="maxreferences_rel" type="contains" source="hierarchyroot" dest="maxreferences"/>
 <BaseObject id="quality_references_max_1_relation" type="maxreferences" source="quality" dest="One"/>
 <BaseObject id="quality_references_min_0_relation" type="minreferences" source="quality" dest="Zero"/>
 <BaseObject id="relation_have_min_0_quality" type="minoccurs" source="quality" dest="Zero"/>
@@ -35,29 +50,20 @@
 <BaseObject id="follows_maxoccurs_1" type="maxoccurs" source="follows" dest="One"/>
 <BaseObject id="follows_maxreferences_1" type="maxreferences" source="follows" dest="One"/>
 <BaseObject id="follows_noncircular" type="quality" source="follows" dest="noncircular"/>
-<!-- TODO(code): xml representation of documents -->
 <BaseObject id="document" type="thing"/>
+<BaseObject id="document_rel" type="contains" source="hierarchyroot" dest="document"/>
 <BaseObject id="tag" type="thing"/>
-<!-- objects of type attribute have the attribute key as value
-	objects of type directly subclassed from attribute have the attribute value as value
-	FIXME: is it consistent?
- -->
 <BaseObject id="attribute" type="thing"/>
 <BaseObject id="document contains tag" type="contains" source="document" dest="tag"/>
 <BaseObject id="tag_contains_attribute" type="contains" source="tag" dest="attribute"/>
-<BaseObject id="tag_contains_tag" type="contains" source="tag" dest="tag"/>
 <BaseObject id="tag_maxreferences_attribute_1" type="maxreferences" source="tag_contains_attribute" dest="One"/>
 <BaseObject id="document_contains_max_1_tag" type="maxoccurs" source="document contains tag" dest="One"/>
 <BaseObject id="tag_contains_max_0_attribute" type="maxoccurs" source="tag_contains_attribute" dest="Zero"/>
-<BaseObject id="tag_contains_max_0_tag" type="maxoccurs" source="tag_contains_tag" dest="Zero"/>
-<!-- FIXME: not true in this form
-<BaseObject id="tag_follows_tag" type="follows" source="tag" dest="tag"/>
- -->
 <BaseObject id="textNode" type="thing"/>
-<BaseObject id="textNode_follows_textNode" type="follows" source="textNode" dest="textNode"/>
 <BaseObject id="tag_contains_textNode" type="contains" source="tag" dest="textNode"/>
 <BaseObject id="tag_contains_min_0_textNode" type="minoccurs" source="tag_contains_textNode" dest="Zero"/>
 <BaseObject id="htmldocument" type="document"/>
+<BaseObject id="htmldocument_rel" type="contains" source="hierarchyroot" dest="htmldocument"/>
 <BaseObject id="html" type="tag" value="html" />
 <BaseObject id="htmldocument_contains_html" type="contains" source="htmldocument" dest="html"/>
 <BaseObject id="head" type="tag" value="head" />
@@ -67,9 +73,7 @@
 <BaseObject id="head_contains_title" type="contains" source="head" dest="title"/>
 <BaseObject id="head_contains_max_1_title" type="maxoccurs" source="head_contains_title" dest="One"/>
 <BaseObject id="body" type="tag" value="body" />
-<BaseObject id="head_contains_body" type="contains" source="head" dest="body"/>
-<BaseObject id="head_contains_max_1_body" type="maxoccurs" source="head_contains_body" dest="One"/>
-<BaseObject id="body_follows_head" type="follows" source="body" dest="head"/>
+<BaseObject id="body_follows_head" type="follows" source="head" dest="body"/>
 <BaseObject id="h1" type="tag" value="h1" />
 <BaseObject id="body_contains_h1" type="contains" source="body" dest="h1"/>
 <BaseObject id="body_contains_min_0_h1" type="minoccurs" source="body_contains_h1" dest="Zero"/>
@@ -77,8 +81,11 @@
 <BaseObject id="body_contains_p" type="contains" source="body" dest="p"/>
 <BaseObject id="body_contains_min_0_p" type="minoccurs" source="body_contains_p" dest="Zero"/>
 <BaseObject id="a" type="tag" value="a" />
+<BaseObject id="a_rel" type="contains" source="body" dest="a"/>
 <BaseObject id="href" type="attribute" value="href" />
+<BaseObject id="href_rel" type="contains" source="body" dest="href"/>
 <BaseObject id="my_first_document" type="document"/>
+<BaseObject id="my_first_document_rel" type="contains" source="hierarchyroot" dest="my_first_document"/>
 <BaseObject id="html#1" type="html"/>
 <BaseObject id="my_first_document_containshtml#1" type="contains" source="my_first_document" dest="html#1"/>
 <BaseObject id="head#1:" type="head"/>
@@ -86,10 +93,9 @@
 <BaseObject id="body#1:" type="body"/>
 <BaseObject id="html#1_contains_body#1" type="contains" source="html#1" dest="body#1"/>
 <BaseObject id="p#1" type="p"/>
-<BaseObject id="body#1_contains_p#1" type="contains" source="body#1" dest="p#1"/>
 <BaseObject id="h1#1" type="h1"/>
 <BaseObject id="body#1_contains_h1#1" type="contains" source="body#1" dest="h1#1"/>
-<BaseObject id="p#1_follows_h1#1" type="follows" source="p#1" dest="h1#1"/>
+<BaseObject id="p#1_follows_h1#1" type="follows" source="h1#1" dest="p#1"/>
 <BaseObject id="textNode#1" type="textNode" value="Árvíztűrő egy" />
 <BaseObject id="textNode#2" type="textNode" value="Tükörfúrógép" />
 <BaseObject id="a#1" type="a"/>
@@ -98,6 +104,8 @@
 <BaseObject id="p#1_contains_textNode#1" type="contains" source="p#1" dest="textNode#1"/>
 <BaseObject id="p#1_contains_textNode#2" type="contains" source="p#1" dest="textNode#2"/>
 <BaseObject id="p#1_contains_a#1" type="contains" source="p#1" dest="a#1"/>
+<!-- 
+-->
 <!--
 <html>
  <head>

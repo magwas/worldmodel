@@ -107,6 +107,7 @@ public final class Util {
     
     public static void die(Exception e) {
         logException(e);
+        shutdown();
         System.exit(1);
     }
     

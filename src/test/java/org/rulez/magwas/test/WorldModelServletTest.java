@@ -27,6 +27,7 @@ public class WorldModelServletTest {
     
     @BeforeClass
     public static void before() throws Exception {
+        System.out.println("Before");
         servlet = new WorldModelServlet();
         ServletConfig config = new MockServletConfig();
         servlet.init(config);
@@ -41,14 +42,39 @@ public class WorldModelServletTest {
         MyHttpServletRequest request = new MyHttpServletRequest();
         MyHttpServletResponse response = new MyHttpServletResponse();
         servlet.doGet(request, response);
+        String output = response.getOutput();
+        assertEquals(
+                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n"
+                        + "<?xml-stylesheet type=\"text/xsl\" href=\"stylesheet.xsl\"?>"
+                        + "<objects>\n"
+                        + "<BaseObject id=\"thing\"/>\n"
+                        + "<BaseObject dest=\"thing\" id=\"relation\" source=\"thing\" type=\"thing\"/>\n"
+                        + "<BaseObject id=\"contains\" type=\"relation\"/>\n"
+                        + "<BaseObject id=\"folder\" type=\"thing\"/>\n"
+                        + "<BaseObject id=\"hierarchyroot\" type=\"folder\"/>\n"
+                        + "<BaseObject id=\"ontology\" type=\"folder\"/>\n"
+                        + "<BaseObject id=\"basic ontology\" type=\"folder\"/>\n"
+                        + "<BaseObject dest=\"ontology\" id=\"c1\" source=\"hierarchyroot\" type=\"contains\"/>\n"
+                        + "<BaseObject dest=\"basic ontology\" id=\"c2\" source=\"ontology\" type=\"contains\"/>\n"
+                        + "<BaseObject dest=\"thing\" id=\"c3\" source=\"basic ontology\" type=\"contains\"/>\n"
+                        + "<BaseObject dest=\"relation\" id=\"c4\" source=\"basic ontology\" type=\"contains\"/>\n"
+                        + "<BaseObject id=\"hierarchy\" type=\"folder\"/>\n"
+                        + "<BaseObject dest=\"hierarchy\" id=\"c5\" source=\"ontology\" type=\"contains\"/>\n"
+                        + "<BaseObject dest=\"contains\" id=\"c6\" source=\"hierarchy\" type=\"contains\"/>\n"
+                        + "<BaseObject dest=\"folder\" id=\"c7\" source=\"hierarchy\" type=\"contains\"/>\n"
+                        + "</objects>\n", output);
         servlet.checkAll();
         FileInputStream inputStream = new FileInputStream(
                 "src/test/resources/searchtest.xml");
         String objstring = IOUtils.toString(inputStream);
-        System.out.println(objstring);
-        request.setInputString(objstring);
         inputStream.close();
-        servlet.doPost(request, response);
+        MyHttpServletRequest request2 = new MyHttpServletRequest();
+        MyHttpServletResponse response2 = new MyHttpServletResponse();
+        request2.setInputString(objstring);
+        servlet.doPost(request2, response2);
+        String output2 = response2.getOutput();
+        Document retdoc = Util.newDocument(output2);
+        assertEquals(0, retdoc.getElementsByTagName("exception").getLength());
         
     }
     
@@ -145,7 +171,7 @@ public class WorldModelServletTest {
             assertEquals(typestr, "relation");
             idlist.add(idstr);
         }
-        assertEquals(3, bolist.getLength());
+        assertEquals(2, bolist.getLength());
         assertEquals(0, retdoc.getElementsByTagName("continues").getLength());
     }
     
@@ -170,7 +196,7 @@ public class WorldModelServletTest {
             assertEquals(typestr, "thing");
             idlist.add(idstr);
         }
-        assertEquals(2, bolist.getLength());
+        assertEquals(1, bolist.getLength());
         assertEquals(0, retdoc.getElementsByTagName("continues").getLength());
     }
     
@@ -230,19 +256,19 @@ public class WorldModelServletTest {
         request.setInputString(objstring);
         servlet.doPost(request, response);
         
-        assertEquals(response.getOutput(),
-                "<exception>object loop at stuff1</exception>");
+        assertEquals("<exception>object loop at stuff1</exception>",
+                response.getOutput());
     }
     
     @Test
     public void testDoPostTest1() throws ServletException, IOException {
         String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<xml>"
-                + "<BaseObject id=\"idnum\" value=\"érték\"/>"
+                + "<BaseObject id=\"idnum\" value=\"érték\" type=\"thing\"/>"
                 + "<BaseObject id=\"idnumplace\" type=\"contains\" source=\"hierarchyroot\" dest=\"idnum\"/>"
                 + "</xml>";
         String retstring = "<objects>"
-                + "<BaseObject id=\"idnum\" value=\"érték\"/>"
+                + "<BaseObject id=\"idnum\" type=\"thing\" value=\"érték\"/>"
                 + "<BaseObject dest=\"idnum\" id=\"idnumplace\" source=\"hierarchyroot\" type=\"contains\"/>"
                 + "</objects>";
         MyHttpServletRequest request = new MyHttpServletRequest();
@@ -257,15 +283,15 @@ public class WorldModelServletTest {
     public void testDoPostMoreObjects() throws ServletException, IOException {
         String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<xml>"
-                + "<BaseObject id=\"idnum2\" value=\"érték\"/>"
+                + "<BaseObject id=\"idnum2\" value=\"érték\" type=\"thing\"/>"
                 + "<BaseObject id=\"idnumplace2\" type=\"contains\" source=\"hierarchyroot\" dest=\"idnum2\"/>"
-                + "<BaseObject id=\"idnum3\" value=\"érték\"/>"
+                + "<BaseObject id=\"idnum3\" value=\"érték\" type=\"thing\"/>"
                 + "<BaseObject id=\"idnumplace3\" type=\"contains\" source=\"hierarchyroot\" dest=\"idnum3\"/>"
                 + "</xml>";
         String retstring = "<objects>"
-                + "<BaseObject id=\"idnum2\" value=\"érték\"/>"
+                + "<BaseObject id=\"idnum2\" type=\"thing\" value=\"érték\"/>"
                 + "<BaseObject dest=\"idnum2\" id=\"idnumplace2\" source=\"hierarchyroot\" type=\"contains\"/>"
-                + "<BaseObject id=\"idnum3\" value=\"érték\"/>"
+                + "<BaseObject id=\"idnum3\" type=\"thing\" value=\"érték\"/>"
                 + "<BaseObject dest=\"idnum3\" id=\"idnumplace3\" source=\"hierarchyroot\" type=\"contains\"/>"
                 + "</objects>";
         MyHttpServletRequest request = new MyHttpServletRequest();
@@ -280,11 +306,11 @@ public class WorldModelServletTest {
     public void testDoPostTest2() throws ServletException, IOException {
         String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<xml>\n"
-                + "<BaseObject id=\"harom\" value=\"na micsoda?\"/>"
+                + "<BaseObject id=\"harom\" value=\"na micsoda?\" type=\"thing\"/>"
                 + "<BaseObject id=\"haromplace\" type=\"contains\" source=\"hierarchyroot\" dest=\"harom\"/>"
                 + "</xml>";
         String retstring = "<objects>"
-                + "<BaseObject id=\"harom\" value=\"na micsoda?\"/>"
+                + "<BaseObject id=\"harom\" type=\"thing\" value=\"na micsoda?\"/>"
                 + "<BaseObject dest=\"harom\" id=\"haromplace\" source=\"hierarchyroot\" type=\"contains\"/>"
                 + "</objects>";
         MyHttpServletRequest request = new MyHttpServletRequest();
@@ -299,15 +325,15 @@ public class WorldModelServletTest {
     public void testDoPostAndGet() throws ServletException, IOException {
         String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<xml>\n"
-                + "<BaseObject id=\"hehe\" value=\"post And Get\"/>"
+                + "<BaseObject id=\"hehe\" value=\"post And Get\" type=\"thing\"/>"
                 + "<BaseObject id=\"heheplace\" type=\"contains\" source=\"hierarchyroot\" dest=\"hehe\"/>"
                 + "</xml>";
         String retstring = "<objects>"
-                + "<BaseObject id=\"hehe\" value=\"post And Get\"/>"
+                + "<BaseObject id=\"hehe\" type=\"thing\" value=\"post And Get\"/>"
                 + "<BaseObject dest=\"hehe\" id=\"heheplace\" source=\"hierarchyroot\" type=\"contains\"/>"
                 + "</objects>";
         String retstring2 = "<objects>"
-                + "<BaseObject id=\"hehe\" value=\"post And Get\"/>"
+                + "<BaseObject id=\"hehe\" type=\"thing\" value=\"post And Get\"/>"
                 + "</objects>";
         MyHttpServletRequest request = new MyHttpServletRequest();
         MyHttpServletResponse response = new MyHttpServletResponse();
@@ -328,11 +354,11 @@ public class WorldModelServletTest {
             IOException {
         String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<xml>\n"
-                + "<BaseObject id=\"negy\" value=\"negyedik\"/>"
+                + "<BaseObject id=\"negy\" value=\"negyedik\" type=\"thing\"/>"
                 + "<BaseObject id=\"negyplace\" type=\"contains\" source=\"hierarchyroot\" dest=\"negy\"/>"
                 + "</xml>";
         String retstring = "<objects>"
-                + "<BaseObject id=\"negy\" value=\"negyedik\"/>"
+                + "<BaseObject id=\"negy\" type=\"thing\" value=\"negyedik\"/>"
                 + "<BaseObject dest=\"negy\" id=\"negyplace\" source=\"hierarchyroot\" type=\"contains\"/>"
                 + "</objects>";
         MyHttpServletRequest request = new MyHttpServletRequest();
