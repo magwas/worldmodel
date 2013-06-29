@@ -11,6 +11,10 @@
 	<servlet>
 		<servlet-name>worldmodel</servlet-name>
 		<servlet-class>org.rulez.magwas.worldmodel.WorldModelServlet</servlet-class>
+		    <init-param>
+        <param-name>PluginStack</param-name>
+        <param-value>org.rulez.magwas.worldmodel.HierarchyPlugin</param-value>
+    </init-param>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>worldmodel</servlet-name>
