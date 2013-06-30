@@ -11,7 +11,7 @@ define(
             "thing.HierarchyTree",
             [ ],
             {
-                browser: null,
+                browser1: null,
                 constructor : function () {
                     var obMan, hierarchyTreeModel, tree, browser1;
                     obMan = ObjectManager;
@@ -94,12 +94,12 @@ define(
                     this.tree = new Tree({
                         model : hierarchyTreeModel
                     });
-                },
-                placeAt: function (where) {
                     this.browser1 = new ContentPane({
                         title : "Hierarchy Tree"
                     });
                     this.tree.placeAt(this.browser1);
+                },
+                placeAt: function (where) {
                     this.tree.startup();
                     this.browser1.placeAt(where);
                 }
