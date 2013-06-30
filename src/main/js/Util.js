@@ -35,12 +35,16 @@ Util.xmlGet = function (uriend) {
     return xmlDoc;
 };
 
+Util.showException = function (str) {
+    alert(str);
+};
+
 Util.processExceptions = function (response) {
     "use strict";
     var allobjs, i;
     allobjs = response.getElementsByTagName("exception");
     for (i = 0; i < allobjs.length; i += 1) {
-        alert(allobjs[i].textContent);
+        Util.showException(allobjs[i].textContent);
     }
     return (allobjs.length === 0);
 };

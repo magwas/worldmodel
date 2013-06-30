@@ -1,29 +1,68 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
-<meta charset="utf-8">
-<title>Javascript unit tests for The Thing</title>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>The Thing</title>
+<script type="text/javascript" src="../../main/js/Util.js"></script>
+<link rel="stylesheet" href="../js/dijit/themes/claro/document.css">
+<link rel="stylesheet" href="../js/dijit/themes/claro/claro.css">
 <link rel="stylesheet" href="qunit.css">
+<script type="text/javascript" src="../js/dojo/dojo.js" data-dojo-config="parseOnLoad: false, async:true">
+</script><link rel="stylesheet" href="../../main/webapp/worldmodel.css">
+<script type="text/javascript">
+	require(["thing/ObjectManager"],function(ObjectManager) {
+	
+		ObjectManager.create('thing','','','','');
+		ObjectManager.create('relation','thing','','','');
+		ObjectManager.create('contains','relation','','','');
+		ObjectManager.create('folder','thing','','','');
+		ObjectManager.create('hierarchyroot','folder','','','');
+		ObjectManager.create('ontology','folder','','','');
+		ObjectManager.create('c1','contains','hierarchyroot','ontology','');
+		ObjectManager.create('basic ontology','folder','','','');
+		ObjectManager.create('c2','contains','ontology','basic ontology','');
+		ObjectManager.create('c3','contains','basic ontology','thing','');
+		ObjectManager.create('c4','contains','basic ontology','relation','');
+		ObjectManager.create('hierarchy','folder','','','');
+		ObjectManager.create('c5','contains','ontology','hierarchy','');
+		ObjectManager.create('c6','contains','hierarchy','contains','');
+		ObjectManager.create('c7','contains','hierarchy','folder','');
+		ObjectManager.create('another folder','folder','folder','','');
+/*
+*/
+
+	});
+	</script>
 </head>
-<body>
+<body class="claro">
+
 <div id="qunit"></div>
 <div id="qunit-fixture"></div>
 <script src="../js/qunit.js"></script>
-<script type="text/javascript" src="../js/dojo/dojo.js"
-		data-dojo-config="parseOnLoad: false, async:true"></script>
-
-<script src="../../main/js/Util.js"></script>
-<!-- 
-<script src="../../main/js/thing/BaseObject.js"></script>
-<script src="../../main/js/thing/ObjectManager.js"></script>
-<script src="../../main/js/thing/TableBrowser.js"></script>
- -->
 <script src="../js/TestUtil.js"></script>
+<!--
+-->
 <script src="../js/BaseObjectTest.js"></script>
 <script src="../js/ObjectManagerTest.js"></script>
 <script src="../js/TableBrowserTest.js"></script>
-<div data-dojo-type="dijit.layout.TabContainer"
-data-dojo-props="region:'center', tabStrip:true" id="testarea">
+<script src="../js/HierarchyTreeTest.js"></script>
+<script src="../js/TypeTreeTest.js"></script>
+
+<div id="loader"><div id="loaderInner" style="direction:ltr;white-space:nowrap;overflow:visible;">Loading ... </div></div>
+<div data-dojo-type="dijit.Menu" id="submenu1" data-dojo-props='contextMenuForWindow:true, style:"display:none"' style="display: none;">
+<div data-dojo-type="dijit.MenuItem" data-dojo-props="disabled:true">Context menu</div>
+<div data-dojo-type="dijit.MenuSeparator"></div>
 </div>
+<div id="main" data-dojo-type="dijit.layout.BorderContainer" data-dojo-props="liveSplitters:false, design:'sidebar', persist:true">
+<div id="header" data-dojo-type="dijit.MenuBar" data-dojo-props="region:'top'"><div data-dojo-type="dijit.PopupMenuBarItem" id="edit">
+<span>Edit</span><div data-dojo-type="dijit.Menu" id="editMenu"><div data-dojo-type="dijit.MenuItem" id="undo" data-dojo-props="iconClass:'dijitIconUndo'">A menu item will go here</div></div>
+</div></div>
+<div data-dojo-type="dijit.layout.AccordionContainer" data-dojo-props="region:'leading', splitter:true, minSize:20" style="width: 300px;" id="navigatorArea"></div>
+<div data-dojo-type="dijit.layout.TabContainer" data-dojo-props="region:'center', tabStrip:true" id="browserArea"></div>
+<div data-dojo-type="dijit.layout.TabContainer" id="inspectorArea" data-dojo-props="     tabPosition:'bottom', region:'bottom',     splitter:true, tabStrip:true    ">
+			Inspector widgets can come here.
+		</div>
+</div>
+<script type="text/javascript" src="../../main/js/main.js"></script>
 </body>
 </html>
