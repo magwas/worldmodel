@@ -36,6 +36,7 @@ Util.xmlGet = function (uriend) {
 };
 
 Util.showException = function (str) {
+    "use strict";
     alert(str);
 };
 
