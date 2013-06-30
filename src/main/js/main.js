@@ -1,7 +1,7 @@
 /*global require:false*/
 require([ "dojo/dom", "dojo/ready", "dojo/_base/fx", "dojo/parser",
     "dijit/tree/ObjectStoreModel", "dijit/Tree",
-    "dijit/layout/ContentPane", "thing/ObjectManager",
+    "dijit/layout/ContentPane",
     "thing/TableBrowser", "thing/TypeTree", "thing/HierarchyTree",
     //--- 
     "dijit/Menu", "dijit/MenuBar",
@@ -9,7 +9,7 @@ require([ "dojo/dom", "dojo/ready", "dojo/_base/fx", "dojo/parser",
     "dijit/layout/BorderContainer", "dijit/layout/AccordionContainer",
     "dijit/layout/TabContainer" ],
     function (dom, ready, fx, parser, ObjectStoreModel, Tree,
-        ContentPane, ObjectManager, TableBrowser, TypeTree, HierarchyTree) {
+        ContentPane, TableBrowser, TypeTree, HierarchyTree) {
         "use strict";
         (new HierarchyTree()).placeAt("navigatorArea");
         (new TypeTree()).placeAt("navigatorArea");

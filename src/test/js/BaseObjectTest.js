@@ -10,7 +10,7 @@ require(["thing/BaseObject"], function(BaseObject){
 			value: "thevalue"
 		});
 		equal(ob.id,"theid");
-		equal(ob.name,"id=theid");
+		equal(ob.name,"theid");
 		equal(ob.type,"thetype");
 		equal(ob.source,"thesrc");
 		equal(ob.dest,"thedest");
@@ -52,11 +52,11 @@ require(["thing/BaseObject"], function(BaseObject){
 		frag3 = document.createElement("BaseObject");
 		frag3.setAttribute("type","fragToObjectType3");
 		frag3.setAttribute("source","fragToObjectSource3");
-		var numobjs = Object.keys(ObjectManager.objects).length;
-		ObjectManager.fragToObject(frag3,TableRowObject);
-		equal(Object.keys(ObjectManager.objects).length,numobjs+1);
-		ObjectManager.fragToObject(frag3,TableRowObject);
-		equal(Object.keys(ObjectManager.objects).length,numobjs+1);
+		var numobjs = Object.keys(BaseObject.objectManager.objects).length;
+		BaseObject.objectManager.fragToObject(frag3,TableRowObject);
+		equal(Object.keys(BaseObject.objectManager.objects).length,numobjs+1);
+		BaseObject.objectManager.fragToObject(frag3,TableRowObject);
+		equal(Object.keys(BaseObject.objectManager.objects).length,numobjs+1);
 	});	
 	*/
 	

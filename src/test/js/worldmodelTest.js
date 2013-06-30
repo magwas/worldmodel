@@ -1,7 +1,7 @@
 test( "worldmodel edit, unedit, submit", function() {
 
-	ObjectManager.create("worldmodel edit test")
-	var numobjs = Object.keys(ObjectManager.objects).length;
+	BaseObject.objectManager.create("worldmodel edit test")
+	var numobjs = Object.keys(BaseObject.objectManager.objects).length;
 	edit("worldmodel edit test");
 	var trohtml = document.getElementById("worldmodel edit test");
 	var doc = (new DOMParser()).parseFromString(
@@ -16,7 +16,7 @@ test( "worldmodel edit, unedit, submit", function() {
 	"<input onclick=\"javascript:unedit('worldmodel edit test')\" value=\"Cancel\" type=\"submit\"/>" +
 	"</td></tr>",
 	 'text/xml');
-	equal(Object.keys(ObjectManager.objects).length,numobjs);
+	equal(Object.keys(BaseObject.objectManager.objects).length,numobjs);
 	equalxml(trohtml,doc.documentElement);
 	
 	var desttag = document.getElementById("worldmodel edit test_dest_t");
@@ -45,7 +45,7 @@ test( "worldmodel edit, unedit, submit", function() {
 			"</tr>",
 			 'text/xml');
 	
-	equal(Object.keys(ObjectManager.objects).length,numobjs);
+	equal(Object.keys(BaseObject.objectManager.objects).length,numobjs);
 	var trohtml = document.getElementById("worldmodel edit test");
 	console.log(trohtml.innerHTML)
 	equalxml(trohtml,doc2.documentElement);
@@ -55,20 +55,20 @@ test( "worldmodel edit, unedit, submit", function() {
 	desttag.value="test2"
 
 	submit("worldmodel edit test");
-	equal(Object.keys(ObjectManager.objects).length,numobjs);
+	equal(Object.keys(BaseObject.objectManager.objects).length,numobjs);
 	var trohtml = document.getElementById("worldmodel edit test");
 	equalxml(trohtml,doc2.documentElement);
-	equal(ObjectManager.getObjectForId("worldmodel edit test").id,"worldmodel edit test");
-	equal(ObjectManager.getObjectForId("worldmodel edit test").type,null);
-	equal(ObjectManager.getObjectForId("worldmodel edit test").source,null);
-	equal(ObjectManager.getObjectForId("worldmodel edit test").dest,"test2");
-	equal(ObjectManager.getObjectForId("worldmodel edit test").value,null);
+	equal(BaseObject.objectManager.getObjectForId("worldmodel edit test").id,"worldmodel edit test");
+	equal(BaseObject.objectManager.getObjectForId("worldmodel edit test").type,null);
+	equal(BaseObject.objectManager.getObjectForId("worldmodel edit test").source,null);
+	equal(BaseObject.objectManager.getObjectForId("worldmodel edit test").dest,"test2");
+	equal(BaseObject.objectManager.getObjectForId("worldmodel edit test").value,null);
 
 
 })
 
 test( "worldmodel search", function() {
-	var numobjs = Object.keys(ObjectManager.objects).length;
+	var numobjs = Object.keys(BaseObject.objectManager.objects).length;
 	search("id=worldmodel search test");
-	equal(Object.keys(ObjectManager.objects).length,numobjs+1);
+	equal(Object.keys(BaseObject.objectManager.objects).length,numobjs+1);
 })

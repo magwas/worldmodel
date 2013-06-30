@@ -1,11 +1,11 @@
 require([
-         "thing/TypeTree", "thing/ObjectManager",
-         ], function(TypeTree, ObjectManager){
+         "thing/TypeTree", "thing/BaseObject",
+         ], function(TypeTree, BaseObject){
     test( "init", function() {
         var tt, thing, onOk, onBad, tester;
         checkalert();
         tt = new TypeTree();
-        thing = ObjectManager.get("thing");
+        thing = BaseObject.objectManager.get("thing");
         equal("thing",thing.id);
         tester = function (obj,list) {
             onOk = function (l) {
@@ -26,12 +26,12 @@ require([
                 tester(thing,
                         ",relation,folder,1_thing,1_relation,1_noninherited,1_noncircular,1_integer,1_document,1_tag,1_attribute,1_thing:2,1_relation:2,1_noninherited:2,1_noncircular:2,1_integer:2");
                 
-                tester(ObjectManager.get("relation"),
+                tester(BaseObject.objectManager.get("relation"),
                         ",contains,1_quality,1_follows,1_contains,1_quality:2,1_follows:2");
                 var doc = (new DOMParser()).parseFromString(
                         '<object><BaseObject id="under_relation" type="relation"/></object>', 'text/xml');
-                ObjectManager.processResponse(doc);
-                tester(ObjectManager.get("relation"),
+                BaseObject.objectManager.processResponse(doc);
+                tester(BaseObject.objectManager.get("relation"),
                 ",contains,1_quality,1_follows,1_contains,1_quality:2,1_follows:2,under_relation");
 
             });

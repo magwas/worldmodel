@@ -1,8 +1,8 @@
 /*globals dojo: false, define: false*/
 define([ "dojo/_base/declare", "dijit/_WidgetBase",
-        "dijit/_TemplatedMixin", "thing/ObjectManager",
+        "dijit/_TemplatedMixin", "thing/BaseObject",
         "dijit/layout/ContentPane" ], function (declare,
-        WidgetBase, TemplatedMixin, ObjectManager) {
+        WidgetBase, TemplatedMixin, BaseObject) {
     "use strict";
     return declare("thing.TableRowObject", [ WidgetBase, TemplatedMixin ],
             {
@@ -21,14 +21,14 @@ define([ "dojo/_base/declare", "dijit/_WidgetBase",
                     if (this.obj[attname] !== null) {
                         a = document.createElement("a");
                         a.onclick = function () {
-                            ObjectManager.search(self.id);
+                            BaseObject.objectManager.search(self.id);
                         };
                         a.textContent = this.obj[attname];
                         td.appendChild(a);
                     }
                     a2 = document.createElement("a");
                     a2.onclick = function () {
-                        ObjectManager.search(self.obj.id);
+                        BaseObject.objectManager.search(self.obj.id);
                     };
                     a2.textContent = "+";
                     td.appendChild(a2);
@@ -93,7 +93,7 @@ define([ "dojo/_base/declare", "dijit/_WidgetBase",
                 but.type = "submit";
                 but.value = "Submit";
                 but.onclick = function () {
-                    ObjectManager.submit(self);
+                    BaseObject.objectManager.submit(self);
                 };
                 but2 = document.createElement("input");
                 but2.setAttribute("id", this.obj.id + "_butunedit");
@@ -115,7 +115,7 @@ define([ "dojo/_base/declare", "dijit/_WidgetBase",
                 this.postCreate();
             },
             submit : function () {
-                ObjectManager.submit(this);
+                BaseObject.objectManager.submit(this);
             },
             submitted : function () {
                 this.postCreate();

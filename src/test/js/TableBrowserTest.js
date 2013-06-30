@@ -1,8 +1,8 @@
 require([
          "thing/TableBrowser",
-         "thing/ObjectManager",
+         "thing/BaseObject",
          "dojo/ready"
-         ], function(TableBrowser,ObjectManager, ready){
+         ], function(TableBrowser,BaseObject, ready){
 	
 
 
@@ -14,9 +14,9 @@ require([
 	                    '<BaseObject id="TRO1" type="TRO1Type" source="TRO1Source" dest="TRO1Dest" value="TRO1Value"></BaseObject>'+
 	                    '<BaseObject id="TRO2" value="pr2Value">foo</BaseObject>'+
 	                    '</object>', 'text/xml');
-	            var numobjs = ObjectManager.data.length;
-	            ObjectManager.processResponse(doc);
-	            equal(ObjectManager.data.length,numobjs+2);
+	            var numobjs = BaseObject.objectManager.data.length;
+	            BaseObject.objectManager.processResponse(doc);
+	            equal(BaseObject.objectManager.data.length,numobjs+2);
 	            var trohtml = document.getElementById("TRO1");
 	            var vi=trohtml.getAttribute("widgetid");
 	            var str = ("<tr id=\"TRO1\" widgetid=\"WIDGETID\">" +
@@ -68,9 +68,9 @@ require([
 	            srcfield.value = "NewSrc";
 	            document.getElementById("TRO1_but").onclick();
 	            
-	            equal(ObjectManager.data.length,numobjs+3);
+	            equal(BaseObject.objectManager.data.length,numobjs+3);
 	            equal(trohtml2.parentElement.querySelectorAll("tr").length,numrows+1);
-	            var tro11 = ObjectManager.getObjectForId("TRO11");
+	            var tro11 = BaseObject.objectManager.getObjectForId("TRO11");
 	            var trohtml11 = document.getElementById("TRO11");
 	            equal(trohtml11.id,"TRO11");//exists
 	            equal(tro11.id,"TRO11");

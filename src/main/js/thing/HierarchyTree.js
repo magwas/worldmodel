@@ -1,10 +1,10 @@
 /*global define: false */
 define(
     [ "dojo/_base/declare", "dijit/tree/ObjectStoreModel",
-        "dijit/Tree", "thing/ObjectManager",
+        "dijit/Tree", "thing/BaseObject",
         "dijit/layout/ContentPane" ],
     function (declare, ObjectStoreModel,
-              Tree, ObjectManager,
+              Tree, BaseObject,
               ContentPane) {
         "use strict";
         return declare(
@@ -14,9 +14,9 @@ define(
                 browser1: null,
                 constructor : function () {
                     var obMan, hierarchyTreeModel, tree, browser1;
-                    obMan = ObjectManager;
+                    obMan = BaseObject.objectManager;
                     hierarchyTreeModel = new ObjectStoreModel({
-                        store : ObjectManager,
+                        store : BaseObject.objectManager,
                         containmentrelations: {contains: true},
                         query : {
                             id : 'hierarchyroot'
@@ -46,7 +46,7 @@ define(
                                 hierarchyTreeModel.traceToContainment(trace, false);
                                 return false;
                             }
-                            p = ObjectManager.get(obj.type);
+                            p = BaseObject.objectManager.get(obj.type);
                             if (p == null) {
                                 hierarchyTreeModel.traceToContainment(trace, false);
                                 return false;
@@ -57,7 +57,7 @@ define(
                         getChildren: function (parentItem, onComplete, onError) {
                             var currentKids, q, i, l, listener, objectsfor, of, j;
                             currentKids = [];
-                            q = ObjectManager.query({
+                            q = BaseObject.objectManager.query({
                                 source : parentItem.id
                             });
                             q.observe(listener);
@@ -65,7 +65,7 @@ define(
                                 var r = [];
                                 r.push(obj);
                                 if (hierarchyTreeModel.isContainment(obj)) {
-                                    r.push(ObjectManager.get(obj.dest));
+                                    r.push(BaseObject.objectManager.get(obj.dest));
                                 }
                                 return r;
                             };

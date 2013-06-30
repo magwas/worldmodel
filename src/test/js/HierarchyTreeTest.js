@@ -1,7 +1,7 @@
 /*global define: false, DOMParser: false, checkalert: false */
-require([ "thing/HierarchyTree", "thing/ObjectManager"
+require([ "thing/HierarchyTree", "thing/BaseObject"
         ],
-        function(HierarchyTree, ObjectManager) {
+        function(HierarchyTree, BaseObject) {
     test("init", function() {
         checkalert();
         var tt, thing, onOk, onBad, tester;
@@ -24,15 +24,15 @@ require([ "thing/HierarchyTree", "thing/ObjectManager"
         };
         setTimeout(function () {
             test( "hierarchytest", function() {
-                tester(ObjectManager.get("hierarchyroot"),
+                tester(BaseObject.objectManager.get("hierarchyroot"),
                         ",c1,ontology");
                 
-                tester(ObjectManager.get("hierarchy"),
+                tester(BaseObject.objectManager.get("hierarchy"),
                         ",c6,contains,c7,folder");
                 var doc = (new DOMParser()).parseFromString(
                         '<object><BaseObject id="under_hierarchy" type="folder" source="hierarchy"/></object>', 'text/xml');
-                ObjectManager.processResponse(doc);
-                tester(ObjectManager.get("hierarchy"),
+                BaseObject.objectManager.processResponse(doc);
+                tester(BaseObject.objectManager.get("hierarchy"),
                 ",c6,contains,c7,folder,under_hierarchy");
                 string2 =        '<object>'+
                         '<BaseObject id="under_hierarchy2" type="folder"/>'+
@@ -40,9 +40,9 @@ require([ "thing/HierarchyTree", "thing/ObjectManager"
                         '</object>';
                 //alert(string2);
                 var doc2 = (new DOMParser()).parseFromString(string2, 'text/xml');
-                ObjectManager.processResponse(doc2);
+                BaseObject.objectManager.processResponse(doc2);
                 checkalert();
-                tester(ObjectManager.get("hierarchy"),
+                tester(BaseObject.objectManager.get("hierarchy"),
                 ",c6,contains,c7,folder,under_hierarchy,under_hierarchy2_rel,under_hierarchy2");
 
             });

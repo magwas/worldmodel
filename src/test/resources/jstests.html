@@ -10,24 +10,24 @@
 <script type="text/javascript" src="../js/dojo/dojo.js" data-dojo-config="parseOnLoad: false, async:true">
 </script><link rel="stylesheet" href="../../main/webapp/worldmodel.css">
 <script type="text/javascript">
-	require(["thing/ObjectManager"],function(ObjectManager) {
+	require(["thing/BaseObject"],function(BaseObject) {
 	
-		ObjectManager.create('thing','','','','');
-		ObjectManager.create('relation','thing','','','');
-		ObjectManager.create('contains','relation','','','');
-		ObjectManager.create('folder','thing','','','');
-		ObjectManager.create('hierarchyroot','folder','','','');
-		ObjectManager.create('ontology','folder','','','');
-		ObjectManager.create('c1','contains','hierarchyroot','ontology','');
-		ObjectManager.create('basic ontology','folder','','','');
-		ObjectManager.create('c2','contains','ontology','basic ontology','');
-		ObjectManager.create('c3','contains','basic ontology','thing','');
-		ObjectManager.create('c4','contains','basic ontology','relation','');
-		ObjectManager.create('hierarchy','folder','','','');
-		ObjectManager.create('c5','contains','ontology','hierarchy','');
-		ObjectManager.create('c6','contains','hierarchy','contains','');
-		ObjectManager.create('c7','contains','hierarchy','folder','');
-		ObjectManager.create('another folder','folder','folder','','');
+		BaseObject.objectManager.create('thing','','','','');
+		BaseObject.objectManager.create('relation','thing','','','');
+		BaseObject.objectManager.create('contains','relation','','','');
+		BaseObject.objectManager.create('folder','thing','','','');
+		BaseObject.objectManager.create('hierarchyroot','folder','','','');
+		BaseObject.objectManager.create('ontology','folder','','','');
+		BaseObject.objectManager.create('c1','contains','hierarchyroot','ontology','');
+		BaseObject.objectManager.create('basic ontology','folder','','','');
+		BaseObject.objectManager.create('c2','contains','ontology','basic ontology','');
+		BaseObject.objectManager.create('c3','contains','basic ontology','thing','');
+		BaseObject.objectManager.create('c4','contains','basic ontology','relation','');
+		BaseObject.objectManager.create('hierarchy','folder','','','');
+		BaseObject.objectManager.create('c5','contains','ontology','hierarchy','');
+		BaseObject.objectManager.create('c6','contains','hierarchy','contains','');
+		BaseObject.objectManager.create('c7','contains','hierarchy','folder','');
+		BaseObject.objectManager.create('another folder','folder','folder','','');
 /*
 */
 

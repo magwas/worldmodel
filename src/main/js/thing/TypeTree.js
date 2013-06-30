@@ -1,10 +1,10 @@
 /*global define: false, console: false */
 define(
     [ "dojo/_base/declare", "dijit/tree/ObjectStoreModel",
-        "dijit/Tree", "thing/ObjectManager",
+        "dijit/Tree", "thing/BaseObject",
         "dijit/layout/ContentPane"],
     function (declare, ObjectStoreModel,
-              Tree, ObjectManager,
+              Tree, BaseObject,
               ContentPane, WidgetBase) {
         "use strict";
         return declare(
@@ -13,11 +13,10 @@ define(
             {
                 browser1 : null,
                 constructor : function () {
-                    console.log("constructor");
                     var typeTreeModel, tree;
                     // Create the model
                     typeTreeModel = new ObjectStoreModel({
-                        store : ObjectManager,
+                        store : BaseObject.objectManager,
                         query : {
                             id : 'thing'
                         }
@@ -33,7 +32,6 @@ define(
 
                 },
                 placeAt: function (where) {
-                    console.log("placeat");
                     this.browser1.placeAt(where);
                 }
             }
