@@ -5,25 +5,23 @@
 <xsl:template match="/">
 <html>
 <head>
-	<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
 
 	<title>The Thing</title>
-
-
-	<script type="text/javascript" src="js/Util.js"></script>
-	<link rel="stylesheet" href="js/dijit/themes/claro/document.css"/>
-	<link rel="stylesheet" href="js/dijit/themes/claro/claro.css"/>
-	<script type="text/javascript" src="js/dojo/dojo.js"
-		data-dojo-config="parseOnLoad: false, async:true"></script>
-	<link rel="stylesheet" href="worldmodel.css"/>
-	<script type="text/javascript" src="js/main.js"></script>
-	<script type="text/javascript">
-	require(["thing/ObjectManager"],function(ObjectManager) {
+<script type="text/javascript" src="js/Util.js"></script>
+<link rel="stylesheet" href="js/dijit/themes/claro/document.css"/>
+<link rel="stylesheet" href="js/dijit/themes/claro/claro.css"/>
+<script type="text/javascript" src="js/dojo/dojo.js" data-dojo-config="parseOnLoad: false, async:true">
+</script><link rel="stylesheet" href="worldmodel.css"/>
+<script type="text/javascript">
+require(["thing/BaseObject"],function(BaseObject) {
+  //BEGIN objects
 	<xsl:apply-templates select=".//BaseObject"/>
+  //END objects
 	});
 	</script>
 </head>
 <body class="claro">
+
 	<!-- basic preloader: -->
 	<div id="loader"><div id="loaderInner" style="direction:ltr;white-space:nowrap;overflow:visible;">Loading ... </div></div>
 
@@ -69,13 +67,14 @@
 
 	</div><!-- end of BorderContainer -->
 	
-
+<script type="text/javascript" src="js/main.js"></script>
 </body>
 </html>
 
 </xsl:template>
+
 <xsl:template match="BaseObject">
-		ObjectManager.create('<xsl:value-of select="@id"/>','<xsl:value-of select="@type"/>','<xsl:value-of select="@source"/>','<xsl:value-of select="@dest"/>','<xsl:value-of select="@value"/>');
+		BaseObject.objectManager.create('<xsl:value-of select="@id"/>','<xsl:value-of select="@type"/>','<xsl:value-of select="@source"/>','<xsl:value-of select="@dest"/>','<xsl:value-of select="@value"/>');
 </xsl:template>
 <xsl:template match="@*|*|processing-instruction()|comment()">
     <xsl:copy>

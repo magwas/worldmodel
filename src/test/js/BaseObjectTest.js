@@ -49,7 +49,7 @@ require(["thing/BaseObject"], function(BaseObject){
 	 
 	test("fragToObject no id", function() {
 		// no id FIXME not checked. Should it be?
-		frag3 = document.createElement("BaseObject");
+		var frag3 = document.createElement("BaseObject");
 		frag3.setAttribute("type","fragToObjectType3");
 		frag3.setAttribute("source","fragToObjectSource3");
 		var ob1 = BaseObject.fragToObject(frag3);

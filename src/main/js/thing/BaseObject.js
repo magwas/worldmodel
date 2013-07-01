@@ -21,37 +21,37 @@ define([ "dojo/_base/declare", "dojo/_base/lang",
                     sourceobj = this.objectManager.get(this.source);
                     typeobj = this.objectManager.get(this.type);
                     destobj = this.objectManager.get(this.dest);
-                    if(sourceobj && typeobj && destobj) {
+                    if (sourceobj && typeobj && destobj) {
                         this.name = "(" +
-                        sourceobj.getName() + " " +
-                        typeobj.getName() + " " +
-                        destobj.getName() + ")";
+                            sourceobj.getName() + " " +
+                            typeobj.getName() + " " +
+                            destobj.getName() + ")";
                         typeobj.registerForNameChange(this);
                         sourceobj.registerForNameChange(this);
                         destobj.registerForNameChange(this);
-                        
                     } else {
-                        this.name = "(@" + this.id + ")";                        
+                        this.name = "(@" + this.id + ")";
                     }
                 } else {
                     this.name = "(@" + this.id + ")";
                 }
-                if(this.value) {
-                    this.name += "["+this.value+"]";
+                if (this.value) {
+                    this.name += "[" + this.value + "]";
                 }
                 return this.name;
             },
             registerForNameChange: function (obj) {
-                if( -1 ==this.nameCallbacks.indexOf(obj)) {
-                    this.nameCallbacks.push(obj);                    
+                if (-1 === this.nameCallbacks.indexOf(obj)) {
+                    this.nameCallbacks.push(obj);
                 }
             },
             flagNameChange: function () {
-                if(this.nameCallbacks.length >0) {
-                    for(var i = 0; i < this.nameCallbacks.length; i += 1) {
-                        var ob = this.nameCallbacks[i];
+                var i, ob;
+                if (this.nameCallbacks.length > 0) {
+                    for (i = 0; i < this.nameCallbacks.length; i += 1) {
+                        ob = this.nameCallbacks[i];
                         ob.getName();
-                    }                    
+                    }
                 }
             },
             getName : function () {
@@ -60,12 +60,12 @@ define([ "dojo/_base/declare", "dojo/_base/lang",
                 oldname = self.name;
                 self.defname();
                 q = self.objectManager.query({type: 'name', source: self.id});
-                callback = function(obj, removed, added) {
-                    if(added > -1 ) {
+                callback = function (obj, removed, added) {
+                    if (added > -1) {
                         var oldname = self.name;
                         self.name = obj.value;
                         obj.registerForNameChange(self);
-                        if(oldname != self.name) {
+                        if (oldname !== self.name) {
                             self.flagNameChange();
                         }
                     }
@@ -78,8 +78,8 @@ define([ "dojo/_base/declare", "dojo/_base/lang",
                     self.name = q[0].value;
                 }
                 //console.log("name for "+self.id+"="+self.name);
-                if(oldname != self.name) {
-                    this.flagNameChange();                    
+                if (oldname !== self.name) {
+                    this.flagNameChange();
                 }
                 return self.name;
             },

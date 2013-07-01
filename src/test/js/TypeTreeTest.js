@@ -9,6 +9,7 @@ require([
         equal("thing",thing.id);
         tester = function (obj,list) {
             onOk = function (l) {
+                var idlist, i;
                 idlist = "";
                 for(i=0; i<l.length; i++) {
                     idlist += ","+l[i].id;

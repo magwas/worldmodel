@@ -4,14 +4,14 @@ require([ "thing/HierarchyTree", "thing/BaseObject"
         function(HierarchyTree, BaseObject) {
     test("init", function() {
         checkalert();
-        var tt, thing, onOk, onBad, tester;
+        var tt, thing, onOk, onBad, tester, string2;
         checkalert();
         tt = new HierarchyTree();
-        window.tt=tt;
         tester = function (obj,list) {
             onOk = function (l) {
+                var idlist, i;
                 idlist = "";
-                for(i=0; i<l.length; i++) {
+                for( i=0; i<l.length; i++) {
                     idlist += ","+l[i].id;
                 };
                 equal(idlist,list);

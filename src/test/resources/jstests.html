@@ -1,17 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>The Thing</title>
 <script type="text/javascript" src="../../main/js/Util.js"></script>
 <link rel="stylesheet" href="../js/dijit/themes/claro/document.css">
 <link rel="stylesheet" href="../js/dijit/themes/claro/claro.css">
 <link rel="stylesheet" href="qunit.css">
-<script type="text/javascript" src="../js/dojo/dojo.js" data-dojo-config="parseOnLoad: false, async:true">
-</script><link rel="stylesheet" href="../../main/webapp/worldmodel.css">
+<script type="text/javascript" src="../js/dojo/dojo.js" data-dojo-config="parseOnLoad: false, async:true"></script>
+<link rel="stylesheet" href="../../main/webapp/worldmodel.css">
 <script type="text/javascript">
-	require(["thing/BaseObject"],function(BaseObject) {
-	
+require(["thing/BaseObject"],function(BaseObject) {
+  //BEGIN objects
 		BaseObject.objectManager.create('thing','','','','');
 		BaseObject.objectManager.create('relation','thing','','','');
 		BaseObject.objectManager.create('contains','relation','','','');
@@ -30,33 +29,38 @@
 		BaseObject.objectManager.create('another folder','folder','folder','','');
 /*
 */
-
+  //END objects
 	});
 	</script>
 </head>
 <body class="claro">
-
+<!--//BEGIN testing-->
 <div id="qunit"></div>
 <div id="qunit-fixture"></div>
 <script src="../js/qunit.js"></script>
 <script src="../js/TestUtil.js"></script>
-<!--
--->
 <script src="../js/BaseObjectTest.js"></script>
 <script src="../js/ObjectManagerTest.js"></script>
 <script src="../js/TableBrowserTest.js"></script>
 <script src="../js/HierarchyTreeTest.js"></script>
 <script src="../js/TypeTreeTest.js"></script>
-
-<div id="loader"><div id="loaderInner" style="direction:ltr;white-space:nowrap;overflow:visible;">Loading ... </div></div>
-<div data-dojo-type="dijit.Menu" id="submenu1" data-dojo-props='contextMenuForWindow:true, style:"display:none"' style="display: none;">
+<!--//END testing-->
+<div id="loader">
+<div id="loaderInner" style="direction:ltr;white-space:nowrap;overflow:visible;">Loading ... </div>
+</div>
+<div data-dojo-type="dijit.Menu" id="submenu1" data-dojo-props="contextMenuForWindow:true, style:&quot;display:none&quot;" style="display: none;">
 <div data-dojo-type="dijit.MenuItem" data-dojo-props="disabled:true">Context menu</div>
 <div data-dojo-type="dijit.MenuSeparator"></div>
 </div>
 <div id="main" data-dojo-type="dijit.layout.BorderContainer" data-dojo-props="liveSplitters:false, design:'sidebar', persist:true">
-<div id="header" data-dojo-type="dijit.MenuBar" data-dojo-props="region:'top'"><div data-dojo-type="dijit.PopupMenuBarItem" id="edit">
-<span>Edit</span><div data-dojo-type="dijit.Menu" id="editMenu"><div data-dojo-type="dijit.MenuItem" id="undo" data-dojo-props="iconClass:'dijitIconUndo'">A menu item will go here</div></div>
-</div></div>
+<div id="header" data-dojo-type="dijit.MenuBar" data-dojo-props="region:'top'">
+<div data-dojo-type="dijit.PopupMenuBarItem" id="edit">
+<span>Edit</span>
+<div data-dojo-type="dijit.Menu" id="editMenu">
+<div data-dojo-type="dijit.MenuItem" id="undo" data-dojo-props="iconClass:'dijitIconUndo'">A menu item will go here</div>
+</div>
+</div>
+</div>
 <div data-dojo-type="dijit.layout.AccordionContainer" data-dojo-props="region:'leading', splitter:true, minSize:20" style="width: 300px;" id="navigatorArea"></div>
 <div data-dojo-type="dijit.layout.TabContainer" data-dojo-props="region:'center', tabStrip:true" id="browserArea"></div>
 <div data-dojo-type="dijit.layout.TabContainer" id="inspectorArea" data-dojo-props="     tabPosition:'bottom', region:'bottom',     splitter:true, tabStrip:true    ">
