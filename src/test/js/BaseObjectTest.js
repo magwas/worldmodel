@@ -10,7 +10,7 @@ require(["thing/BaseObject"], function(BaseObject){
 			value: "thevalue"
 		});
 		equal(ob.id,"theid");
-		equal(ob.name,"theid");
+		equal(ob.name,"(@theid)[thevalue]");
 		equal(ob.type,"thetype");
 		equal(ob.source,"thesrc");
 		equal(ob.dest,"thedest");
@@ -46,18 +46,42 @@ require(["thing/BaseObject"], function(BaseObject){
 		equal(ob3.value,null);
 	});	
 
-	/* 
+	 
 	test("fragToObject no id", function() {
 		// no id FIXME not checked. Should it be?
 		frag3 = document.createElement("BaseObject");
 		frag3.setAttribute("type","fragToObjectType3");
 		frag3.setAttribute("source","fragToObjectSource3");
-		var numobjs = Object.keys(BaseObject.objectManager.objects).length;
-		BaseObject.objectManager.fragToObject(frag3,TableRowObject);
-		equal(Object.keys(BaseObject.objectManager.objects).length,numobjs+1);
-		BaseObject.objectManager.fragToObject(frag3,TableRowObject);
-		equal(Object.keys(BaseObject.objectManager.objects).length,numobjs+1);
+		var ob1 = BaseObject.fragToObject(frag3);
+        equal(ob1.id,null);
+        equal(ob1.type,"fragToObjectType3");
+        equal(ob1.source,"fragToObjectSource3");
+        equal(ob1.dest,null);
+        equal(ob1.value,null);
 	});	
-	*/
+	
+	test("naming", function () {
+	       var doc = (new DOMParser()).parseFromString(
+	               '<object>'+
+	               '<BaseObject id="named1" type="folder" source="another folder"/>'+
+                   '<BaseObject id="named2" type="folder" source="another folder"/>'+
+                   '<BaseObject id="unnamed1" type="folder"/>'+
+                   '<BaseObject id="containsname" type="name" source="contains" value="contains"/>'+
+                   '<BaseObject id="namedrel" type="contains" source="named1" dest="unnamed1"/>'+
+                   '<BaseObject id="named1_name" type="name" source="named1" value="Name of The Game"/>'+
+                   '<BaseObject id="named2_name" type="name" source="named2" value="Name of The Lame"/>'+
+                   '<BaseObject id="namedrel2" type="contains" source="named1" dest="named2"/>'+
+	               '</object>', 'text/xml');
+	        var numobjs = Object.keys(BaseObject.objectManager.data).length;
+	        BaseObject.objectManager.processResponse(doc);
+	        checkalert();
+	        equal(Object.keys(BaseObject.objectManager.data).length,numobjs+8);
+	        equal(BaseObject.objectManager.getObjectForId("named1").name,"Name of The Game");
+            equal(BaseObject.objectManager.getObjectForId("namedrel").name,"(Name of The Game contains (@unnamed1))");
+            equal(BaseObject.objectManager.getObjectForId("namedrel2").name,"(Name of The Game contains Name of The Lame)");
+            equal(BaseObject.objectManager.getObjectForId("c1").name,"((@hierarchyroot) contains (@ontology))");
+
+
+	});
 	
 });

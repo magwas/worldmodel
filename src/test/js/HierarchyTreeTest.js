@@ -49,5 +49,12 @@ require([ "thing/HierarchyTree", "thing/BaseObject"
         },500);
 
     });
+    
+    /* FIXME: failing test
+    test("naming", function () {
+        equal(document.getElementById("dijit__TreeNode_1").childNodes[0].childNodes[2].childNodes[2].innerHTML,
+                "((@hierarchyroot) contains (@ontology))");
+    });
+    */
 
 });
