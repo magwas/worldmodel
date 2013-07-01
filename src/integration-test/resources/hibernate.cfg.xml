@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration> 
+    <session-factory>
+
+        <!-- Database connection settings -->
+        <property name="hibernate.connection.datasource">java:comp/env/jdbc/worldmodel</property>
+        <property name="hibernate.hbm2ddl.auto">create</property>
+        <!-- Mapped annotated entity-->
+        <mapping class="org.rulez.magwas.worldmodel.BaseObject"/>
+        <mapping class="org.rulez.magwas.worldmodel.Value"/>
+
+    </session-factory> 
+</hibernate-configuration>

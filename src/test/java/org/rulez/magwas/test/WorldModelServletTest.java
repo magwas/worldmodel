@@ -44,25 +44,23 @@ public class WorldModelServletTest {
         servlet.doGet(request, response);
         String output = response.getOutput();
         assertEquals(
-                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n"
-                        + "<?xml-stylesheet type=\"text/xsl\" href=\"stylesheet.xsl\"?>"
-                        + "<objects>\n"
-                        + "<BaseObject id=\"thing\"/>\n"
-                        + "<BaseObject dest=\"thing\" id=\"relation\" source=\"thing\" type=\"thing\"/>\n"
-                        + "<BaseObject id=\"contains\" type=\"relation\"/>\n"
-                        + "<BaseObject id=\"folder\" type=\"thing\"/>\n"
-                        + "<BaseObject id=\"hierarchyroot\" type=\"folder\"/>\n"
-                        + "<BaseObject id=\"ontology\" type=\"folder\"/>\n"
-                        + "<BaseObject id=\"basic ontology\" type=\"folder\"/>\n"
-                        + "<BaseObject dest=\"ontology\" id=\"c1\" source=\"hierarchyroot\" type=\"contains\"/>\n"
-                        + "<BaseObject dest=\"basic ontology\" id=\"c2\" source=\"ontology\" type=\"contains\"/>\n"
-                        + "<BaseObject dest=\"thing\" id=\"c3\" source=\"basic ontology\" type=\"contains\"/>\n"
-                        + "<BaseObject dest=\"relation\" id=\"c4\" source=\"basic ontology\" type=\"contains\"/>\n"
-                        + "<BaseObject id=\"hierarchy\" type=\"folder\"/>\n"
-                        + "<BaseObject dest=\"hierarchy\" id=\"c5\" source=\"ontology\" type=\"contains\"/>\n"
-                        + "<BaseObject dest=\"contains\" id=\"c6\" source=\"hierarchy\" type=\"contains\"/>\n"
-                        + "<BaseObject dest=\"folder\" id=\"c7\" source=\"hierarchy\" type=\"contains\"/>\n"
-                        + "</objects>\n", output);
+                "<objects>"
+                        + "<BaseObject id=\"thing\"/>"
+                        + "<BaseObject dest=\"thing\" id=\"relation\" source=\"thing\" type=\"thing\"/>"
+                        + "<BaseObject id=\"contains\" type=\"relation\"/>"
+                        + "<BaseObject id=\"folder\" type=\"thing\"/>"
+                        + "<BaseObject id=\"hierarchyroot\" type=\"folder\"/>"
+                        + "<BaseObject id=\"ontology\" type=\"folder\"/>"
+                        + "<BaseObject id=\"basic ontology\" type=\"folder\"/>"
+                        + "<BaseObject dest=\"ontology\" id=\"c1\" source=\"hierarchyroot\" type=\"contains\"/>"
+                        + "<BaseObject dest=\"basic ontology\" id=\"c2\" source=\"ontology\" type=\"contains\"/>"
+                        + "<BaseObject dest=\"thing\" id=\"c3\" source=\"basic ontology\" type=\"contains\"/>"
+                        + "<BaseObject dest=\"relation\" id=\"c4\" source=\"basic ontology\" type=\"contains\"/>"
+                        + "<BaseObject id=\"hierarchy\" type=\"folder\"/>"
+                        + "<BaseObject dest=\"hierarchy\" id=\"c5\" source=\"ontology\" type=\"contains\"/>"
+                        + "<BaseObject dest=\"contains\" id=\"c6\" source=\"hierarchy\" type=\"contains\"/>"
+                        + "<BaseObject dest=\"folder\" id=\"c7\" source=\"hierarchy\" type=\"contains\"/>"
+                        + "</objects>", TestUtil.NormalizeXmlString(output));
         servlet.checkAll();
         FileInputStream inputStream = new FileInputStream(
                 "src/test/resources/searchtest.xml");

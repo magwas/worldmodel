@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml-stylesheet type="text/xsl" href="stylesheet.xsl"?><objects>
+<BaseObject id="thing"/>
+<BaseObject dest="thing" id="relation" source="thing" type="thing"/>
+<BaseObject id="contains" type="relation"/>
+<BaseObject id="folder" type="thing"/>
+<BaseObject id="hierarchyroot" type="folder"/>
+<BaseObject id="ontology" type="folder"/>
+<BaseObject id="basic ontology" type="folder"/>
+<BaseObject dest="ontology" id="c1" source="hierarchyroot" type="contains"/>
+<BaseObject dest="basic ontology" id="c2" source="ontology" type="contains"/>
+<BaseObject dest="thing" id="c3" source="basic ontology" type="contains"/>
+<BaseObject dest="relation" id="c4" source="basic ontology" type="contains"/>
+<BaseObject id="hierarchy" type="folder"/>
+<BaseObject dest="hierarchy" id="c5" source="ontology" type="contains"/>
+<BaseObject dest="contains" id="c6" source="hierarchy" type="contains"/>
+<BaseObject dest="folder" id="c7" source="hierarchy" type="contains"/>
+</objects>
+

@@ -31,6 +31,7 @@ public final class Util {
     
     private static DocumentBuilder dBuilder       = null;
     private static Logger          logger         = null;
+    public static boolean          isStopped      = false;
     
     private Util() {
         // singleton
@@ -70,6 +71,10 @@ public final class Util {
         log(Level.WARN, what);
     }
     
+    public static void fatal(String what) {
+        log(Level.FATAL, what);
+    }
+    
     public static void log(Level level, String what) {
         if (logger == null) {
             logger = Logger.getLogger(BaseObject.class);
@@ -84,7 +89,6 @@ public final class Util {
     
     public static void logInfo(String string) {
         log(Level.INFO, string);
-        
     }
     
     public static void shutdown() {
@@ -92,7 +96,8 @@ public final class Util {
         sessionFactory.close();
     }
     
-    private static DocumentBuilder getDocumentBuilder() {
+    private static DocumentBuilder getDocumentBuilder()
+            throws ParserConfigurationException {
         if (dBuilder == null) {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory
                     .newInstance();
@@ -100,6 +105,7 @@ public final class Util {
                 dBuilder = dbFactory.newDocumentBuilder();
             } catch (ParserConfigurationException e) {
                 Util.die(e);
+                throw e;
             }
         }
         return dBuilder;
@@ -108,10 +114,11 @@ public final class Util {
     public static void die(Exception e) {
         logException(e);
         shutdown();
-        System.exit(1);
+        fatal("worldmodel cannot continue");
+        Util.isStopped = true;
     }
     
-    public static Document newDocument() {
+    public static Document newDocument() throws ParserConfigurationException {
         dBuilder = getDocumentBuilder();
         Document doc = dBuilder.newDocument();
         ProcessingInstruction pi = doc.createProcessingInstruction(
@@ -122,14 +129,14 @@ public final class Util {
     }
     
     public static Document newDocument(String str) throws SAXException,
-            IOException {
+            IOException, ParserConfigurationException {
         byte[] arr = str.getBytes("UTF-8");
         ByteArrayInputStream bis = new ByteArrayInputStream(arr);
         return newDocument(bis);
     }
     
     public static Document newDocument(ByteArrayInputStream bis)
-            throws SAXException, IOException {
+            throws SAXException, IOException, ParserConfigurationException {
         dBuilder = getDocumentBuilder();
         return dBuilder.parse(bis);
     }
@@ -145,7 +152,8 @@ public final class Util {
         return out.toString();
     }
     
-    public static String baseObject2String(BaseObject obj) {
+    public static String baseObject2String(BaseObject obj)
+            throws ParserConfigurationException {
         // maybe create an interface
         
         Document doc = Util.newDocument();

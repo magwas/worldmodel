@@ -2,6 +2,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:output method="html" version="1.0" encoding="utf-8" indent="yes" omit-xml-declaration="yes"/>
 
+<xsl:param name="testing"/>
 <xsl:template match="/">
 <html>
 <head>
@@ -9,7 +10,11 @@
 	<title>The Thing</title>
 <script type="text/javascript" src="js/Util.js"></script>
 <link rel="stylesheet" href="js/dijit/themes/claro/document.css"/>
+
 <link rel="stylesheet" href="js/dijit/themes/claro/claro.css"/>
+<xsl:if test="$testing = 'yes'">
+  <link href="../../src/test/resources/qunit.css" rel="stylesheet"/>
+</xsl:if>
 <script type="text/javascript" src="js/dojo/dojo.js" data-dojo-config="parseOnLoad: false, async:true">
 </script><link rel="stylesheet" href="worldmodel.css"/>
 <script type="text/javascript">
@@ -21,7 +26,17 @@ require(["thing/BaseObject"],function(BaseObject) {
 	</script>
 </head>
 <body class="claro">
-
+  <xsl:if test="$testing = 'yes'">
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+    <script src="../../src/test/js/qunit.js"></script>
+    <script src="../../src/test/js/TestUtil.js"></script>
+    <script src="../../src/test/js/BaseObjectTest.js"></script>
+    <script src="../../src/test/js/ObjectManagerTest.js"></script>
+    <script src="../../src/test/js/TableBrowserTest.js"></script>
+    <script src="../../src/test/js/HierarchyTreeTest.js"></script>
+    <script src="../../src/test/js/TypeTreeTest.js"></script>    
+  </xsl:if>
 	<!-- basic preloader: -->
 	<div id="loader"><div id="loaderInner" style="direction:ltr;white-space:nowrap;overflow:visible;">Loading ... </div></div>
 

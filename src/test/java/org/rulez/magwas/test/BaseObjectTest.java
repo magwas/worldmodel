@@ -9,6 +9,8 @@ import static org.junit.Assert.assertEquals;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.AfterClass;
@@ -32,7 +34,7 @@ public class BaseObjectTest {
     
     @BeforeClass
     public static void setUp() throws SAXException, IOException,
-            InputParseException {
+            InputParseException, ParserConfigurationException {
         session = Util.getSession();
         BaseObject obj = BaseObject
                 .getBaseObjectByCompositeId("thing", session);
@@ -179,13 +181,11 @@ public class BaseObjectTest {
                 + "<BaseObject id=\"two\" type=\"thing\"/>"
                 + "<BaseObject id=\"idnum1:foo\"  type=\"thing\" value=\"öüŐŰőűÖÜ\" source=\"one\" dest=\"two\"></BaseObject>"
                 + "</xml>";
-        String outstring = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n"
-                + "<?xml-stylesheet type=\"text/xsl\" href=\"stylesheet.xsl\"?>"
-                + "<objects>\n"
-                + "<BaseObject id=\"one\" type=\"thing\"/>\n"
-                + "<BaseObject id=\"two\" type=\"thing\"/>\n"
-                + "<BaseObject dest=\"two\" id=\"idnum1:foo\" source=\"one\" type=\"thing\" value=\"öüŐŰőűÖÜ\"/>\n"
-                + "</objects>\n";
+        String outstring = "<objects>"
+                + "<BaseObject id=\"one\" type=\"thing\"/>"
+                + "<BaseObject id=\"two\" type=\"thing\"/>"
+                + "<BaseObject dest=\"two\" id=\"idnum1:foo\" source=\"one\" type=\"thing\" value=\"öüŐŰőűÖÜ\"/>"
+                + "</objects>";
         
         byte[] arr = objstring.getBytes("UTF-8");
         ByteArrayInputStream bis = new ByteArrayInputStream(arr);
@@ -196,7 +196,8 @@ public class BaseObjectTest {
         BaseObject.createFromXml(doc, session, outdoc, rootElement);
         BaseObject obj = BaseObject.getBaseObjectByCompositeId("idnum1:foo",
                 session);
-        assertEquals(outstring, Util.dom2String(outdoc));
+        assertEquals(outstring,
+                TestUtil.NormalizeXmlString(Util.dom2String(outdoc)));
         assertEquals(false, obj.equals(null));
         assertEquals(false, obj.equals("This is not a pipe"));
         assertEquals("foo", obj.getVersion().getValue());

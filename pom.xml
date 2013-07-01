@@ -46,6 +46,7 @@
       <artifactId>maven-surefire-plugin</artifactId>
       <version>2.14.1</version>
       <type>maven-plugin</type>
+      <scope>test</scope>
     </dependency>
     <dependency>
     	<groupId>javax.servlet</groupId>
@@ -58,7 +59,7 @@
     	<version>1.0.2</version>
     </dependency>
     <dependency>
-    	<groupId>org.apache.commons</groupId>
+    	<groupId>commons-io</groupId>
     	<artifactId>commons-io</artifactId>
     	<version>1.3.2</version>
     </dependency>
@@ -72,6 +73,14 @@
     	<artifactId>exec-maven-plugin</artifactId>
     	<version>1.2.1</version>
     	<type>maven-plugin</type>
+    	<scope>test</scope>
+    </dependency>
+    <dependency>
+    	<groupId>org.codehaus.mojo</groupId>
+    	<artifactId>selenium-maven-plugin</artifactId>
+    	<version>2.3</version>
+    	<type>maven-plugin</type>
+    	<scope>test</scope>
     </dependency>
   </dependencies>
   <build>
@@ -100,7 +109,76 @@
               </resources>              
             </configuration>            
           </execution>
+          <execution>
+            <id>copy-test-resources</id>
+            <phase>generate-test-sources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}/target/guitest</outputDirectory>
+              <resources>          
+                <resource>
+                  <directory>${basedir}/src/main/webapp/</directory>
+                </resource>
+              </resources>              
+            </configuration>            
+          </execution>
+          <execution>
+            <id>copy-test-resources-dojo</id>
+            <phase>generate-test-sources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}/target/guitest/js</outputDirectory>
+              <resources>          
+                <resource>
+                  <directory>${basedir}/target/resources/</directory>
+                </resource>
+                <resource>
+                  <directory>${basedir}/src/main/js</directory>
+                </resource>
+              </resources>              
+            </configuration>            
+          </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>xml-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>create test html</id>
+            <goals>
+              <goal>transform</goal>
+            </goals>
+            <phase>generate-test-sources</phase>
+          </execution>
+        </executions>
+        <configuration>
+          <transformationSets>
+            <transformationSet>
+              <dir>src/test/resources/</dir>
+              <outputDir>target/guitest</outputDir>
+              <includes>
+                <include>basicobj.xml</include>
+              </includes>
+              <stylesheet>src/main/webapp/stylesheet.xsl</stylesheet>
+              <parameters>
+                <parameter>
+                  <name>testing</name>
+                  <value>yes</value>
+                </parameter>
+              </parameters>
+              <fileMappers>
+                <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+                <targetExtension>.html</targetExtension>
+              </fileMapper>
+              </fileMappers>
+            </transformationSet>
+          </transformationSets>
+        </configuration>
       </plugin>
        <plugin>
          <groupId>org.apache.maven.plugins</groupId>
@@ -237,30 +315,100 @@
   	</pluginManagement>
   </build>
   
-   <profiles>
+    <profiles>
       <profile>
-      <id>test</id>
-      <build>
-      <plugins>
-    <plugin>
-      <artifactId>exec-maven-plugin</artifactId>
-      <groupId>org.codehaus.mojo</groupId>
-      <version>1.2.1</version>
-      <executions>
-       <execution>
-        <id>deploy. See doc/upload-worldmodel.sh.example on setting it up.</id>
-        <phase>integration-test</phase>
-        <goals>
-         <goal>exec</goal>
-        </goals>
-        <configuration>
-         <executable>upload-worldmodel.sh</executable>
-        </configuration>
-       </execution>
-      </executions>
-    </plugin>
-      </plugins>
-      </build>
+        <id>prod</id>
+        <activation>
+          <activeByDefault>true</activeByDefault>
+        </activation>
+        <build>
+          <resources>
+            <resource>
+              <directory>src/main/resources</directory>
+            </resource>
+          </resources>
+        </build>
+      </profile>
+      <profile>
+        <id>test</id>
+        <build>
+          <resources>
+            <resource>
+              <directory>src/integration-test/resources</directory>
+            </resource>
+          </resources>
+          <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>selenium-maven-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <execution>
+                        <id>starting selenium server</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop-server</goal>
+                        </goals>
+                        <configuration>
+                            <background>true</background>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>stopping selenium server</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>start-server</goal>
+                        </goals>
+                        <configuration>
+                            <background>true</background>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+              <artifactId>exec-maven-plugin</artifactId>
+              <groupId>org.codehaus.mojo</groupId>
+              <version>1.2.1</version>
+              <executions>
+               <execution>
+                <id>deploy. See doc/upload-worldmodel.sh.example on setting it up.</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                 <goal>exec</goal>
+                </goals>
+                <configuration>
+                 <executable>upload-worldmodel.sh</executable>
+                </configuration>
+               </execution>
+              </executions>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-surefire-plugin</artifactId>
+              <executions>
+                <!--execution>
+                  <id>test</id>
+                  <goals>
+                    <goal>test</goal>
+                  </goals>
+                  <phase>test</phase>
+                </execution-->
+                <execution>
+                  <id>integration-test</id>
+                  <goals>
+                    <goal>test</goal>
+                  </goals>
+                  <phase>integration-test</phase>
+                    <configuration>
+                    <includes>
+                      <include>**/IntegrationTest*.java</include>
+                    </includes>
+                    </configuration>
+                </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </build>
       </profile>
    </profiles>
 </project>

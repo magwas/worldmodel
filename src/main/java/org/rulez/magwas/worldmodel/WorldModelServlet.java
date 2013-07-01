@@ -35,7 +35,6 @@ public class WorldModelServlet extends HttpServlet {
     
     @Override
     public void init(ServletConfig config) throws ServletException {
-        // FIXME: Here comes the initialisation of all modules
         Session session = Util.getSession();
         
         BaseObject thing;
@@ -47,6 +46,7 @@ public class WorldModelServlet extends HttpServlet {
             return;
         }
         if (thing == null) {
+            Util.logInfo("initializing thing");
             thing = new BaseObject();
             thing.setId(Value.getValueByValue("thing", session));
             thing.setType(thing);
@@ -90,6 +90,9 @@ public class WorldModelServlet extends HttpServlet {
         Session session = Util.getSession();
         Transaction tx = session.beginTransaction();
         try {
+            if (Util.isStopped) {
+                throw new IOException("Fatal error occured");
+            }
             reader = request.getReader();
             String xmlstring = IOUtils.toString(reader);
             // FIXME schema validation (maybe in upper layers)
@@ -239,6 +242,9 @@ public class WorldModelServlet extends HttpServlet {
         Transaction tx = session.beginTransaction();
         
         try {
+            if (Util.isStopped) {
+                throw new IOException("Fatal error occured");
+            }
             Document doc = Util.newDocument();
             Element root = doc.createElement("objects");
             List<BaseObject> l;

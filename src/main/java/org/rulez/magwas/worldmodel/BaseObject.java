@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -151,7 +152,8 @@ public class BaseObject implements Serializable {
     }
     
     public static void createFromString(String docstring, Session session)
-            throws SAXException, IOException, InputParseException {
+            throws SAXException, IOException, InputParseException,
+            ParserConfigurationException {
         Document doc = Util.newDocument(docstring);
         createFromXml(doc, session, null, null);
     }
