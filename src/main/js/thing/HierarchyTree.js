@@ -7,14 +7,14 @@ define(
               Tree, BaseObject,
               ContentPane) {
         "use strict";
-        return declare(
+        var klass = declare(
             "thing.HierarchyTree",
             [ ],
             {
                 browser1: null,
                 constructor : function () {
-                    var obMan, hierarchyTreeModel, tree, browser1;
-                    obMan = BaseObject.objectManager;
+                    var hierarchyTreeModel, tree, browser1;
+
                     hierarchyTreeModel = new ObjectStoreModel({
                         store : BaseObject.objectManager,
                         containmentrelations: {contains: true},
@@ -105,5 +105,7 @@ define(
                 }
             }
         );
+        BaseObject.objectManager.search("id=hierarchyroot");
+        return klass;
     }
 );

@@ -7,7 +7,7 @@ define(
               Tree, BaseObject,
               ContentPane, WidgetBase) {
         "use strict";
-        return declare(
+        var klass = declare(
             "thing.TypeTree",
             [],
             {
@@ -36,6 +36,7 @@ define(
                 }
             }
         );
-
+        BaseObject.objectManager.search("id=hierarchyroot");
+        return klass;
     }
 );
