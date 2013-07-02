@@ -76,10 +76,10 @@ require(["thing/BaseObject"], function(BaseObject){
 	        BaseObject.objectManager.processResponse(doc);
 	        checkalert();
 	        equal(Object.keys(BaseObject.objectManager.data).length,numobjs+8);
-	        equal(BaseObject.objectManager.getObjectForId("named1").name,"Name of The Game");
-            equal(BaseObject.objectManager.getObjectForId("namedrel").name,"(Name of The Game contains (@unnamed1))");
-            equal(BaseObject.objectManager.getObjectForId("namedrel2").name,"(Name of The Game contains Name of The Lame)");
-            equal(BaseObject.objectManager.getObjectForId("c1").name,"((@hierarchyroot) contains (@ontology))");
+	        equal(BaseObject.objectManager.get("named1").name,"Name of The Game");
+            equal(BaseObject.objectManager.get("namedrel").name,"(Name of The Game contains (@unnamed1))");
+            equal(BaseObject.objectManager.get("namedrel2").name,"(Name of The Game contains Name of The Lame)");
+            equal(BaseObject.objectManager.get("c1").name,"((@hierarchyroot) contains (@ontology))");
 
 
 	});

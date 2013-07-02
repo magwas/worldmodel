@@ -8,6 +8,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -30,22 +32,22 @@ import org.xml.sax.SAXException;
  */
 public class BaseObjectTest {
     
-    private static Session session;
+    private static Session    session;
+    private static BaseObject thing;
     
     @BeforeClass
     public static void setUp() throws SAXException, IOException,
             InputParseException, ParserConfigurationException {
         session = Util.getSession();
-        BaseObject obj = BaseObject
-                .getBaseObjectByCompositeId("thing", session);
-        if (obj == null) {
+        thing = BaseObject.getBaseObjectByCompositeId("thing", session);
+        if (thing == null) {
             String objstring = "<BaseObject id=\"thing\" type=\"thing\"/>";
             byte[] arr = objstring.getBytes("UTF-8");
             ByteArrayInputStream bis = new ByteArrayInputStream(arr);
             Document doc = Util.newDocument(bis);
             Transaction tx = session.beginTransaction();
-            new BaseObject((Element) doc.getElementsByTagName("BaseObject")
-                    .item(0), session);
+            thing = new BaseObject((Element) doc.getElementsByTagName(
+                    "BaseObject").item(0), session);
             tx.commit();
             
         }
@@ -71,6 +73,59 @@ public class BaseObjectTest {
         String str = Util.baseObject2String(obj);
         assertEquals(outstring, TestUtil.NormalizeXmlString(str));
         tx.commit();
+    }
+    
+    @Test
+    public void testComputedFields() throws Exception {
+        BaseObject bo = new BaseObject();
+        bo.setId(Value.getValueByValue("testComputed", session));
+        bo.setType(bo);
+        bo.setComputedField("anattribute", "astring");
+        bo.setComputedField("anattribute2",
+                Value.getValueByValue("avalue", session));
+        
+        HashMap<Value, Value> testValuedMap = new HashMap<Value, Value>();
+        testValuedMap.put(Value.getValueByValue("mappedkey1", session),
+                Value.getValueByValue("mappedval1", session));
+        testValuedMap.put(Value.getValueByValue("mappedkey2", session),
+                Value.getValueByValue("mappedval2", session));
+        testValuedMap.put(Value.getValueByValue("mappedkey3", session),
+                Value.getValueByValue("mappedval3", session));
+        bo.setComputedField("valuedMap", testValuedMap);
+        
+        HashMap<Value, String> testStringMap = new HashMap<Value, String>();
+        testStringMap.put(Value.getValueByValue("mappedstringkey1", session),
+                "mappedstringval1");
+        testStringMap.put(Value.getValueByValue("mappedstringkey2", session),
+                "mappedstringval2");
+        testStringMap.put(Value.getValueByValue("mappedstringkey3", session),
+                "mappedstringval3");
+        bo.setComputedField("stringMap", testStringMap);
+        
+        ArrayList<BaseObject> objectList = new ArrayList<BaseObject>();
+        objectList.add(bo);
+        objectList.add(thing);
+        bo.setComputedField("object", objectList);
+        
+        ArrayList<String> stringList = new ArrayList<String>();
+        stringList.add("one");
+        stringList.add("one");
+        stringList.add("one");
+        bo.setComputedField("string", stringList);
+        session.save(bo);
+        
+        String outstring = "<objects><BaseObject anattribute=\"astring\" anattribute2=\"avalue\" "
+                + "id=\"testComputed\" "
+                + "mappedkey1=\"mappedval1\" mappedkey2=\"mappedval2\" mappedkey3=\"mappedval3\" "
+                + "mappedstringkey1=\"mappedstringval1\" mappedstringkey2=\"mappedstringval2\" "
+                + "mappedstringkey3=\"mappedstringval3\" "
+                + "type=\"testComputed\">"
+                + "<strings><string>one</string><string>one</string><string>one</string></strings>"
+                + "<objects><object>testComputed</object><object>thing</object></objects>"
+                + "</BaseObject>" + "</objects>";
+        
+        String str = Util.baseObject2String(bo);
+        assertEquals(outstring, TestUtil.NormalizeXmlString(str));
     }
     
     @Test(expected = InputParseException.class)

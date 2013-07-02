@@ -13,7 +13,7 @@ public class IntegrationTestSelenium1 {
     @Before
     public void setUp() throws Exception {
         selenium = new DefaultSelenium("localhost", 4444, "*chrome",
-                "http://tomcat.realm:8080/worldmodel/worldmodel");
+                "http://tomcat:8080/worldmodel/worldmodel");
         selenium.setSpeed("100");
         selenium.start();
     }

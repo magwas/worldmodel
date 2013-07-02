@@ -2,7 +2,7 @@
 require(["thing/BaseObject"], function(BaseObject){
 	om = BaseObject.objectManager;
 	
-	test("processResponse basic, getObjectForId", function() {
+	test("processResponse basic, get", function() {
 		//processResponse: exceptions
 		var frag = document.createElement("objects");
 		var obj = document.createElement("BaseObject");
@@ -13,11 +13,11 @@ require(["thing/BaseObject"], function(BaseObject){
 		var numobjs = BaseObject.objectManager.data.length;
 		BaseObject.objectManager.processResponse(frag);
 		equal(BaseObject.objectManager.data.length,numobjs+1);
-		equal(BaseObject.objectManager.getObjectForId("processResponseId1").id,"processResponseId1");
-		equal(BaseObject.objectManager.getObjectForId("processResponseId1").type,"processResponseType1");
-		equal(BaseObject.objectManager.getObjectForId("processResponseId1").source,null);
-		equal(BaseObject.objectManager.getObjectForId("processResponseId1").dest,null);
-		equal(BaseObject.objectManager.getObjectForId("processResponseId1").value,"processResponseValue1");
+		equal(BaseObject.objectManager.get("processResponseId1").id,"processResponseId1");
+		equal(BaseObject.objectManager.get("processResponseId1").type,"processResponseType1");
+		equal(BaseObject.objectManager.get("processResponseId1").source,null);
+		equal(BaseObject.objectManager.get("processResponseId1").dest,null);
+		equal(BaseObject.objectManager.get("processResponseId1").value,"processResponseValue1");
 		
 	});
 
@@ -56,16 +56,16 @@ require(["thing/BaseObject"], function(BaseObject){
 		BaseObject.objectManager.processResponse(doc);
 		checkalert();
 		equal(Object.keys(BaseObject.objectManager.data).length,numobjs+2);
-		equal(BaseObject.objectManager.getObjectForId("pR1").id,"pR1");
-		equal(BaseObject.objectManager.getObjectForId("pR1").type,"pR1Type");
-		equal(BaseObject.objectManager.getObjectForId("pR1").source,null);
-		equal(BaseObject.objectManager.getObjectForId("pR1").dest,null);
-		equal(BaseObject.objectManager.getObjectForId("pR1").value,null);
-		equal(BaseObject.objectManager.getObjectForId("pR2").id,"pR2");
-		equal(BaseObject.objectManager.getObjectForId("pR2").type,null);
-		equal(BaseObject.objectManager.getObjectForId("pR2").source,null);
-		equal(BaseObject.objectManager.getObjectForId("pR2").dest,null);
-		equal(BaseObject.objectManager.getObjectForId("pR2").value,"pr2Value");
+		equal(BaseObject.objectManager.get("pR1").id,"pR1");
+		equal(BaseObject.objectManager.get("pR1").type,"pR1Type");
+		equal(BaseObject.objectManager.get("pR1").source,null);
+		equal(BaseObject.objectManager.get("pR1").dest,null);
+		equal(BaseObject.objectManager.get("pR1").value,null);
+		equal(BaseObject.objectManager.get("pR2").id,"pR2");
+		equal(BaseObject.objectManager.get("pR2").type,null);
+		equal(BaseObject.objectManager.get("pR2").source,null);
+		equal(BaseObject.objectManager.get("pR2").dest,null);
+		equal(BaseObject.objectManager.get("pR2").value,"pr2Value");
 	});
 
 	test("processResponse exceptions and data", function() {	
@@ -75,16 +75,16 @@ require(["thing/BaseObject"], function(BaseObject){
 		BaseObject.objectManager.processResponse(doc);
 		checkalert("test exception 5");
 		equal(Object.keys(BaseObject.objectManager.data).length,numobjs+2);
-		equal(BaseObject.objectManager.getObjectForId("pR3").id,"pR3");
-		equal(BaseObject.objectManager.getObjectForId("pR3").type,"pR1Type");
-		equal(BaseObject.objectManager.getObjectForId("pR3").source,null);
-		equal(BaseObject.objectManager.getObjectForId("pR3").dest,null);
-		equal(BaseObject.objectManager.getObjectForId("pR3").value,null);
-		equal(BaseObject.objectManager.getObjectForId("pR4").id,"pR4");
-		equal(BaseObject.objectManager.getObjectForId("pR4").type,null);
-		equal(BaseObject.objectManager.getObjectForId("pR4").source,null);
-		equal(BaseObject.objectManager.getObjectForId("pR4").dest,null);
-		equal(BaseObject.objectManager.getObjectForId("pR4").value,"pr2Value");
+		equal(BaseObject.objectManager.get("pR3").id,"pR3");
+		equal(BaseObject.objectManager.get("pR3").type,"pR1Type");
+		equal(BaseObject.objectManager.get("pR3").source,null);
+		equal(BaseObject.objectManager.get("pR3").dest,null);
+		equal(BaseObject.objectManager.get("pR3").value,null);
+		equal(BaseObject.objectManager.get("pR4").id,"pR4");
+		equal(BaseObject.objectManager.get("pR4").type,null);
+		equal(BaseObject.objectManager.get("pR4").source,null);
+		equal(BaseObject.objectManager.get("pR4").dest,null);
+		equal(BaseObject.objectManager.get("pR4").value,"pr2Value");
 
 	});
 
@@ -93,11 +93,11 @@ require(["thing/BaseObject"], function(BaseObject){
 		var numobjs = Object.keys(BaseObject.objectManager.data).length;
 		BaseObject.objectManager.search("id=querytest");
 		equal(Object.keys(BaseObject.objectManager.data).length,numobjs+1);
-		equal(BaseObject.objectManager.getObjectForId("id=querytest").id,"id=querytest");
-		equal(BaseObject.objectManager.getObjectForId("id=querytest").type,"id=querytestType");
-		equal(BaseObject.objectManager.getObjectForId("id=querytest").source,null);
-		equal(BaseObject.objectManager.getObjectForId("id=querytest").dest,null);
-		equal(BaseObject.objectManager.getObjectForId("id=querytest").value,null);
+		equal(BaseObject.objectManager.get("id=querytest").id,"id=querytest");
+		equal(BaseObject.objectManager.get("id=querytest").type,"id=querytestType");
+		equal(BaseObject.objectManager.get("id=querytest").source,null);
+		equal(BaseObject.objectManager.get("id=querytest").dest,null);
+		equal(BaseObject.objectManager.get("id=querytest").value,null);
 	});
 
 	test("search", function() {	
@@ -105,11 +105,11 @@ require(["thing/BaseObject"], function(BaseObject){
 		var numobjs = Object.keys(BaseObject.objectManager.data).length;
 		BaseObject.objectManager.search("type=searchtest");
 		equal(Object.keys(BaseObject.objectManager.data).length,numobjs+1);
-		equal(BaseObject.objectManager.getObjectForId("type=searchtest").id,"type=searchtest");
-		equal(BaseObject.objectManager.getObjectForId("type=searchtest").type,"type=searchtestType");
-		equal(BaseObject.objectManager.getObjectForId("type=searchtest").source,null);
-		equal(BaseObject.objectManager.getObjectForId("type=searchtest").dest,null);
-		equal(BaseObject.objectManager.getObjectForId("type=searchtest").value,null);
+		equal(BaseObject.objectManager.get("type=searchtest").id,"type=searchtest");
+		equal(BaseObject.objectManager.get("type=searchtest").type,"type=searchtestType");
+		equal(BaseObject.objectManager.get("type=searchtest").source,null);
+		equal(BaseObject.objectManager.get("type=searchtest").dest,null);
+		equal(BaseObject.objectManager.get("type=searchtest").value,null);
 	});
 
 	test("search with continue", function() {	
@@ -177,16 +177,16 @@ require(["thing/BaseObject"], function(BaseObject){
 		var numobjs = Object.keys(BaseObject.objectManager.data).length;
 		BaseObject.objectManager.search("id=document");
 		equal(Object.keys(BaseObject.objectManager.data).length,numobjs+25+9);
-		equal(BaseObject.objectManager.getObjectForId("1_document").id,"1_document");
-		equal(BaseObject.objectManager.getObjectForId("1_document").type,"thing");
-		equal(BaseObject.objectManager.getObjectForId("1_document").source,null);
-		equal(BaseObject.objectManager.getObjectForId("1_document").dest,null);
-		equal(BaseObject.objectManager.getObjectForId("1_document").value,null);
-		equal(BaseObject.objectManager.getObjectForId("1_follows:2").id,"1_follows:2");
-		equal(BaseObject.objectManager.getObjectForId("1_follows:2").type,"relation");
-		equal(BaseObject.objectManager.getObjectForId("1_follows:2").source,"thing");
-		equal(BaseObject.objectManager.getObjectForId("1_follows:2").dest,"thing:2");
-		equal(BaseObject.objectManager.getObjectForId("1_follows:2").value,null);
+		equal(BaseObject.objectManager.get("1_document").id,"1_document");
+		equal(BaseObject.objectManager.get("1_document").type,"thing");
+		equal(BaseObject.objectManager.get("1_document").source,null);
+		equal(BaseObject.objectManager.get("1_document").dest,null);
+		equal(BaseObject.objectManager.get("1_document").value,null);
+		equal(BaseObject.objectManager.get("1_follows:2").id,"1_follows:2");
+		equal(BaseObject.objectManager.get("1_follows:2").type,"relation");
+		equal(BaseObject.objectManager.get("1_follows:2").source,"thing");
+		equal(BaseObject.objectManager.get("1_follows:2").dest,"thing:2");
+		equal(BaseObject.objectManager.get("1_follows:2").value,null);
 		
 		Util.xmlAnswers = null;
 	});

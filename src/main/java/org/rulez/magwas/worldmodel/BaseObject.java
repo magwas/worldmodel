@@ -3,7 +3,10 @@ package org.rulez.magwas.worldmodel;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.hibernate.Query;
@@ -20,13 +24,47 @@ import org.hibernate.Session;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 
 @Entity
 @Table(name = "object")
 public class BaseObject implements Serializable {
     
-    private static final long serialVersionUID = 1L;
+    private static final long         serialVersionUID = 1L;
+    
+    @SuppressWarnings("unused")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
+    private Integer                   physid;
+    
+    @ManyToOne
+    @JoinColumn
+    private Value                     theid;
+    
+    @ManyToOne
+    @JoinColumn
+    private Value                     version;
+    
+    @ManyToOne
+    @JoinColumn
+    private BaseObject                type;
+    
+    @ManyToOne
+    @JoinColumn
+    private BaseObject                source;
+    
+    @ManyToOne
+    @JoinColumn
+    private BaseObject                dest;
+    
+    @ManyToOne
+    @JoinColumn
+    private Value                     value;
+    
+    @Transient
+    private Map<String, Serializable> computedFields   = new HashMap<String, Serializable>();
     
     public BaseObject() {
         super();
@@ -189,36 +227,6 @@ public class BaseObject implements Serializable {
         return this.getCompositeId().hashCode() + 1;
     }
     
-    @SuppressWarnings("unused")
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private Integer    physid;
-    
-    @ManyToOne
-    @JoinColumn
-    private Value      theid;
-    
-    @ManyToOne
-    @JoinColumn
-    private Value      version;
-    
-    @ManyToOne
-    @JoinColumn
-    private BaseObject type;
-    
-    @ManyToOne
-    @JoinColumn
-    private BaseObject source;
-    
-    @ManyToOne
-    @JoinColumn
-    private BaseObject dest;
-    
-    @ManyToOne
-    @JoinColumn
-    private Value      value;
-    
     /**
      * @return the id
      */
@@ -293,6 +301,22 @@ public class BaseObject implements Serializable {
         }
     }
     
+    private String anyObjectToString(Object value) {
+        String entrystring;
+        if (value instanceof String) {
+            entrystring = (String) value;
+        } else if (value instanceof Value) {
+            entrystring = ((Value) value).getValue();
+        } else if (value instanceof BaseObject) {
+            entrystring = ((BaseObject) value).getCompositeId();
+        } else {
+            throw new UnsupportedOperationException(
+                    "Unknown type of entry value");
+        }
+        return entrystring;
+    }
+    
+    @SuppressWarnings("unchecked")
     public Element toXML(Document doc) {
         Element e = doc.createElement("BaseObject");
         e.setAttribute("id", this.getCompositeId());
@@ -302,7 +326,79 @@ public class BaseObject implements Serializable {
         if (value != null) {
             e.setAttribute("value", value.getValue());
         }
+        for (Entry<String, Serializable> computedField : computedFields
+                .entrySet()) {
+            if (computedField.getValue() instanceof String) {
+                e.setAttribute(computedField.getKey(),
+                        (String) computedField.getValue());
+                continue;
+            }
+            if (computedField.getValue() instanceof Value) {
+                e.setAttribute(computedField.getKey(),
+                        ((Value) computedField.getValue()).getValue());
+                continue;
+            }
+            if (computedField.getValue() instanceof Map) {
+                // expected Map<Value,Value>
+                for (Entry<Value, Object> entry : ((Map<Value, Object>) computedField
+                        .getValue()).entrySet()) {
+                    e.setAttribute(entry.getKey().getValue(),
+                            anyObjectToString(entry.getValue()));
+                }
+                continue;
+            }
+            if (computedField.getValue() instanceof List) {
+                // expected List<String> or List<BaseObject>
+                String key = computedField.getKey();
+                Element listhead = doc.createElement(key + "s");
+                for (Object val : ((List<Object>) computedField.getValue())) {
+                    Element item = doc.createElement(key);
+                    Text xmlValue = doc.createTextNode(anyObjectToString(val));
+                    item.appendChild(xmlValue);
+                    listhead.appendChild(item);
+                }
+                e.appendChild(listhead);
+                continue;
+            }
+        }
         return e;
     }
     
+    public Serializable getComputedField(String fieldname) {
+        return computedFields.get(fieldname);
+    }
+    
+    public void setComputedField(String key, Serializable value) {
+        /*
+         * The computed fields are computed by the various plugins from data
+         * available in the repository. The main points to have them is:
+         * 
+         * - make it unnecessary for the client to do complex searches to figure
+         * out a feature of an object (like hierarchy children)
+         * 
+         * - make it unnecessary to reimplement algorithms in the client which
+         * have alredy implemented server side
+         * 
+         * The computed fields can have a limited set of possible types, and
+         * given to the client. See toXml for details.
+         * 
+         * The following goals should be considered:
+         * 
+         * - the computed fields should be up to date if exist. If a change
+         * induces changes in other objects, than they should also be updated,
+         * iff they have the field in place.
+         * 
+         * - the computation should be lazy, to not bring in every object in
+         * database to memory
+         * 
+         * - model belongs to server, view belongs to client.
+         * 
+         * - a complex model computation which brings in large chunks of objects
+         * would do so on the server even if would be performed in the client.
+         * The answer here is a plugin.
+         * 
+         * - avoid code duplication between server and client
+         */
+        this.computedFields.put(key, value);
+    }
 }

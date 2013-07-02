@@ -82,6 +82,13 @@
     	<type>maven-plugin</type>
     	<scope>test</scope>
     </dependency>
+    <dependency>
+    	<groupId>org.codehaus.mojo</groupId>
+    	<artifactId>xml-maven-plugin</artifactId>
+    	<version>1.0</version>
+    	<type>maven-plugin</type>
+    	<scope>test</scope>
+    </dependency>
   </dependencies>
   <build>
     <finalName>worldmodel</finalName>
@@ -147,6 +154,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>xml-maven-plugin</artifactId>
+        <version>1.0</version>
         <executions>
           <execution>
             <id>create test html</id>
@@ -286,6 +294,19 @@
                     <versionRange>[2.0,)</versionRange>
                     <goals>
                       <goal>unpack</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <execute />
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                     <groupId>org.codehaus.mojo</groupId>
+                     <artifactId>xml-maven-plugin</artifactId>
+                     <versionRange>[1.0,)</versionRange>
+                    <goals>
+                      <goal>transform</goal>
                     </goals>
                   </pluginExecutionFilter>
                   <action>

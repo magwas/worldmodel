@@ -70,7 +70,7 @@ require([
 	            
 	            equal(BaseObject.objectManager.data.length,numobjs+3);
 	            equal(trohtml2.parentElement.querySelectorAll("tr").length,numrows+1);
-	            var tro11 = BaseObject.objectManager.getObjectForId("TRO11");
+	            var tro11 = BaseObject.objectManager.get("TRO11");
 	            var trohtml11 = document.getElementById("TRO11");
 	            equal(trohtml11.id,"TRO11");//exists
 	            equal(tro11.id,"TRO11");

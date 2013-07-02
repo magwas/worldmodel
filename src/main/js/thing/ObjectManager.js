@@ -63,27 +63,17 @@ define([ "dojo/store/Memory", "dojo/_base/declare"],
                     node.setAttribute(fieldname, e);
                 }
             },
-            getObjectForId : function (id) {
-                var l = this.query({
-                    id : id
-                });
-                if (l.length > 1) {
-                    throw "internal error";
-                }
-                return l[0];
-            },
          // FIXME unit test
             getChildren : function (object) {
                 var q = this.query({
                     type : object.id
                 });
+                q.observe();
                 if (q.length === 0) {
-                    q.observe();
                     this.search("type=" + object.id);
                 }
                 return q;
             },
-         // FIXME unit test
             create : function (id, type, src, dest, value) {
                 this.put(new this.BaseObjectClass({
                     id : id,
