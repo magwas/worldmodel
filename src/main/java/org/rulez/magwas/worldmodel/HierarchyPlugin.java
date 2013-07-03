@@ -65,7 +65,7 @@ public class HierarchyPlugin implements IWorldModelPlugin {
         
     }
     
-    public void checkConsistencyOne(Session session, BaseObject obj)
+    public void finalizeObject(Session session, BaseObject obj)
             throws HierarchyInconsistencyException {
         Set<BaseObject> lineage = new HashSet<BaseObject>();
         checkConsistencyOne(session, obj, lineage);
@@ -167,7 +167,7 @@ public class HierarchyPlugin implements IWorldModelPlugin {
         @SuppressWarnings("unchecked")
         List<BaseObject> l = query.list();
         for (BaseObject obj : l) {
-            checkConsistencyOne(session, obj);
+            finalizeObject(session, obj);
         }
     }
 }

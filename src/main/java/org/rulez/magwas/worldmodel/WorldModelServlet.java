@@ -36,22 +36,6 @@ public class WorldModelServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         Session session = Util.getSession();
-        
-        BaseObject thing;
-        try {
-            thing = BaseObject.getBaseObjectByCompositeId("thing", session);
-        } catch (InputParseException e) {
-            Util.die(e);
-            // just to make the compiler happy
-            return;
-        }
-        if (thing == null) {
-            Util.logInfo("initializing thing");
-            thing = new BaseObject();
-            thing.setId(Value.getValueByValue("thing", session));
-            thing.setType(thing);
-            session.save(thing);
-        }
         String pluginstackConfig = config.getInitParameter("PluginStack");
         pluginstack = new ArrayList<IWorldModelPlugin>();
         for (String classname : pluginstackConfig.split("[ \t\n\r]+")) {
@@ -115,7 +99,7 @@ public class WorldModelServlet extends HttpServlet {
             }
             for (IWorldModelPlugin plugin : pluginstack) {
                 for (BaseObject candidate : newobjs) {
-                    plugin.checkConsistencyOne(session, candidate);
+                    plugin.finalizeObject(session, candidate);
                 }
             }
             

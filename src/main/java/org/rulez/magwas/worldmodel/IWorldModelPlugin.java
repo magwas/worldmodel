@@ -12,17 +12,18 @@ public interface IWorldModelPlugin extends Serializable {
     void init(Session session) throws Exception;
     
     /*
-     * Checks the consistency of one object.
+     * Checks the consistency of one object, adds computed fields if they are
+     * missing.
      * 
-     * Called when all objects in the transaction are added
+     * Called when all objects in the transaction are added.
      */
     
-    void checkConsistencyOne(Session session, BaseObject obj) throws Exception;
+    void finalizeObject(Session session, BaseObject obj) throws Exception;
     
     /*
      * Checks the consistency of the whole database
      * 
-     * Called rarely, by the administrator
+     * Called rarely, by the administrator, maybe in command line?
      */
     
     // FIXME not called
