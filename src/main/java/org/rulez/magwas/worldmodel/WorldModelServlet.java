@@ -37,7 +37,6 @@ public class WorldModelServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         Session session = Util.getSession();
         String pluginstackConfig = config.getInitParameter("PluginStack");
-        Util.logInfo("plugin stack:" + pluginstackConfig);
         pluginstack = new ArrayList<IWorldModelPlugin>();
         for (String classname : pluginstackConfig.split("[ \t\n\r]+")) {
             try {
