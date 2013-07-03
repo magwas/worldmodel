@@ -11,7 +11,7 @@ public class MockServletConfig implements ServletConfig {
     
     MockServletConfig() {
         super();
-        param = "org.rulez.magwas.worldmodel.HierarchyPlugin";
+        param = "org.rulez.magwas.worldmodel.BasicPlugin org.rulez.magwas.worldmodel.HierarchyPlugin";
     }
     
     @Override
