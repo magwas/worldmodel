@@ -415,11 +415,7 @@ public class BaseObject implements Serializable {
         Element rootnode = doc.createElement("objects");
         doc.appendChild(rootnode);
         Element xml;
-        if (this == null) {
-            xml = doc.createElement("null");
-        } else {
-            xml = toXML(doc);
-        }
+        xml = toXML(doc);
         rootnode.appendChild(xml);
         try {
             return Util.dom2String(doc);
