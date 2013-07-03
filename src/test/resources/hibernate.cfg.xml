@@ -15,7 +15,11 @@
         <property name="hibernate.connection.pool_size">4</property>
                
         <property name="hibernate.current_session_context_class">thread</property>
+        <!--property name="hibernate.cache.use_second_level_cache">true</property-->
+        <!--property name="hibernate.cache.use_query_cache">true</property-->
         <property name="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+        <!--property name="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</property-->
+        <!--property name="hibernate.cache.region.factory_class">net.sf.ehcache.hibernate.SingletonEhCacheRegionFactory</property-->
                
         <property name="hibernate.show_sql">false</property>    
         <property name="hibernate.format_sql">false</property>
@@ -27,5 +31,6 @@
         <mapping class="org.rulez.magwas.worldmodel.BaseObject"/>
         <mapping class="org.rulez.magwas.worldmodel.Value"/>
 
+    
     </session-factory> 
 </hibernate-configuration>

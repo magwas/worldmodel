@@ -21,7 +21,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.ProcessingInstruction;
 import org.xml.sax.SAXException;
 
@@ -82,7 +81,7 @@ public final class Util {
         logger.log(level, what);
     }
     
-    public static void logException(Exception e) {
+    public static void logException(Throwable e) {
         log(Level.ERROR, "Exception: " + e.getMessage());
         log(Level.INFO, "Stack trace: " + ExceptionUtils.getStackTrace(e));
     }
@@ -111,7 +110,7 @@ public final class Util {
         return dBuilder;
     }
     
-    public static void die(Exception e) {
+    public static void die(Throwable e) {
         logException(e);
         shutdown();
         fatal("worldmodel cannot continue");
@@ -150,28 +149,6 @@ public final class Util {
         StringWriter out = new StringWriter();
         transformer.transform(domSource, new StreamResult(out));
         return out.toString();
-    }
-    
-    public static String baseObject2String(BaseObject obj)
-            throws ParserConfigurationException {
-        // maybe create an interface
-        
-        Document doc = Util.newDocument();
-        Element rootnode = doc.createElement("objects");
-        doc.appendChild(rootnode);
-        Element xml;
-        if (obj == null) {
-            xml = doc.createElement("null");
-        } else {
-            xml = obj.toXML(doc);
-        }
-        rootnode.appendChild(xml);
-        try {
-            return dom2String(doc);
-        } catch (TransformerException e) {
-            logException(e);
-            return "<exception>Transformation failed</exception>";
-        }
     }
     
 }

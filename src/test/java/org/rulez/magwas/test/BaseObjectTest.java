@@ -38,9 +38,13 @@ public class BaseObjectTest {
     @BeforeClass
     public static void setUp() throws SAXException, IOException,
             InputParseException, ParserConfigurationException {
+        System.out.println("setUp");
         session = Util.getSession();
+        System.out.println("got session");
         thing = BaseObject.getBaseObjectByCompositeId("thing", session);
+        System.out.println("got thing");
         if (thing == null) {
+            System.out.println("thing is null");
             String objstring = "<BaseObject id=\"thing\" type=\"thing\"/>";
             byte[] arr = objstring.getBytes("UTF-8");
             ByteArrayInputStream bis = new ByteArrayInputStream(arr);
@@ -48,18 +52,22 @@ public class BaseObjectTest {
             Transaction tx = session.beginTransaction();
             thing = new BaseObject((Element) doc.getElementsByTagName(
                     "BaseObject").item(0), session);
+            System.out.println("before commit");
             tx.commit();
+            System.out.println("after commit");
             
         }
     }
     
     @AfterClass
     public static void tearDown() throws Exception {
+        System.out.println("tearDown");
         session.close();
     }
     
     @Test
     public void testCreate() throws Exception {
+        System.out.println("create");
         String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xml><BaseObject id=\"idnum0\" value=\"öüŐŰőűÖÜ\" type=\"thing\"></BaseObject></xml>";
         String outstring = "<objects><BaseObject id=\"idnum0\" type=\"thing\" value=\"öüŐŰőűÖÜ\"/></objects>";
         
@@ -70,13 +78,14 @@ public class BaseObjectTest {
         Transaction tx = session.beginTransaction();
         BaseObject obj = new BaseObject((Element) doc.getElementsByTagName(
                 "BaseObject").item(0), session);
-        String str = Util.baseObject2String(obj);
+        String str = obj.toXmlString();
         assertEquals(outstring, TestUtil.NormalizeXmlString(str));
         tx.commit();
     }
     
     @Test
     public void testComputedFields() throws Exception {
+        System.out.println("testComputedFields");
         BaseObject bo = new BaseObject();
         bo.setId(Value.getValueByValue("testComputed", session));
         bo.setType(bo);
@@ -93,6 +102,7 @@ public class BaseObjectTest {
                 Value.getValueByValue("mappedval3", session));
         bo.setComputedField("valuedMap", testValuedMap);
         
+        bo.setComputedField("objattrib", bo);
         HashMap<Value, String> testStringMap = new HashMap<Value, String>();
         testStringMap.put(Value.getValueByValue("mappedstringkey1", session),
                 "mappedstringval1");
@@ -109,8 +119,8 @@ public class BaseObjectTest {
         
         ArrayList<String> stringList = new ArrayList<String>();
         stringList.add("one");
-        stringList.add("one");
-        stringList.add("one");
+        stringList.add("two");
+        stringList.add("three");
         bo.setComputedField("string", stringList);
         session.save(bo);
         
@@ -119,23 +129,25 @@ public class BaseObjectTest {
                 + "mappedkey1=\"mappedval1\" mappedkey2=\"mappedval2\" mappedkey3=\"mappedval3\" "
                 + "mappedstringkey1=\"mappedstringval1\" mappedstringkey2=\"mappedstringval2\" "
                 + "mappedstringkey3=\"mappedstringval3\" "
-                + "type=\"testComputed\">"
-                + "<strings><string>one</string><string>one</string><string>one</string></strings>"
+                + "objattrib=\"testComputed\" type=\"testComputed\">"
+                + "<strings><string>one</string><string>two</string><string>three</string></strings>"
                 + "<objects><object>testComputed</object><object>thing</object></objects>"
                 + "</BaseObject>" + "</objects>";
         
-        String str = Util.baseObject2String(bo);
+        String str = bo.toXmlString();
         assertEquals(outstring, TestUtil.NormalizeXmlString(str));
     }
     
     @Test(expected = InputParseException.class)
     public void testCreateNull() throws Exception {
+        System.out.println("testCreateNull");
         new BaseObject(null, session);
         
     }
     
     @Test(expected = InputParseException.class)
     public void testCreateNoId() throws Exception {
+        System.out.println("testCreateNoId");
         String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xml><BaseObject value=\"öüŐŰőűÖÜ\" type=\"thing\"></BaseObject></xml>";
         
         byte[] arr = objstring.getBytes("UTF-8");
@@ -149,6 +161,7 @@ public class BaseObjectTest {
     
     @Test(expected = InputParseException.class)
     public void testCreateNoType() throws Exception {
+        System.out.println("testCreateNoType");
         String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xml><BaseObject value=\"öüŐŰőűÖÜ\" id=\"thought\"></BaseObject></xml>";
         
         byte[] arr = objstring.getBytes("UTF-8");
@@ -162,6 +175,7 @@ public class BaseObjectTest {
     
     @Test(expected = InputParseException.class)
     public void testCreateTooManyPartsId() throws Exception {
+        System.out.println("testCreateTooManyPartsId");
         String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xml><BaseObject id=\"foo:bar:baz\" value=\"öüŐŰőűÖÜ\" type=\"thing\"></BaseObject></xml>";
         
         byte[] arr = objstring.getBytes("UTF-8");
@@ -175,6 +189,7 @@ public class BaseObjectTest {
     
     @Test
     public void testCreateVersionedId() throws Exception {
+        System.out.println("testCreateVersionedId");
         String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xml><BaseObject id=\"idnum0:foo\" value=\"öüŐŰőűÖÜ\" type=\"thing\"></BaseObject></xml>";
         String outstring = "<objects><BaseObject id=\"idnum0:foo\" type=\"thing\" value=\"öüŐŰőűÖÜ\"/></objects>";
         
@@ -185,13 +200,14 @@ public class BaseObjectTest {
         Transaction tx = session.beginTransaction();
         BaseObject obj = new BaseObject((Element) doc.getElementsByTagName(
                 "BaseObject").item(0), session);
-        String str = Util.baseObject2String(obj);
+        String str = obj.toXmlString();
         assertEquals(outstring, TestUtil.NormalizeXmlString(str));
         tx.commit();
     }
     
     @Test(expected = InputParseException.class)
     public void testCreateInvalidType() throws Exception {
+        System.out.println("testCreateInvalidType");
         String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xml><BaseObject id=\"fooo\" value=\"öüŐŰőűÖÜ\" type=\"this type does not exist\"></BaseObject></xml>";
         
         byte[] arr = objstring.getBytes("UTF-8");
@@ -205,6 +221,7 @@ public class BaseObjectTest {
     
     @Test(expected = InputParseException.class)
     public void testCreateInvalidSource() throws Exception {
+        System.out.println("testCreateInvalidSource");
         String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xml><BaseObject id=\"fooo\" value=\"öüŐŰőűÖÜ\" source=\"this source does not exist\" type=\"thing\"></BaseObject></xml>";
         
         byte[] arr = objstring.getBytes("UTF-8");
@@ -218,6 +235,7 @@ public class BaseObjectTest {
     
     @Test(expected = InputParseException.class)
     public void testCreateInvalidDest() throws Exception {
+        System.out.println("testCreateInvalidDest");
         String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xml><BaseObject id=\"fooo\" value=\"öüŐŰőűÖÜ\" dest=\"this dest does not exist\" type=\"thing\"></BaseObject></xml>";
         
         byte[] arr = objstring.getBytes("UTF-8");
@@ -231,6 +249,7 @@ public class BaseObjectTest {
     
     @Test
     public void testTheRest() throws Exception {
+        System.out.println("testTheRest");
         String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xml>"
                 + "<BaseObject id=\"one\" type=\"thing\"/>"
                 + "<BaseObject id=\"two\" type=\"thing\"/>"
@@ -266,6 +285,7 @@ public class BaseObjectTest {
     
     @Test(expected = UnsupportedOperationException.class)
     public void testEmptyObjectGetId() throws Exception {
+        System.out.println("testEmptyObjectGetId");
         BaseObject obj = new BaseObject();
         obj.getId();
     }

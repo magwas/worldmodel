@@ -1,5 +1,6 @@
 package org.rulez.magwas.worldmodel;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -29,6 +31,7 @@ import org.xml.sax.SAXException;
 
 @Entity
 @Table(name = "object")
+// @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class BaseObject implements Serializable {
     
     private static final long         serialVersionUID = 1L;
@@ -303,6 +306,9 @@ public class BaseObject implements Serializable {
     
     private String anyObjectToString(Object value) {
         String entrystring;
+        if (value == null) {
+            throw new UnsupportedOperationException("null entry value");
+        }
         if (value instanceof String) {
             entrystring = (String) value;
         } else if (value instanceof Value) {
@@ -311,7 +317,8 @@ public class BaseObject implements Serializable {
             entrystring = ((BaseObject) value).getCompositeId();
         } else {
             throw new UnsupportedOperationException(
-                    "Unknown type of entry value");
+                    "Unknown type of entry value:"
+                            + value.getClass().getCanonicalName());
         }
         return entrystring;
     }
@@ -328,16 +335,6 @@ public class BaseObject implements Serializable {
         }
         for (Entry<String, Serializable> computedField : computedFields
                 .entrySet()) {
-            if (computedField.getValue() instanceof String) {
-                e.setAttribute(computedField.getKey(),
-                        (String) computedField.getValue());
-                continue;
-            }
-            if (computedField.getValue() instanceof Value) {
-                e.setAttribute(computedField.getKey(),
-                        ((Value) computedField.getValue()).getValue());
-                continue;
-            }
             if (computedField.getValue() instanceof Map) {
                 // expected Map<Value,Value>
                 for (Entry<Value, Object> entry : ((Map<Value, Object>) computedField
@@ -345,20 +342,22 @@ public class BaseObject implements Serializable {
                     e.setAttribute(entry.getKey().getValue(),
                             anyObjectToString(entry.getValue()));
                 }
-                continue;
-            }
-            if (computedField.getValue() instanceof List) {
+            } else if (computedField.getValue() instanceof List) {
                 // expected List<String> or List<BaseObject>
                 String key = computedField.getKey();
                 Element listhead = doc.createElement(key + "s");
                 for (Object val : ((List<Object>) computedField.getValue())) {
                     Element item = doc.createElement(key);
-                    Text xmlValue = doc.createTextNode(anyObjectToString(val));
+                    
+                    String itemString = anyObjectToString(val);
+                    Text xmlValue = doc.createTextNode(itemString);
                     item.appendChild(xmlValue);
                     listhead.appendChild(item);
                 }
                 e.appendChild(listhead);
-                continue;
+            } else {
+                e.setAttribute(computedField.getKey(),
+                        anyObjectToString(computedField.getValue()));
             }
         }
         return e;
@@ -401,4 +400,49 @@ public class BaseObject implements Serializable {
          */
         this.computedFields.put(key, value);
     }
+    
+    public Document toDocument() throws ParserConfigurationException {
+        Document doc = Util.newDocument();
+        Element xmlobj = toXML(doc);
+        doc.appendChild(xmlobj);
+        return doc;
+    }
+    
+    public String toXmlString() throws ParserConfigurationException {
+        // maybe create an interface
+        
+        Document doc = Util.newDocument();
+        Element rootnode = doc.createElement("objects");
+        doc.appendChild(rootnode);
+        Element xml;
+        if (this == null) {
+            xml = doc.createElement("null");
+        } else {
+            xml = toXML(doc);
+        }
+        rootnode.appendChild(xml);
+        try {
+            return Util.dom2String(doc);
+        } catch (TransformerException e) {
+            Util.logException(e);
+            return "<exception>Transformation failed</exception>";
+        }
+    }
+    
+    public static BaseObject fromString(String str, Session session)
+            throws InputParseException, SAXException, IOException,
+            ParserConfigurationException {
+        String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xml>"
+                + str + "</xml>";
+        
+        byte[] arr = objstring.getBytes("UTF-8");
+        ByteArrayInputStream bis = new ByteArrayInputStream(arr);
+        Document doc = Util.newDocument(bis);
+        
+        BaseObject obj;
+        obj = new BaseObject((Element) doc.getElementsByTagName("BaseObject")
+                .item(0), session);
+        return obj;
+    }
+    
 }

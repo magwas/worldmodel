@@ -9,59 +9,45 @@ import java.util.List;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactoryConfigurationException;
 
 import org.apache.commons.io.IOUtils;
 import org.hibernate.Session;
-import org.junit.BeforeClass;
+import org.hibernate.Transaction;
+import org.junit.Before;
 import org.junit.Test;
-import org.rulez.magwas.worldmodel.BaseObject;
 import org.rulez.magwas.worldmodel.Util;
 import org.rulez.magwas.worldmodel.WorldModelServlet;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class WorldModelServletTest {
     
-    private static WorldModelServlet servlet;
+    private WorldModelServlet servlet;
     
-    @BeforeClass
-    public static void before() throws Exception {
+    @Before
+    public void before() throws Exception {
+        Session session = Util.getSession();
+        Transaction tx = session.beginTransaction();
+        session.createQuery("delete from BaseObject").executeUpdate();
+        tx.commit();
+        session.close();
         System.out.println("Before");
         servlet = new WorldModelServlet();
         ServletConfig config = new MockServletConfig();
         servlet.init(config);
-        Session session = Util.getSession();
-        BaseObject contains = BaseObject.getBaseObjectByCompositeId("contains",
-                session);
-        BaseObject contains2 = BaseObject.getBaseObjectByCompositeId(
-                "contains", session);
-        session.close();
-        assert (contains != null);
-        assertEquals(contains, contains2);
         MyHttpServletRequest request = new MyHttpServletRequest();
         MyHttpServletResponse response = new MyHttpServletResponse();
         servlet.doGet(request, response);
-        String output = response.getOutput();
-        assertEquals(
-                "<objects>"
-                        + "<BaseObject id=\"thing\"/>"
-                        + "<BaseObject dest=\"thing\" id=\"relation\" source=\"thing\" type=\"thing\"/>"
-                        + "<BaseObject id=\"contains\" type=\"relation\"/>"
-                        + "<BaseObject id=\"folder\" type=\"thing\"/>"
-                        + "<BaseObject id=\"hierarchyroot\" type=\"folder\"/>"
-                        + "<BaseObject id=\"ontology\" type=\"folder\"/>"
-                        + "<BaseObject id=\"basic ontology\" type=\"folder\"/>"
-                        + "<BaseObject dest=\"ontology\" id=\"c1\" source=\"hierarchyroot\" type=\"contains\"/>"
-                        + "<BaseObject dest=\"basic ontology\" id=\"c2\" source=\"ontology\" type=\"contains\"/>"
-                        + "<BaseObject dest=\"thing\" id=\"c3\" source=\"basic ontology\" type=\"contains\"/>"
-                        + "<BaseObject dest=\"relation\" id=\"c4\" source=\"basic ontology\" type=\"contains\"/>"
-                        + "<BaseObject id=\"hierarchy\" type=\"folder\"/>"
-                        + "<BaseObject dest=\"hierarchy\" id=\"c5\" source=\"ontology\" type=\"contains\"/>"
-                        + "<BaseObject dest=\"contains\" id=\"c6\" source=\"hierarchy\" type=\"contains\"/>"
-                        + "<BaseObject dest=\"folder\" id=\"c7\" source=\"hierarchy\" type=\"contains\"/>"
-                        + "</objects>", TestUtil.NormalizeXmlString(output));
-        servlet.checkAll();
+        String retstring = response.getOutput();
+        TestUtil.assertExpressionOnXmlString("count(//exception)=0", retstring);
+        TestUtil.assertExpressionOnXmlString("count(//BaseObject) >= 15",
+                retstring);
+        
         FileInputStream inputStream = new FileInputStream(
                 "src/test/resources/searchtest.xml");
         String objstring = IOUtils.toString(inputStream);
@@ -71,8 +57,7 @@ public class WorldModelServletTest {
         request2.setInputString(objstring);
         servlet.doPost(request2, response2);
         String output2 = response2.getOutput();
-        Document retdoc = Util.newDocument(output2);
-        assertEquals(0, retdoc.getElementsByTagName("exception").getLength());
+        TestUtil.assertExpressionOnXmlString("count(//exception)=0", output2);
         
     }
     
@@ -225,21 +210,23 @@ public class WorldModelServletTest {
     
     @Test
     public void testDoPostWithSelfReference() throws ServletException,
-            IOException {
+            IOException, XPathExpressionException,
+            XPathFactoryConfigurationException, SAXException,
+            ParserConfigurationException {
         String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xml>"
                 + "<BaseObject id=\"stuff\" type=\"stuff\"/>"
                 + "<BaseObject id=\"stuffplace\" type=\"contains\" source=\"hierarchyroot\" dest=\"stuff\"/>"
                 + "</xml>";
-        String retstring = "<objects>"
-                + "<BaseObject id=\"stuff\" type=\"stuff\"/>"
-                + "<BaseObject dest=\"stuff\" id=\"stuffplace\" source=\"hierarchyroot\" type=\"contains\"/>"
-                + "</objects>";
         MyHttpServletRequest request = new MyHttpServletRequest();
         MyHttpServletResponse response = new MyHttpServletResponse();
         request.setInputString(objstring);
         servlet.doPost(request, response);
-        assertEquals(retstring,
-                TestUtil.NormalizeXmlString(response.getOutput()));
+        String retstring = response.getOutput();
+        TestUtil.assertExpressionOnXmlString("count(//exception)=0", retstring);
+        TestUtil.assertExpressionOnXmlString("count(//BaseObject) = 2",
+                retstring);
+        TestUtil.assertExpressionOnXmlString(
+                "//BaseObject[@id='stuff']/@type = 'stuff'", retstring);
     }
     
     @Test
@@ -259,26 +246,28 @@ public class WorldModelServletTest {
     }
     
     @Test
-    public void testDoPostTest1() throws ServletException, IOException {
+    public void testDoPostTest1() throws ServletException, IOException,
+            XPathExpressionException, XPathFactoryConfigurationException,
+            SAXException, ParserConfigurationException {
         String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<xml>"
                 + "<BaseObject id=\"idnum\" value=\"érték\" type=\"thing\"/>"
                 + "<BaseObject id=\"idnumplace\" type=\"contains\" source=\"hierarchyroot\" dest=\"idnum\"/>"
                 + "</xml>";
-        String retstring = "<objects>"
-                + "<BaseObject id=\"idnum\" type=\"thing\" value=\"érték\"/>"
-                + "<BaseObject dest=\"idnum\" id=\"idnumplace\" source=\"hierarchyroot\" type=\"contains\"/>"
-                + "</objects>";
         MyHttpServletRequest request = new MyHttpServletRequest();
         MyHttpServletResponse response = new MyHttpServletResponse();
         request.setInputString(objstring);
         servlet.doPost(request, response);
-        assertEquals(retstring,
-                TestUtil.NormalizeXmlString(response.getOutput()));
+        String retstring = response.getOutput();
+        TestUtil.assertExpressionOnXmlString("count(//exception)=0", retstring);
+        TestUtil.assertExpressionOnXmlString("count(//BaseObject) = 2",
+                retstring);
     }
     
     @Test
-    public void testDoPostMoreObjects() throws ServletException, IOException {
+    public void testDoPostMoreObjects() throws ServletException, IOException,
+            XPathExpressionException, XPathFactoryConfigurationException,
+            SAXException, ParserConfigurationException {
         String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<xml>"
                 + "<BaseObject id=\"idnum2\" value=\"érték\" type=\"thing\"/>"
@@ -286,85 +275,91 @@ public class WorldModelServletTest {
                 + "<BaseObject id=\"idnum3\" value=\"érték\" type=\"thing\"/>"
                 + "<BaseObject id=\"idnumplace3\" type=\"contains\" source=\"hierarchyroot\" dest=\"idnum3\"/>"
                 + "</xml>";
-        String retstring = "<objects>"
-                + "<BaseObject id=\"idnum2\" type=\"thing\" value=\"érték\"/>"
-                + "<BaseObject dest=\"idnum2\" id=\"idnumplace2\" source=\"hierarchyroot\" type=\"contains\"/>"
-                + "<BaseObject id=\"idnum3\" type=\"thing\" value=\"érték\"/>"
-                + "<BaseObject dest=\"idnum3\" id=\"idnumplace3\" source=\"hierarchyroot\" type=\"contains\"/>"
-                + "</objects>";
         MyHttpServletRequest request = new MyHttpServletRequest();
         MyHttpServletResponse response = new MyHttpServletResponse();
         request.setInputString(objstring);
         servlet.doPost(request, response);
-        assertEquals(retstring,
-                TestUtil.NormalizeXmlString(response.getOutput()));
+        String retstring = response.getOutput();
+        TestUtil.assertExpressionOnXmlString("count(//exception)=0", retstring);
+        TestUtil.assertExpressionOnXmlString("count(//BaseObject) = 4",
+                retstring);
     }
     
     @Test
-    public void testDoPostTest2() throws ServletException, IOException {
+    public void testDoPostTest2() throws ServletException, IOException,
+            XPathExpressionException, XPathFactoryConfigurationException,
+            SAXException, ParserConfigurationException {
         String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<xml>\n"
                 + "<BaseObject id=\"harom\" value=\"na micsoda?\" type=\"thing\"/>"
                 + "<BaseObject id=\"haromplace\" type=\"contains\" source=\"hierarchyroot\" dest=\"harom\"/>"
                 + "</xml>";
-        String retstring = "<objects>"
-                + "<BaseObject id=\"harom\" type=\"thing\" value=\"na micsoda?\"/>"
-                + "<BaseObject dest=\"harom\" id=\"haromplace\" source=\"hierarchyroot\" type=\"contains\"/>"
-                + "</objects>";
         MyHttpServletRequest request = new MyHttpServletRequest();
         MyHttpServletResponse response = new MyHttpServletResponse();
         request.setInputString(objstring);
         servlet.doPost(request, response);
-        assertEquals(retstring,
-                TestUtil.NormalizeXmlString(response.getOutput()));
+        String retstring = response.getOutput();
+        TestUtil.assertExpressionOnXmlString("count(//exception)=0", retstring);
+        TestUtil.assertExpressionOnXmlString("count(//BaseObject) = 2",
+                retstring);
+        TestUtil.assertExpressionOnXmlString(
+                "count(//BaseObject[@id='harom']) = 1", retstring);
+        TestUtil.assertExpressionOnXmlString(
+                "count(//BaseObject[@id='haromplace']) = 1", retstring);
+        
     }
     
     @Test
-    public void testDoPostAndGet() throws ServletException, IOException {
+    public void testDoPostAndGet() throws ServletException, IOException,
+            XPathExpressionException, XPathFactoryConfigurationException,
+            SAXException, ParserConfigurationException {
         String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<xml>\n"
                 + "<BaseObject id=\"hehe\" value=\"post And Get\" type=\"thing\"/>"
                 + "<BaseObject id=\"heheplace\" type=\"contains\" source=\"hierarchyroot\" dest=\"hehe\"/>"
                 + "</xml>";
-        String retstring = "<objects>"
-                + "<BaseObject id=\"hehe\" type=\"thing\" value=\"post And Get\"/>"
-                + "<BaseObject dest=\"hehe\" id=\"heheplace\" source=\"hierarchyroot\" type=\"contains\"/>"
-                + "</objects>";
-        String retstring2 = "<objects>"
-                + "<BaseObject id=\"hehe\" type=\"thing\" value=\"post And Get\"/>"
-                + "</objects>";
         MyHttpServletRequest request = new MyHttpServletRequest();
         MyHttpServletResponse response = new MyHttpServletResponse();
         request.setInputString(objstring);
         servlet.doPost(request, response);
-        assertEquals(retstring,
-                TestUtil.NormalizeXmlString(response.getOutput()));
+        String retstring = response.getOutput();
+        TestUtil.assertExpressionOnXmlString("count(//exception)=0", retstring);
+        TestUtil.assertExpressionOnXmlString("count(//BaseObject) = 2",
+                retstring);
+        TestUtil.assertExpressionOnXmlString(
+                "count(//BaseObject[@id='hehe']) = 1", retstring);
+        TestUtil.assertExpressionOnXmlString(
+                "count(//BaseObject[@id='heheplace']) = 1", retstring);
         MyHttpServletRequest request2 = new MyHttpServletRequest();
         MyHttpServletResponse response2 = new MyHttpServletResponse();
         request2.setParameter("id", "hehe");
         servlet.doGet(request2, response2);
-        assertEquals(retstring2,
-                TestUtil.NormalizeXmlString(response2.getOutput()));
+        String retstring2 = response2.getOutput();
+        TestUtil.assertExpressionOnXmlString("count(//exception)=0", retstring2);
+        TestUtil.assertExpressionOnXmlString("count(//BaseObject) = 2",
+                retstring);
+        TestUtil.assertExpressionOnXmlString(
+                "count(//BaseObject[@id='hehe']) = 1", retstring2);
     }
     
     @Test
     public void testDoPostTestDoubleWrite() throws ServletException,
-            IOException {
+            IOException, XPathExpressionException,
+            XPathFactoryConfigurationException, SAXException,
+            ParserConfigurationException {
         String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<xml>\n"
                 + "<BaseObject id=\"negy\" value=\"negyedik\" type=\"thing\"/>"
                 + "<BaseObject id=\"negyplace\" type=\"contains\" source=\"hierarchyroot\" dest=\"negy\"/>"
                 + "</xml>";
-        String retstring = "<objects>"
-                + "<BaseObject id=\"negy\" type=\"thing\" value=\"negyedik\"/>"
-                + "<BaseObject dest=\"negy\" id=\"negyplace\" source=\"hierarchyroot\" type=\"contains\"/>"
-                + "</objects>";
         MyHttpServletRequest request = new MyHttpServletRequest();
         MyHttpServletResponse response = new MyHttpServletResponse();
         request.setInputString(objstring);
         servlet.doPost(request, response);
-        assertEquals(retstring,
-                TestUtil.NormalizeXmlString(response.getOutput()));
+        String retstring = response.getOutput();
+        TestUtil.assertExpressionOnXmlString("count(//exception)=0", retstring);
+        TestUtil.assertExpressionOnXmlString("count(//BaseObject) = 2",
+                retstring);
         MyHttpServletRequest request2 = new MyHttpServletRequest();
         MyHttpServletResponse response2 = new MyHttpServletResponse();
         request2.setInputString(objstring);

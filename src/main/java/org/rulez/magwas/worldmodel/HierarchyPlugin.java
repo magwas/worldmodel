@@ -1,6 +1,7 @@
 package org.rulez.magwas.worldmodel;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -49,7 +50,6 @@ public class HierarchyPlugin implements IWorldModelPlugin {
     
     public void init(Session session) throws InputParseException, SAXException,
             IOException, ParserConfigurationException {
-        
         hierarchyroot = BaseObject.getBaseObjectByCompositeId("hierarchyroot",
                 session);
         if (null == hierarchyroot) {
@@ -65,10 +65,10 @@ public class HierarchyPlugin implements IWorldModelPlugin {
         
     }
     
-    public void finalizeObject(Session session, BaseObject obj)
+    public void checkConsistency(Session session, BaseObject obj)
             throws HierarchyInconsistencyException {
         Set<BaseObject> lineage = new HashSet<BaseObject>();
-        checkConsistencyOne(session, obj, lineage);
+        checkConsistency(session, obj, lineage);
     }
     
     private Boolean isContainRelation(BaseObject relation)
@@ -112,7 +112,7 @@ public class HierarchyPlugin implements IWorldModelPlugin {
         return isContainRelation(type, relationLineage);
     }
     
-    private void checkConsistencyOne(Session session, BaseObject obj,
+    private void checkConsistency(Session session, BaseObject obj,
             Set<BaseObject> lineage) throws HierarchyInconsistencyException {
         if (lineage.contains(obj)) {
             // loop
@@ -125,49 +125,101 @@ public class HierarchyPlugin implements IWorldModelPlugin {
             }
             return;
         }
-        BaseObject source = obj.getSource();
-        if (source != null) {
-            lineage.add(obj);
-            checkConsistencyOne(session, source, lineage);
-        } else {
-            Query query = session
-                    .createQuery("from BaseObject where dest = :dest");
-            query.setParameter("dest", obj);
-            @SuppressWarnings("unchecked")
-            List<BaseObject> l = query.list();
-            BaseObject container = null;
-            int containscount = 0;
-            for (BaseObject r : l) {
-                if (isContainRelation(r)) {
-                    containscount += 1;
-                    if (containscount > 1) {
-                        throw new HierarchyInconsistencyException("object '"
-                                + obj.getCompositeId()
-                                + "' have at least two parents: '"
-                                + r.getCompositeId() + "' and '"
-                                + container.getCompositeId() + "'");
-                    }
-                    container = r;
-                }
-            }
-            if (containscount == 0) {
-                throw new HierarchyInconsistencyException("orphan node "
-                        + obj.getCompositeId());
-            }
-            lineage.add(obj);
-            checkConsistencyOne(session, container, lineage);
-        }
+        BaseObject container = getParent(session, obj);
+        lineage.add(obj);
+        checkConsistency(session, container, lineage);
     }
     
-    public void checkConsistencyAll(Session session)
-            throws InputParseException, HierarchyInconsistencyException {
+    private BaseObject getParent(Session session, BaseObject obj)
+            throws HierarchyInconsistencyException {
+        
+        BaseObject source = obj.getSource();
+        if (source != null) {
+            return source;
+        }
+        Query query = session.createQuery("from BaseObject where dest = :dest");
+        query.setParameter("dest", obj);
+        @SuppressWarnings("unchecked")
+        List<BaseObject> l = query.list();
+        BaseObject container = null;
+        int containscount = 0;
+        for (BaseObject r : l) {
+            if (isContainRelation(r)) {
+                containscount += 1;
+                BaseObject newcontainer = r.getSource();
+                if (null == newcontainer) {
+                    throw new HierarchyInconsistencyException("relation '"
+                            + r.getCompositeId() + "' for '"
+                            + obj.getCompositeId() + "' does not have source");
+                }
+                if (containscount > 1) {
+                    throw new HierarchyInconsistencyException("object '"
+                            + obj.getCompositeId()
+                            + "' have at least two parents: '"
+                            + newcontainer.getCompositeId() + "' and '"
+                            + container.getCompositeId() + "'");
+                }
+                container = newcontainer;
+            }
+        }
+        if (containscount == 0) {
+            throw new HierarchyInconsistencyException("orphan node "
+                    + obj.getCompositeId());
+        }
+        return container;
+    }
+    
+    public void checkConsistencyAll(Session session) throws Throwable {
         checked.clear();
         checked.add(hierarchyroot);
         Query query = session.createQuery("from BaseObject");
         @SuppressWarnings("unchecked")
         List<BaseObject> l = query.list();
         for (BaseObject obj : l) {
-            finalizeObject(session, obj);
+            checkConsistency(session, obj);
         }
+    }
+    
+    @Override
+    public void finalizeObject(Session session, BaseObject obj)
+            throws Throwable {
+        BaseObject parentfield = (BaseObject) obj.getComputedField("parent");
+        if (null != parentfield) {
+            return;
+        }
+        BaseObject parent = getParent(session, obj);
+        obj.setComputedField("parent", parent);
+        setKid(obj, parent);
+        
+        Query query = session
+                .createQuery("from BaseObject where source = :this");
+        query.setParameter("this", obj);
+        @SuppressWarnings("unchecked")
+        List<BaseObject> l = query.list();
+        ArrayList<BaseObject> kids = new ArrayList<BaseObject>();
+        for (BaseObject r : l) {
+            kids.add(r);
+            if (isContainRelation(r)) {
+                kids.add(r.getDest());
+            }
+        }
+        obj.setComputedField("kid", kids);
+    }
+    
+    private void setKid(BaseObject obj, BaseObject parent) {
+        @SuppressWarnings("unchecked")
+        List<BaseObject> kidlist = (List<BaseObject>) parent
+                .getComputedField("kid");
+        if (null == kidlist) {
+            return;
+        }
+        if (!kidlist.contains(obj)) {
+            kidlist.add(obj);
+        }
+    }
+    
+    @Override
+    public String getPluginName() {
+        return this.getClass().getCanonicalName();
     }
 }

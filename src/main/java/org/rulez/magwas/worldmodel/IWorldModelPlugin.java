@@ -6,19 +6,28 @@ import org.hibernate.Session;
 
 public interface IWorldModelPlugin extends Serializable {
     
+    String getPluginName();
+    
     /*
      * initialisation of the plugin
      */
-    void init(Session session) throws Exception;
+    void init(Session session) throws Throwable;
     
     /*
-     * Checks the consistency of one object, adds computed fields if they are
-     * missing.
+     * Checks the consistency of one object.
      * 
      * Called when all objects in the transaction are added.
      */
     
-    void finalizeObject(Session session, BaseObject obj) throws Exception;
+    void checkConsistency(Session session, BaseObject obj) throws Throwable;
+    
+    /*
+     * Adds computed fields if they are missing.
+     * 
+     * Called when all objects in the transaction are added.
+     */
+    
+    void finalizeObject(Session session, BaseObject obj) throws Throwable;
     
     /*
      * Checks the consistency of the whole database
@@ -27,7 +36,7 @@ public interface IWorldModelPlugin extends Serializable {
      */
     
     // FIXME not called
-    void checkConsistencyAll(Session session) throws Exception;
+    void checkConsistencyAll(Session session) throws Throwable;
     
     /*
      * returns the list of names of supported elements.

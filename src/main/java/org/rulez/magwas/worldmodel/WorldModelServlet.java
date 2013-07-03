@@ -1,7 +1,6 @@
 package org.rulez.magwas.worldmodel;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -29,33 +28,22 @@ public class WorldModelServlet extends HttpServlet {
     /**
      * serial version just to get rid of warning
      */
-    private static final long       serialVersionUID = 1L;
-    private static final int        NUMENTRIES       = 25;
-    private List<IWorldModelPlugin> pluginstack      = null;
+    private static final long serialVersionUID = 1L;
+    private static final int  NUMENTRIES       = 25;
+    PluginManager             plugins          = null;
     
     @Override
     public void init(ServletConfig config) throws ServletException {
-        Session session = Util.getSession();
         String pluginstackConfig = config.getInitParameter("PluginStack");
-        pluginstack = new ArrayList<IWorldModelPlugin>();
-        for (String classname : pluginstackConfig.split("[ \t\n\r]+")) {
-            try {
-                Util.logInfo("initializing plugin:" + classname + ".");
-                IWorldModelPlugin plugin = (IWorldModelPlugin) Class.forName(
-                        classname).newInstance();
-                pluginstack.add(plugin);
-                plugin.init(session);
-            } catch (Exception e) {
-                Util.die(e);
-            }
-        }
-        session.close();
-    }
-    
-    public void checkAll() throws Exception {
         Session session = Util.getSession();
-        for (IWorldModelPlugin plugin : pluginstack) {
-            plugin.checkConsistencyAll(session);
+        Transaction tx = session.beginTransaction();
+        try {
+            plugins = new PluginManager(pluginstackConfig);
+            plugins.init(session);
+            tx.commit();
+        } catch (Throwable e) {
+            tx.rollback();
+            Util.die(e);
         }
         session.close();
     }
@@ -80,9 +68,7 @@ public class WorldModelServlet extends HttpServlet {
             reader = request.getReader();
             String xmlstring = IOUtils.toString(reader);
             // FIXME schema validation (maybe in upper layers)
-            ByteArrayInputStream bis = new ByteArrayInputStream(
-                    xmlstring.getBytes("UTF-8"));
-            Document doc = Util.newDocument(bis);
+            Document doc = Util.newDocument(xmlstring);
             
             NodeList objs = doc.getElementsByTagName("BaseObject");
             Document outdoc = Util.newDocument();
@@ -91,22 +77,22 @@ public class WorldModelServlet extends HttpServlet {
             List<BaseObject> newobjs = new ArrayList<BaseObject>();
             for (int i = 0; i < objs.getLength(); i++) {
                 BaseObject obj = new BaseObject((Element) objs.item(i), session);
-                newobjs.add(obj);
                 session.save(obj);
-                Element xml;
-                xml = obj.toXML(outdoc);
-                rootnode.appendChild(xml);
+                newobjs.add(obj);
             }
-            for (IWorldModelPlugin plugin : pluginstack) {
-                for (BaseObject candidate : newobjs) {
-                    plugin.finalizeObject(session, candidate);
-                }
+            for (BaseObject candidate : newobjs) {
+                plugins.checkConsistency(session, candidate);
+                plugins.finalizeObject(session, candidate);
+                Element xml;
+                xml = candidate.toXML(outdoc);
+                rootnode.appendChild(xml);
             }
             
             str = Util.dom2String(outdoc);
             tx.commit();
             
-        } catch (Exception e) {
+        } catch (Throwable e) {
+            tx.rollback();
             str = "<exception>" + e.getMessage() + "</exception>";
             Util.logException(e);
         }
@@ -236,6 +222,7 @@ public class WorldModelServlet extends HttpServlet {
             if (idstr != null && !idstr.equals("")) {
                 BaseObject bo = BaseObject.getBaseObjectByCompositeId(idstr,
                         session);
+                
                 l = new ArrayList<BaseObject>();
                 l.add(bo);
             } else {
@@ -259,12 +246,13 @@ public class WorldModelServlet extends HttpServlet {
                 root.appendChild(continues);
             }
             out.print(Util.dom2String(doc));
+            tx.commit();
         } catch (Exception e) {
+            tx.rollback();
             out.println("<exception>" + e.getMessage() + "</exception>");
             Util.logException(e);
         }
         
-        tx.commit();
         session.close();
         out.flush();
         out.close();

@@ -89,6 +89,11 @@
     	<type>maven-plugin</type>
     	<scope>test</scope>
     </dependency>
+    <dependency>
+    	<groupId>net.sf.saxon</groupId>
+    	<artifactId>Saxon-HE</artifactId>
+    	<version>9.5.1-1</version>
+    </dependency>
   </dependencies>
   <build>
     <finalName>worldmodel</finalName>
