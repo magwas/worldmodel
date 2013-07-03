@@ -1,13 +1,14 @@
 package org.rulez.magwas.worldmodel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.Session;
 
 public class PluginManager implements IWorldModelPlugin {
     
-    private static final long            serialVersionUID = 1L;
-    private ArrayList<IWorldModelPlugin> pluginstack;
+    private static final long       serialVersionUID = 1L;
+    private List<IWorldModelPlugin> pluginstack;
     
     public PluginManager(String pluginstackConfig)
             throws InstantiationException, IllegalAccessException,
@@ -23,7 +24,7 @@ public class PluginManager implements IWorldModelPlugin {
     }
     
     @Override
-    public void init(Session session) throws Throwable {
+    public void init(Session session) throws Exception {
         for (IWorldModelPlugin plugin : pluginstack) {
             plugin.init(session);
         }
@@ -31,14 +32,14 @@ public class PluginManager implements IWorldModelPlugin {
     
     @Override
     public void finalizeObject(Session session, BaseObject obj)
-            throws Throwable {
+            throws Exception {
         for (IWorldModelPlugin plugin : pluginstack) {
             plugin.finalizeObject(session, obj);
         }
     }
     
     @Override
-    public void checkConsistencyAll(Session session) throws Throwable {
+    public void checkConsistencyAll(Session session) throws Exception {
         for (IWorldModelPlugin plugin : pluginstack) {
             plugin.checkConsistencyAll(session);
         }
@@ -46,7 +47,7 @@ public class PluginManager implements IWorldModelPlugin {
     
     @Override
     public void checkConsistency(Session session, BaseObject obj)
-            throws Throwable {
+            throws Exception {
         for (IWorldModelPlugin plugin : pluginstack) {
             plugin.checkConsistencyAll(session);
         }

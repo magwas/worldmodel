@@ -37,7 +37,7 @@ public class PluginManagerTest {
         try {
             plugins.init(session);
             plugins.checkConsistencyAll(session);
-        } catch (Throwable e) {
+        } catch (Exception e) {
             session.close();
             e.printStackTrace();
             fail(e.getMessage());

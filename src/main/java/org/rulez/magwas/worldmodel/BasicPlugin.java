@@ -10,12 +10,12 @@ public class BasicPlugin implements IWorldModelPlugin {
     private static final long serialVersionUID = 1L;
     
     @Override
-    public void init(Session session) throws Exception {
+    public void init(Session session) {
         BaseObject thing;
         try {
             thing = BaseObject.getBaseObjectByCompositeId("thing", session);
         } catch (InputParseException e) {
-            Util.die(e);
+            WorldModelServlet.die(e);
             // just to make the compiler happy
             return;
         }
@@ -42,8 +42,7 @@ public class BasicPlugin implements IWorldModelPlugin {
     }
     
     @Override
-    public void finalizeObject(Session session, BaseObject obj)
-            throws Exception {
+    public void finalizeObject(Session session, BaseObject obj) {
         if (obj.getComputedField("revtype") != null) {
             return;
         }
@@ -68,21 +67,18 @@ public class BasicPlugin implements IWorldModelPlugin {
         @SuppressWarnings("unchecked")
         ArrayList<BaseObject> foreignCF = (ArrayList<BaseObject>) obj.getType()
                 .getComputedField(fieldname);
-        if (foreignCF != null) {
-            if (!foreignCF.contains(obj)) {
-                foreignCF.add(obj);
-            }
+        if (foreignCF != null && !foreignCF.contains(obj)) {
+            foreignCF.add(obj);
         }
     }
     
     @Override
-    public void checkConsistencyAll(Session session) throws Exception {
+    public void checkConsistencyAll(Session session) {
         // FIXME: check for loops/orphans in the type tree
     }
     
     @Override
-    public void checkConsistency(Session session, BaseObject obj)
-            throws Throwable {
+    public void checkConsistency(Session session, BaseObject obj) {
         // do nothing
     }
     

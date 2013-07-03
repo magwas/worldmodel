@@ -169,7 +169,8 @@ public class HierarchyPlugin implements IWorldModelPlugin {
         return container;
     }
     
-    public void checkConsistencyAll(Session session) throws Throwable {
+    public void checkConsistencyAll(Session session)
+            throws HierarchyInconsistencyException {
         checked.clear();
         checked.add(hierarchyroot);
         Query query = session.createQuery("from BaseObject");
@@ -182,7 +183,7 @@ public class HierarchyPlugin implements IWorldModelPlugin {
     
     @Override
     public void finalizeObject(Session session, BaseObject obj)
-            throws Throwable {
+            throws HierarchyInconsistencyException {
         BaseObject parentfield = (BaseObject) obj.getComputedField("parent");
         if (null != parentfield) {
             return;

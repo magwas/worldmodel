@@ -30,7 +30,9 @@ public class WorldModelServlet extends HttpServlet {
      */
     private static final long serialVersionUID = 1L;
     private static final int  NUMENTRIES       = 25;
-    PluginManager             plugins          = null;
+    private PluginManager     plugins          = null;
+    
+    private static boolean    isStopped        = false;
     
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -41,9 +43,9 @@ public class WorldModelServlet extends HttpServlet {
             plugins = new PluginManager(pluginstackConfig);
             plugins.init(session);
             tx.commit();
-        } catch (Throwable e) {
+        } catch (Exception e) {
             tx.rollback();
-            Util.die(e);
+            die(e);
         }
         session.close();
     }
@@ -62,7 +64,7 @@ public class WorldModelServlet extends HttpServlet {
         Session session = Util.getSession();
         Transaction tx = session.beginTransaction();
         try {
-            if (Util.isStopped) {
+            if (isStopped) {
                 throw new IOException("Fatal error occured");
             }
             reader = request.getReader();
@@ -91,7 +93,7 @@ public class WorldModelServlet extends HttpServlet {
             str = Util.dom2String(outdoc);
             tx.commit();
             
-        } catch (Throwable e) {
+        } catch (Exception e) {
             tx.rollback();
             str = "<exception>" + e.getMessage() + "</exception>";
             Util.logException(e);
@@ -104,57 +106,30 @@ public class WorldModelServlet extends HttpServlet {
         
     }
     
+    private void addClause(HttpServletRequest request, Session session,
+            Map<String, Object> queryparms, List<String> whereclause,
+            String fieldname) throws InputParseException {
+        String typestr = request.getParameter(fieldname);
+        if (typestr != null && !typestr.equals("")) {
+            BaseObject bo = BaseObject.getBaseObjectByCompositeId(typestr,
+                    session);
+            queryparms.put(fieldname, bo);
+            whereclause.add(fieldname + " = :" + fieldname);
+        }
+    }
+    
     private Query createQuery(HttpServletRequest request, Session session)
             throws InputParseException {
-        // FIXME: some query optimisation/caching is possible here
         
         Map<String, Object> queryparms = new HashMap<String, Object>();
         List<String> whereclause = new ArrayList<String>();
         
-        String typestr = request.getParameter("type");
-        if (typestr != null && !typestr.equals("")) {
-            BaseObject bo = BaseObject.getBaseObjectByCompositeId(typestr,
-                    session);
-            queryparms.put("type", bo);
-            whereclause.add("type = :type");
-        }
-        
-        String sourcestr = request.getParameter("source");
-        if (sourcestr != null && !sourcestr.equals("")) {
-            BaseObject bo = BaseObject.getBaseObjectByCompositeId(sourcestr,
-                    session);
-            queryparms.put("source", bo);
-            whereclause.add("source = :source");
-        }
-        
-        String deststr = request.getParameter("dest");
-        if (deststr != null && !deststr.equals("")) {
-            BaseObject bo = BaseObject.getBaseObjectByCompositeId(deststr,
-                    session);
-            queryparms.put("dest", bo);
-            whereclause.add("dest = :dest");
-        }
-        
-        String valuestr = request.getParameter("value");
-        if (valuestr != null && !valuestr.equals("")) {
-            Value v = Value.getValueByValue(valuestr, session);
-            queryparms.put("value", v);
-            whereclause.add("value = :value");
-        }
-        
-        String theidstr = request.getParameter("theid");
-        if (theidstr != null && !theidstr.equals("")) {
-            Value v = Value.getValueByValue(theidstr, session);
-            queryparms.put("theid", v);
-            whereclause.add("theid = :theid");
-        }
-        
-        String versionstr = request.getParameter("version");
-        if (versionstr != null && !versionstr.equals("")) {
-            Value v = Value.getValueByValue(versionstr, session);
-            queryparms.put("version", v);
-            whereclause.add("version = :version");
-        }
+        addClause(request, session, queryparms, whereclause, "type");
+        addClause(request, session, queryparms, whereclause, "source");
+        addClause(request, session, queryparms, whereclause, "dest");
+        addClause(request, session, queryparms, whereclause, "value");
+        addClause(request, session, queryparms, whereclause, "theid");
+        addClause(request, session, queryparms, whereclause, "version");
         
         String offsetstr = request.getParameter("offset");
         int offset = 0;
@@ -212,7 +187,7 @@ public class WorldModelServlet extends HttpServlet {
         Transaction tx = session.beginTransaction();
         
         try {
-            if (Util.isStopped) {
+            if (isStopped) {
                 throw new IOException("Fatal error occured");
             }
             Document doc = Util.newDocument();
@@ -256,6 +231,13 @@ public class WorldModelServlet extends HttpServlet {
         session.close();
         out.flush();
         out.close();
+    }
+    
+    public static void die(Exception e) {
+        Util.logException(e);
+        Util.shutdown();
+        Util.fatal("worldmodel cannot continue");
+        isStopped = true;
     }
     
 }

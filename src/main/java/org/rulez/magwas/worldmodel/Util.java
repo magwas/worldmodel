@@ -30,7 +30,6 @@ public final class Util {
     
     private static DocumentBuilder dBuilder       = null;
     private static Logger          logger         = null;
-    public static boolean          isStopped      = false;
     
     private Util() {
         // singleton
@@ -81,7 +80,7 @@ public final class Util {
         logger.log(level, what);
     }
     
-    public static void logException(Throwable e) {
+    public static void logException(Exception e) {
         log(Level.ERROR, "Exception: " + e.getMessage());
         log(Level.INFO, "Stack trace: " + ExceptionUtils.getStackTrace(e));
     }
@@ -103,18 +102,11 @@ public final class Util {
             try {
                 dBuilder = dbFactory.newDocumentBuilder();
             } catch (ParserConfigurationException e) {
-                Util.die(e);
+                WorldModelServlet.die(e);
                 throw e;
             }
         }
         return dBuilder;
-    }
-    
-    public static void die(Throwable e) {
-        logException(e);
-        shutdown();
-        fatal("worldmodel cannot continue");
-        Util.isStopped = true;
     }
     
     public static Document newDocument() throws ParserConfigurationException {

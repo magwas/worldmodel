@@ -11,7 +11,7 @@ public interface IWorldModelPlugin extends Serializable {
     /*
      * initialisation of the plugin
      */
-    void init(Session session) throws Throwable;
+    void init(Session session) throws Exception;
     
     /*
      * Checks the consistency of one object.
@@ -19,7 +19,7 @@ public interface IWorldModelPlugin extends Serializable {
      * Called when all objects in the transaction are added.
      */
     
-    void checkConsistency(Session session, BaseObject obj) throws Throwable;
+    void checkConsistency(Session session, BaseObject obj) throws Exception;
     
     /*
      * Adds computed fields if they are missing.
@@ -27,7 +27,7 @@ public interface IWorldModelPlugin extends Serializable {
      * Called when all objects in the transaction are added.
      */
     
-    void finalizeObject(Session session, BaseObject obj) throws Throwable;
+    void finalizeObject(Session session, BaseObject obj) throws Exception;
     
     /*
      * Checks the consistency of the whole database
@@ -36,7 +36,7 @@ public interface IWorldModelPlugin extends Serializable {
      */
     
     // FIXME not called
-    void checkConsistencyAll(Session session) throws Throwable;
+    void checkConsistencyAll(Session session) throws Exception;
     
     /*
      * returns the list of names of supported elements.
