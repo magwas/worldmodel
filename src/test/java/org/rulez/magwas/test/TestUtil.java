@@ -13,6 +13,8 @@ import javax.xml.xpath.XPathFactoryConfigurationException;
 
 import net.sf.saxon.lib.NamespaceConstant;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.rulez.magwas.worldmodel.BaseObject;
 import org.rulez.magwas.worldmodel.InputParseException;
 import org.rulez.magwas.worldmodel.Util;
@@ -57,6 +59,9 @@ public class TestUtil {
     }
     
     private static String codes = "0123456789abcdef";
+    private static Logger logger1;
+    private static Logger logger2;
+    private static Logger logger3;
     
     public static void hexdump(String label, String str) {
         char[] arr = str.toCharArray();
@@ -70,6 +75,26 @@ public class TestUtil {
                     .append(" ");
         }
         Util.debug(label + buff.toString());
+    }
+    
+    public static void turnLoggingOn() {
+        logger1 = Logger.getLogger("org.hibernate.SQL");
+        logger1.setLevel(Level.TRACE);
+        logger2 = Logger
+                .getLogger("org.hibernate.type.descriptor.sql.BasicBinder");
+        logger2.setLevel(Level.TRACE);
+        logger3 = Logger.getLogger("org.rulez.magwas.worldmodel");
+        logger3.setLevel(Level.DEBUG);
+        Util.debug("Here comes the problem");
+    }
+    
+    public static void turnLoggingOff() {
+        
+        Util.debug("End of problem");
+        
+        logger1.setLevel(Level.INFO);
+        logger2.setLevel(Level.INFO);
+        logger3.setLevel(Level.INFO);
     }
     
 }

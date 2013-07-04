@@ -21,9 +21,9 @@ import org.xml.sax.SAXException;
 
 public class BasicPluginTest {
     
-    private static BasicPlugin plugin;
-    private static BaseObject  thing;
-    private static Session     session;
+    static BasicPlugin plugin;
+    static BaseObject  thing;
+    static Session     session;
     
     @BeforeClass
     public static void setUp() {
@@ -31,8 +31,12 @@ public class BasicPluginTest {
         plugin = new BasicPlugin();
         try {
             plugin.init(session);
+            TestUtil.turnLoggingOn();
             thing = BaseObject.getBaseObjectByCompositeId("thing", session);
-            plugin.finalizeObject(session, thing);
+            BasicPluginTest.plugin.finalizeObject(BasicPluginTest.session,
+                    BasicPluginTest.thing);
+            
+            TestUtil.turnLoggingOff();
         } catch (Exception e) {
             e.printStackTrace();
             fail();
