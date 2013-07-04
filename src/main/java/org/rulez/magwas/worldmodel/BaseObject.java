@@ -173,25 +173,28 @@ public class BaseObject implements Serializable {
         return obj;
     }
     
-    public static void createFromString(String docstring, Session session)
-            throws SAXException, IOException, InputParseException,
-            ParserConfigurationException {
+    public static List<BaseObject> createFromString(String docstring,
+            Session session) throws SAXException, IOException,
+            InputParseException, ParserConfigurationException {
         Document doc = Util.newDocument(docstring);
-        createFromXml(doc, session, null, null);
+        return createFromXml(doc, session, null, null);
     }
     
-    public static void createFromXml(Document doc, Session session,
+    public static List<BaseObject> createFromXml(Document doc, Session session,
             Document outdoc, Element rootnode) throws InputParseException {
         NodeList objs = doc.getElementsByTagName("BaseObject");
+        List<BaseObject> created = new ArrayList<BaseObject>();
         for (int i = 0; i < objs.getLength(); i++) {
             BaseObject obj = new BaseObject((Element) objs.item(i), session);
             session.save(obj);
+            created.add(obj);
             if (outdoc != null) {
                 Element xml;
                 xml = obj.toXML(outdoc);
                 rootnode.appendChild(xml);
             }
         }
+        return created;
     }
     
     @Override

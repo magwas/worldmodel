@@ -3,6 +3,7 @@ package org.rulez.magwas.test;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -14,6 +15,9 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.Before;
 import org.junit.Test;
+import org.rulez.magwas.worldmodel.BaseObject;
+import org.rulez.magwas.worldmodel.HierarchyInconsistencyException;
+import org.rulez.magwas.worldmodel.HierarchyPlugin;
 import org.rulez.magwas.worldmodel.InputParseException;
 import org.rulez.magwas.worldmodel.Util;
 import org.rulez.magwas.worldmodel.WorldModelServlet;
@@ -81,6 +85,57 @@ public class HierarchyPluginTest {
                 "//BaseObject[@id='foo follows thing']/@dest = 'foo'",
                 retstring);
         
+    }
+    
+    @Test
+    public void testMultipleInit() throws InputParseException, SAXException,
+            IOException, ParserConfigurationException {
+        Session session = Util.getSession();
+        HierarchyPlugin plugin = new HierarchyPlugin();
+        plugin.init(session);
+        plugin.init(session);
+        assertEquals("org.rulez.magwas.worldmodel.HierarchyPlugin",
+                plugin.getPluginName());
+        session.close();
+    }
+    
+    @Test
+    public void testMultipleFinalize() throws InputParseException,
+            SAXException, IOException, ParserConfigurationException,
+            HierarchyInconsistencyException {
+        Session session = Util.getSession();
+        HierarchyPlugin plugin = new HierarchyPlugin();
+        plugin.init(session);
+        List<BaseObject> bo = BaseObject
+                .createFromString(
+                        "<BaseObject id=\"multifinalized\" source=\"hierarchyroot\" type=\"thing\"/>",
+                        session);
+        plugin.finalizeObject(session, bo.get(0));
+        plugin.finalizeObject(session, bo.get(0));
+        session.close();
+        // No exception throwm
+    }
+    
+    @Test
+    public void testCrossFinalize() throws InputParseException, SAXException,
+            IOException, ParserConfigurationException,
+            HierarchyInconsistencyException {
+        Session session = Util.getSession();
+        HierarchyPlugin plugin = new HierarchyPlugin();
+        plugin.init(session);
+        BaseObject bo1 = BaseObject
+                .createFromString(
+                        "<BaseObject id=\"crossfinalized\" source=\"hierarchyroot\" type=\"thing\"/>",
+                        session).get(0);
+        plugin.finalizeObject(session, bo1);
+        BaseObject bo2 = BaseObject
+                .createFromString(
+                        "<BaseObject id=\"crossfinalized_kid\" source=\"crossfinalized\" type=\"thing\"/>",
+                        session).get(0);
+        plugin.finalizeObject(session, bo2);
+        plugin.finalizeObject(session, bo2);
+        session.close();
+        // No exception throwm
     }
     
     @Test

@@ -83,6 +83,35 @@ public class BaseObjectTest {
         tx.commit();
     }
     
+    @Test(expected = InputParseException.class)
+    public void testEmptyId() throws Exception {
+        String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                + "<xml><BaseObject id=\"\" value=\"öüŐŰőűÖÜ\" type=\"thing\"></BaseObject></xml>";
+        
+        BaseObject.createFromString(objstring, session).get(0);
+    }
+    
+    @Test
+    public void testEmptyVersion() throws Exception {
+        String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                + "<xml><BaseObject id=\"emptyversion:\" value=\"öüŐŰőűÖÜ\" type=\"thing\"></BaseObject></xml>";
+        String outstring = "<BaseObject id=\"emptyversion\" type=\"thing\" value=\"öüŐŰőűÖÜ\"/>";
+        Transaction tx = session.beginTransaction();
+        
+        BaseObject obj = BaseObject.createFromString(objstring, session).get(0);
+        String str = obj.toXmlString();
+        assertEquals(outstring, TestUtil.NormalizeXmlString(str));
+        tx.commit();
+    }
+    
+    @Test(expected = InputParseException.class)
+    public void testDoubleVersion() throws SAXException, IOException,
+            InputParseException, ParserConfigurationException {
+        String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                + "<xml><BaseObject id=\"idnum0:ha:ha\" value=\"öüŐŰőűÖÜ\" type=\"thing\"></BaseObject></xml>";
+        BaseObject.createFromString(objstring, session).get(0);
+    }
+    
     @Test
     public void testComputedFields() throws Exception {
         System.out.println("testComputedFields");
@@ -136,6 +165,35 @@ public class BaseObjectTest {
         
         String str = bo.toXmlString();
         assertEquals(outstring, TestUtil.NormalizeXmlString(str));
+    }
+    
+    @Test(expected = UnsupportedOperationException.class)
+    public void testNullComputedField() throws Exception {
+        BaseObject bo = new BaseObject();
+        bo.setId(Value.getValueByValue("testNullComputed", session));
+        bo.setType(bo);
+        bo.setComputedField("anattribute", null);
+        session.save(bo);
+        bo.toXmlString();
+    }
+    
+    @Test
+    public void testValueMultipleTimes() {
+        Value v1 = Value.getValueByValue("WeirdValue", session);
+        Value v2 = Value.getValueByValue("WeirdValue", session);
+        assertEquals(v1.getId(), v2.getId());
+        assertEquals(v1.toString(), v2.toString());
+        assertEquals(v1.hashCode(), v2.hashCode());
+    }
+    
+    @Test(expected = UnsupportedOperationException.class)
+    public void testWeirdComputedField() throws Exception {
+        BaseObject bo = new BaseObject();
+        bo.setId(Value.getValueByValue("testWeirdComputed", session));
+        bo.setType(bo);
+        bo.setComputedField("anattribute", session);
+        session.save(bo);
+        bo.toXmlString();
     }
     
     @Test(expected = InputParseException.class)
@@ -197,12 +255,10 @@ public class BaseObjectTest {
         ByteArrayInputStream bis = new ByteArrayInputStream(arr);
         Document doc = Util.newDocument(bis);
         
-        Transaction tx = session.beginTransaction();
         BaseObject obj = new BaseObject((Element) doc.getElementsByTagName(
                 "BaseObject").item(0), session);
         String str = obj.toXmlString();
         assertEquals(outstring, TestUtil.NormalizeXmlString(str));
-        tx.commit();
     }
     
     @Test(expected = InputParseException.class)

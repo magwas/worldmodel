@@ -73,11 +73,6 @@ public final class Util {
         log(Level.INFO, string);
     }
     
-    public static void shutdown() {
-        // Close caches and connection pools
-        sessionFactory.close();
-    }
-    
     private static DocumentBuilder getDocumentBuilder()
             throws ParserConfigurationException {
         if (dBuilder == null) {

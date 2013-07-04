@@ -1,6 +1,7 @@
 package org.rulez.magwas.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -9,6 +10,8 @@ import java.util.List;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactoryConfigurationException;
@@ -20,12 +23,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.rulez.magwas.worldmodel.Util;
 import org.rulez.magwas.worldmodel.WorldModelServlet;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class WorldModelServletTest {
+public class WorldModelServletTest extends WorldModelServlet {
     
     private WorldModelServlet servlet;
     
@@ -243,6 +248,43 @@ public class WorldModelServletTest {
         
         assertEquals("<exception>object loop at stuff1</exception>",
                 response.getOutput());
+    }
+    
+    private void undie() {
+        isStopped = false;
+    }
+    
+    @Test
+    public void testDiedServlet() throws IOException, ServletException {
+        MockServletConfig sc = new MockServletConfig();
+        sc.param = "This is not a class name";
+        WorldModelServlet myservlet = new WorldModelServlet();
+        try {
+            servlet.init(sc);
+            fail("servlet should not be alive here");
+        } catch (ServletException e) {
+        }
+        String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                + "<xml>"
+                + "<BaseObject id=\"stuff1\" type=\"stuff1\" source=\"stuff1\" dest=\"stuff1\"/>"
+                + "</xml>";
+        MyHttpServletRequest request = new MyHttpServletRequest();
+        HttpServletResponse response = new MockHttpServletResponse();
+        
+        request.setInputString(objstring);
+        myservlet.doPost(request, response);
+        System.out.println("got: " + response);
+        assertEquals(500, response.getStatus());
+        HttpServletRequest request2 = new MockHttpServletRequest();
+        HttpServletResponse response2 = new MockHttpServletResponse();
+        myservlet.doGet(request2, response2);
+        assertEquals(500, response2.getStatus());
+        HttpServletRequest request3 = new MockHttpServletRequest();
+        HttpServletResponse response3 = new MockHttpServletResponse();
+        servlet.doGet(request3, response3);
+        assertEquals(500, response3.getStatus());
+        
+        undie();
     }
     
     @Test

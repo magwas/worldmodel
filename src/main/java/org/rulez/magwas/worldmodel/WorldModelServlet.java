@@ -32,22 +32,23 @@ public class WorldModelServlet extends HttpServlet {
     private static final int  NUMENTRIES       = 25;
     private PluginManager     plugins          = null;
     
-    private static boolean    isStopped        = false;
+    protected static boolean  isStopped        = false;
     
     @Override
     public void init(ServletConfig config) throws ServletException {
-        String pluginstackConfig = config.getInitParameter("PluginStack");
-        Session session = Util.getSession();
-        Transaction tx = session.beginTransaction();
         try {
+            String pluginstackConfig = config.getInitParameter("PluginStack");
+            Session session = Util.getSession();
+            Transaction tx = session.beginTransaction();
             plugins = new PluginManager(pluginstackConfig);
             plugins.init(session);
             tx.commit();
+            session.close();
         } catch (Exception e) {
-            tx.rollback();
             die(e);
+            Util.logException(e);
+            throw new ServletException("plugin initialisation failed");
         }
-        session.close();
     }
     
     public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -56,6 +57,12 @@ public class WorldModelServlet extends HttpServlet {
          * expects a xml containing a BaseObject entity in the same form as get
          * returns it back
          */
+        if (isStopped) {
+            response.setStatus(500);
+            response.sendError(500);
+            Util.logInfo("stopped service called");
+            return;
+        }
         BufferedReader reader = null;
         String str = "";
         response.setCharacterEncoding("UTF-8");
@@ -64,9 +71,6 @@ public class WorldModelServlet extends HttpServlet {
         Session session = Util.getSession();
         Transaction tx = session.beginTransaction();
         try {
-            if (isStopped) {
-                throw new IOException("Fatal error occured");
-            }
             reader = request.getReader();
             String xmlstring = IOUtils.toString(reader);
             // FIXME schema validation (maybe in upper layers)
@@ -159,6 +163,10 @@ public class WorldModelServlet extends HttpServlet {
     
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        if (isStopped) {
+            response.setStatus(500);
+            return;
+        }
         // FIXME should only convert the get to post and submit
         /*
          * expects zero or more of the following parameters: - id: a composite
@@ -187,9 +195,6 @@ public class WorldModelServlet extends HttpServlet {
         Transaction tx = session.beginTransaction();
         
         try {
-            if (isStopped) {
-                throw new IOException("Fatal error occured");
-            }
             Document doc = Util.newDocument();
             Element root = doc.createElement("objects");
             List<BaseObject> l;
@@ -234,10 +239,9 @@ public class WorldModelServlet extends HttpServlet {
     }
     
     public static void die(Exception e) {
-        Util.logException(e);
-        Util.shutdown();
-        Util.fatal("worldmodel cannot continue");
         isStopped = true;
+        Util.logException(e);
+        Util.fatal("worldmodel cannot continue");
     }
     
 }
