@@ -35,7 +35,6 @@ public class BasicPluginTest {
             plugin.finalizeObject(session, thing);
         } catch (Exception e) {
             e.printStackTrace();
-            session.close();
             fail();
         }
     }
