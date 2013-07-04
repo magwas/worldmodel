@@ -5,13 +5,19 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
+import java.io.IOException;
+
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.hibernate.Session;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.rulez.magwas.worldmodel.BaseObject;
 import org.rulez.magwas.worldmodel.BasicPlugin;
+import org.rulez.magwas.worldmodel.InputParseException;
 import org.rulez.magwas.worldmodel.Util;
+import org.xml.sax.SAXException;
 
 public class BasicPluginTest {
     
@@ -37,6 +43,26 @@ public class BasicPluginTest {
     @AfterClass
     public static void tearDown() {
         session.close();
+    }
+    
+    @Test
+    public void testName() {
+        assertEquals("org.rulez.magwas.worldmodel.BasicPlugin",
+                plugin.getPluginName());
+    }
+    
+    @Test
+    public void testDoubleTest() throws InputParseException, SAXException,
+            IOException, ParserConfigurationException {
+        BaseObject bo = BaseObject
+                .fromString(
+                        "<BaseObject id=\"doubleBasicFinalize\" type =\"thing\" source=\"thing\"/>",
+                        session);
+        session.save(bo);
+        plugin.finalizeObject(session, bo);
+        plugin.checkConsistency(session, bo);
+        plugin.finalizeObject(session, bo);
+        plugin.checkConsistency(session, bo);
     }
     
     @Test

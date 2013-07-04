@@ -32,6 +32,7 @@ import org.xml.sax.SAXException;
 
 public class WorldModelServletTest extends WorldModelServlet {
     
+    private static final long serialVersionUID = 1L;
     private WorldModelServlet servlet;
     
     @Before
@@ -214,6 +215,32 @@ public class WorldModelServletTest extends WorldModelServlet {
     }
     
     @Test
+    public void testDoGetFetchOneDestwithEmptytype() throws Exception {
+        List<String> idlist = new ArrayList<String>();
+        MyHttpServletRequest request = new MyHttpServletRequest();
+        MyHttpServletResponse response = new MyHttpServletResponse();
+        request.setParameter("dest", "One");
+        request.setParameter("type", "");
+        
+        servlet.doGet(request, response);
+        String output = response.getOutput();
+        
+        Document retdoc = Util.newDocument(output);
+        assertEquals(0, retdoc.getElementsByTagName("exception").getLength());
+        assertEquals(1, retdoc.getElementsByTagName("objects").getLength());
+        NodeList bolist = retdoc.getElementsByTagName("BaseObject");
+        for (int i = 0; i < bolist.getLength(); i++) {
+            String idstr = ((Element) bolist.item(i)).getAttribute("id");
+            String deststr = ((Element) bolist.item(i)).getAttribute("dest");
+            assert (!idlist.contains(idstr));
+            assertEquals(deststr, "One");
+            idlist.add(idstr);
+        }
+        assertEquals(9, bolist.getLength());
+        assertEquals(0, retdoc.getElementsByTagName("continues").getLength());
+    }
+    
+    @Test
     public void testDoPostWithSelfReference() throws ServletException,
             IOException, XPathExpressionException,
             XPathFactoryConfigurationException, SAXException,
@@ -248,10 +275,6 @@ public class WorldModelServletTest extends WorldModelServlet {
         
         assertEquals("<exception>object loop at stuff1</exception>",
                 response.getOutput());
-    }
-    
-    private void undie() {
-        isStopped = false;
     }
     
     @Test
@@ -304,6 +327,33 @@ public class WorldModelServletTest extends WorldModelServlet {
         TestUtil.assertExpressionOnXmlString("count(//exception)=0", retstring);
         TestUtil.assertExpressionOnXmlString("count(//BaseObject) = 2",
                 retstring);
+    }
+    
+    @Test
+    public void testDoPostWithEmptythings() throws ServletException,
+            IOException, XPathExpressionException,
+            XPathFactoryConfigurationException, SAXException,
+            ParserConfigurationException {
+        String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                + "<xml>"
+                + "<BaseObject id=\"emptysrc\" value=\"érték\" type=\"thing\" source=\"\"/>"
+                + "<BaseObject id=\"emptysrcplace\" type=\"contains\" source=\"hierarchyroot\" "
+                + "dest=\"emptysrc\"/>" + "</xml>";
+        MyHttpServletRequest request = new MyHttpServletRequest();
+        MyHttpServletResponse response = new MyHttpServletResponse();
+        request.setInputString(objstring);
+        request.setParameter("offset", (String) null);
+        request.setParameter("id", (String) null);
+        servlet.doPost(request, response);
+        String retstring = response.getOutput();
+        TestUtil.assertExpressionOnXmlString("count(//exception)=0", retstring);
+        TestUtil.assertExpressionOnXmlString("count(//BaseObject) = 2",
+                retstring);
+        TestUtil.assertExpressionOnXmlString(
+                "count(//BaseObject[@id='emptysrc']/@source) = 0", retstring);
+        TestUtil.assertExpressionOnXmlString(
+                "count(//BaseObject[@id='emptysrc']) = 1", retstring);
+        Util.warning("this is a warning");
     }
     
     @Test

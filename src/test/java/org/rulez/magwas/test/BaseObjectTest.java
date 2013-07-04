@@ -179,7 +179,9 @@ public class BaseObjectTest {
     
     @Test
     public void testValueMultipleTimes() {
-        Value v1 = Value.getValueByValue("WeirdValue", session);
+        Value v1 = new Value();
+        v1.setValue("WeirdValue");
+        session.save(v1);
         Value v2 = Value.getValueByValue("WeirdValue", session);
         assertEquals(v1.getId(), v2.getId());
         assertEquals(v1.toString(), v2.toString());

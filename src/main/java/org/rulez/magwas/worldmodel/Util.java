@@ -32,8 +32,7 @@ public final class Util {
     private static Logger          logger         = null;
     
     private Util() {
-        // singleton
-    }
+    };
     
     // Every method of initializing hibernate is deprecated AFAIK.
     @SuppressWarnings("deprecation")
@@ -78,12 +77,7 @@ public final class Util {
         if (dBuilder == null) {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory
                     .newInstance();
-            try {
-                dBuilder = dbFactory.newDocumentBuilder();
-            } catch (ParserConfigurationException e) {
-                WorldModelServlet.die(e);
-                throw e;
-            }
+            dBuilder = dbFactory.newDocumentBuilder();
         }
         return dBuilder;
     }

@@ -32,7 +32,7 @@ public class WorldModelServlet extends HttpServlet {
     private static final int  NUMENTRIES       = 25;
     private PluginManager     plugins          = null;
     
-    protected static boolean  isStopped        = false;
+    private static boolean    isStopped        = false;
     
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -58,8 +58,7 @@ public class WorldModelServlet extends HttpServlet {
          * returns it back
          */
         if (isStopped) {
-            response.setStatus(500);
-            response.sendError(500);
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             Util.logInfo("stopped service called");
             return;
         }
@@ -164,7 +163,8 @@ public class WorldModelServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         if (isStopped) {
-            response.setStatus(500);
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            Util.logInfo("stopped service called");
             return;
         }
         // FIXME should only convert the get to post and submit
@@ -209,8 +209,6 @@ public class WorldModelServlet extends HttpServlet {
                 Query query = createQuery(request, session);
                 
                 @SuppressWarnings("unchecked")
-                // variable introduced just to make the scope of
-                // SuppressWarnings small
                 List<BaseObject> ql = (List<BaseObject>) query.list();
                 l = ql;
                 
@@ -242,6 +240,11 @@ public class WorldModelServlet extends HttpServlet {
         isStopped = true;
         Util.logException(e);
         Util.fatal("worldmodel cannot continue");
+    }
+    
+    protected static void undie() {
+        // for tests
+        isStopped = false;
     }
     
 }

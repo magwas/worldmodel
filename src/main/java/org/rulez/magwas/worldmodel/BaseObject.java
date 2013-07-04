@@ -132,7 +132,7 @@ public class BaseObject implements Serializable {
             throws InputParseException {
         String[] parts = cidstring.split(":");
         ArrayList<String> r = new ArrayList<String>();
-        if ((parts.length < 1) || (parts.length > 2)) {
+        if ((parts.length > 2)) {
             throw new InputParseException("object should have a valid ID");
         }
         r.add(parts[0]);

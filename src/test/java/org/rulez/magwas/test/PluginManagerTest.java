@@ -1,5 +1,6 @@
 package org.rulez.magwas.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import org.hibernate.Session;
@@ -43,6 +44,8 @@ public class PluginManagerTest {
             fail(e.getMessage());
         }
         session.close();
+        assertEquals("org.rulez.magwas.worldmodel.PluginManager",
+                plugins.getPluginName());
     }
     
 }

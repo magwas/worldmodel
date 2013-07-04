@@ -85,7 +85,7 @@ public class HierarchyPlugin implements IWorldModelPlugin {
             Set<BaseObject> relationLineage)
             throws HierarchyInconsistencyException {
         if (relationLineage.contains(relation)) {
-            // loop
+            // loop, TODO: test when there will be versiosn
             throw new HierarchyInconsistencyException("relation loop at "
                     + relation.getCompositeId());
         }

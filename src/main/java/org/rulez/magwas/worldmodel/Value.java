@@ -49,7 +49,6 @@ public class Value implements Serializable {
             session.save(obj);
         } else {
             obj = (Value) query.list().get(0);
-            
         }
         return obj;
     }

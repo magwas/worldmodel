@@ -10,15 +10,9 @@ public class BasicPlugin implements IWorldModelPlugin {
     private static final long serialVersionUID = 1L;
     
     @Override
-    public void init(Session session) {
+    public void init(Session session) throws InputParseException {
         BaseObject thing;
-        try {
-            thing = BaseObject.getBaseObjectByCompositeId("thing", session);
-        } catch (InputParseException e) {
-            WorldModelServlet.die(e);
-            // just to make the compiler happy
-            return;
-        }
+        thing = BaseObject.getBaseObjectByCompositeId("thing", session);
         if (thing == null) {
             thing = new BaseObject();
             thing.setId(Value.getValueByValue("thing", session));
@@ -52,9 +46,7 @@ public class BasicPlugin implements IWorldModelPlugin {
         addrev(obj, "type", session);
         // checks forward for them
         // nice repetitive code. you gotta love java because the rhythm
-        if (obj.getType() != null) {
-            addRefToForeign(obj, "revtype");
-        }
+        addRefToForeign(obj, "revtype");
         if (obj.getSource() != null) {
             addRefToForeign(obj, "revsource");
         }
