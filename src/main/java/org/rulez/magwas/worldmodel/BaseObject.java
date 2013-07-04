@@ -92,59 +92,40 @@ public class BaseObject implements Serializable {
         if ((versionstring != null) && !versionstring.equals("")) {
             this.version = Value.getValueByValue(versionstring, session);
         }
-        String typestring = node.getAttribute("type");
-        if (!typestring.equals("")) {
-            if (typestring.equals(cidstring)) {
-                this.type = this;
-            } else {
-                BaseObject tobj = getBaseObjectByCompositeId(typestring,
-                        session);
-                if (tobj == null) {
-                    Util.logInfo("object for type does not exists. id="
-                            + typestring);
-                    throw new InputParseException(
-                            "object for type does not exists. id=" + typestring);
-                }
-                this.type = tobj;
-            }
-        } else {
+        BaseObject typeobj = objForField(node, session, cidstring, "type");
+        if (null == typeobj) {
             throw new InputParseException("object without type " + cidstring);
+        } else {
+            type = typeobj;
         }
-        String sourcestring = node.getAttribute("source");
-        if (!sourcestring.equals("")) {
-            if (sourcestring.equals(cidstring)) {
-                this.source = this;
-            } else {
-                BaseObject tobj = getBaseObjectByCompositeId(sourcestring,
-                        session);
-                if (tobj == null) {
-                    throw new InputParseException(
-                            "object for source does not exists. id="
-                                    + sourcestring);
-                }
-                this.source = tobj;
-            }
-        }
-        String deststring = node.getAttribute("dest");
-        if (!deststring.equals("")) {
-            if (sourcestring.equals(cidstring)) {
-                this.dest = this;
-            } else {
-                BaseObject tobj = getBaseObjectByCompositeId(deststring,
-                        session);
-                if (tobj == null) {
-                    throw new InputParseException(
-                            "object for dest does not exists. id=" + deststring);
-                }
-                this.dest = tobj;
-            }
-        }
+        source = objForField(node, session, cidstring, "source");
+        dest = objForField(node, session, cidstring, "dest");
         String valuestring = node.getAttribute("value");
         if (!valuestring.equals("")) {
             Value tobj = Value.getValueByValue(valuestring, session);
             this.value = tobj;
         }
         session.save(this);
+    }
+    
+    private BaseObject objForField(Element node, Session session,
+            String cidstring, String fieldname) throws InputParseException {
+        String fieldvalue = node.getAttribute(fieldname);
+        if (!fieldvalue.equals("")) {
+            if (fieldvalue.equals(cidstring)) {
+                return this;
+            } else {
+                BaseObject tobj = getBaseObjectByCompositeId(fieldvalue,
+                        session);
+                if (tobj == null) {
+                    throw new InputParseException("object for " + fieldname
+                            + " does not exists. id=" + fieldvalue);
+                }
+                return tobj;
+            }
+        } else {
+            return null;
+        }
     }
     
     private static List<String> parseCompositeId(String cidstring)
