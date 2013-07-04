@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
@@ -34,7 +35,8 @@ public class TestUtil {
     public static void assertExpressionOnObject(String expression,
             BaseObject obj) throws InputParseException, SAXException,
             IOException, ParserConfigurationException,
-            XPathExpressionException, XPathFactoryConfigurationException {
+            XPathExpressionException, XPathFactoryConfigurationException,
+            TransformerException {
         assertExpressionOnXmlString(expression, obj.toXmlString());
     }
     
@@ -53,4 +55,21 @@ public class TestUtil {
             fail("got '" + result + "' for \"" + expression + "\" on:\n" + xml);
         }
     }
+    
+    private static String codes = "0123456789abcdef";
+    
+    public static void hexdump(String label, String str) {
+        char[] arr = str.toCharArray();
+        
+        StringBuffer buff = new StringBuffer();
+        for (int i = 0; i < arr.length; i++) {
+            // yeah, hexdump is magical, thus uses magic numbers
+            buff.append(codes.charAt((arr[i] >> 8) & 0x0f))
+                    .append(codes.charAt((arr[i] >> 4) & 0x0f))
+                    .append(codes.charAt(arr[i] & 0xf)).append(arr[i])
+                    .append(" ");
+        }
+        Util.debug(label + buff.toString());
+    }
+    
 }

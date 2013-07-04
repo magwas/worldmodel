@@ -389,21 +389,10 @@ public class BaseObject implements Serializable {
         return doc;
     }
     
-    public String toXmlString() throws ParserConfigurationException {
-        // maybe create an interface
-        
-        Document doc = Util.newDocument();
-        Element rootnode = doc.createElement("objects");
-        doc.appendChild(rootnode);
-        Element xml;
-        xml = toXML(doc);
-        rootnode.appendChild(xml);
-        try {
-            return Util.dom2String(doc);
-        } catch (TransformerException e) {
-            Util.logException(e);
-            return "<exception>Transformation failed</exception>";
-        }
+    public String toXmlString() throws ParserConfigurationException,
+            TransformerException {
+        Document doc = toDocument();
+        return Util.dom2String(doc);
     }
     
     public static BaseObject fromString(String str, Session session)

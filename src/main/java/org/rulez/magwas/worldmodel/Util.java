@@ -49,22 +49,6 @@ public final class Util {
         log(Level.DEBUG, what);
     }
     
-    private static String codes = "0123456789abcdef";
-    
-    public static void hexdump(String label, String str) {
-        char[] arr = str.toCharArray();
-        
-        StringBuffer buff = new StringBuffer();
-        for (int i = 0; i < arr.length; i++) {
-            // yeah, hexdump is magical, thus uses magic numbers
-            buff.append(codes.charAt((arr[i] >> 8) & 0x0f))
-                    .append(codes.charAt((arr[i] >> 4) & 0x0f))
-                    .append(codes.charAt(arr[i] & 0xf)).append(arr[i])
-                    .append(" ");
-        }
-        Util.debug(label + buff.toString());
-    }
-    
     public static void warning(String what) {
         log(Level.WARN, what);
     }
