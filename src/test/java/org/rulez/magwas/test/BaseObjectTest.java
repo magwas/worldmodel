@@ -69,7 +69,7 @@ public class BaseObjectTest {
     public void testCreate() throws Exception {
         System.out.println("create");
         String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xml><BaseObject id=\"idnum0\" value=\"öüŐŰőűÖÜ\" type=\"thing\"></BaseObject></xml>";
-        String outstring = "<objects><BaseObject id=\"idnum0\" type=\"thing\" value=\"öüŐŰőűÖÜ\"/></objects>";
+        String outstring = "<BaseObject id=\"idnum0\" type=\"thing\" value=\"öüŐŰőűÖÜ\"/>";
         
         byte[] arr = objstring.getBytes("UTF-8");
         ByteArrayInputStream bis = new ByteArrayInputStream(arr);
@@ -124,7 +124,7 @@ public class BaseObjectTest {
         bo.setComputedField("string", stringList);
         session.save(bo);
         
-        String outstring = "<objects><BaseObject anattribute=\"astring\" anattribute2=\"avalue\" "
+        String outstring = "<BaseObject anattribute=\"astring\" anattribute2=\"avalue\" "
                 + "id=\"testComputed\" "
                 + "mappedkey1=\"mappedval1\" mappedkey2=\"mappedval2\" mappedkey3=\"mappedval3\" "
                 + "mappedstringkey1=\"mappedstringval1\" mappedstringkey2=\"mappedstringval2\" "
@@ -132,7 +132,7 @@ public class BaseObjectTest {
                 + "objattrib=\"testComputed\" type=\"testComputed\">"
                 + "<strings><string>one</string><string>two</string><string>three</string></strings>"
                 + "<objects><object>testComputed</object><object>thing</object></objects>"
-                + "</BaseObject>" + "</objects>";
+                + "</BaseObject>";
         
         String str = bo.toXmlString();
         assertEquals(outstring, TestUtil.NormalizeXmlString(str));
@@ -191,7 +191,7 @@ public class BaseObjectTest {
     public void testCreateVersionedId() throws Exception {
         System.out.println("testCreateVersionedId");
         String objstring = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xml><BaseObject id=\"idnum0:foo\" value=\"öüŐŰőűÖÜ\" type=\"thing\"></BaseObject></xml>";
-        String outstring = "<objects><BaseObject id=\"idnum0:foo\" type=\"thing\" value=\"öüŐŰőűÖÜ\"/></objects>";
+        String outstring = "<BaseObject id=\"idnum0:foo\" type=\"thing\" value=\"öüŐŰőűÖÜ\"/>";
         
         byte[] arr = objstring.getBytes("UTF-8");
         ByteArrayInputStream bis = new ByteArrayInputStream(arr);
